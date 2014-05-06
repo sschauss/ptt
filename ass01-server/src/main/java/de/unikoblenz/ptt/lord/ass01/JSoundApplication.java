@@ -33,13 +33,17 @@ public class JSoundApplication extends Application<JSoundConfiguration> {
 		final Client client = jerseyClientBuilder.build(SC_CLIENT_NAME);
 		final TrackClient trackClient = new TrackClient(client, config.getClientId());
 		final TrackResource trackResource = new TrackResource(trackClient);
-		environment.jersey().register(trackResource);
+		registerResource(environment, trackResource);
 		environment.jersey().setUrlPattern("/api/*");
 	}
 
 	@Override
 	public String getName() {
 		return NAME;
+	}
+
+	private void registerResource(final Environment environment, final Object resource) {
+		environment.jersey().register(resource);
 	}
 
 }
