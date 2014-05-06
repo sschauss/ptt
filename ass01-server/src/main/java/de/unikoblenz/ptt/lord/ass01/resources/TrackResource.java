@@ -1,28 +1,31 @@
 package de.unikoblenz.ptt.lord.ass01.resources;
 
-import javax.ws.rs.GET;
+import java.util.List;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import de.unikoblenz.ptt.lord.ass01.api.Track;
-import de.unikoblenz.ptt.lord.ass01.client.TrackClient;
+import de.unikoblenz.ptt.lord.ass01.api.DoughnutGraph;
+import de.unikoblenz.ptt.lord.ass01.core.DoughnutGraphService;
 
 @Path("/tracks")
 public class TrackResource {
 
-	private final TrackClient trackClient;
+	private final DoughnutGraphService doughnutGraphService;
 
-	public TrackResource(final TrackClient trackClient) {
-		this.trackClient = trackClient;
+	public TrackResource(final DoughnutGraphService doughnutGraphService) {
+		this.doughnutGraphService = doughnutGraphService;
 	}
 
-	@GET
-	@Path("/{id}")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Track getTrack(@PathParam("id") String id) {
-		return trackClient.getTrack(id);
+	@POST
+	@Path("/")
+	@Consumes(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+	public DoughnutGraph createDoughnutChart(final List<String> ids) {
+		return doughnutGraphService.create(ids);
 	}
 
 }

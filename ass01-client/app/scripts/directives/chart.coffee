@@ -2,8 +2,12 @@
 
 angular.module('ass01ClientApp')
   .directive('chart', ->
-    template: '<div></div>'
+    templateUrl: 'views/chart.html'
     restrict: 'E'
+    scope:
+      data: '='
     link: (scope, element, attrs) ->
-      element.text 'this is the chart directive'
+      context = $('.chart', element).get(0).getContext('2d')
+      chart = new Chart(context).Doughnut(scope.data)
+
   )

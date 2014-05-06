@@ -1,2 +1,16 @@
 <div ng-include src="'views/navigation.html'"></div>
-<p>This is the tracks view.</p>
+<chart data="data"></chart>
+<table class="table" ng-if="tracks.length > 0">
+    <thead>
+    <tr>
+        <th></th>
+        <th ng-repeat="track in tracks">{{track.title}}</th>
+    </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="category in categories">
+            <td>{{category}}</td>
+            <td ng-repeat="track in tracks">{{track[category]}}</td>
+        </tr>
+    </tbody>
+</table>
