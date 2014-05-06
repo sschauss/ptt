@@ -21,7 +21,7 @@ public class TrackResource {
 	@GET
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Track getTrackByid(@PathParam("id") String id) {
+	public Track getTrack(@PathParam("id") String id) {
 		return trackClient.getTrack(id);
 	}
 
