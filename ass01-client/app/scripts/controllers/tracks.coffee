@@ -25,6 +25,8 @@ angular.module('ass01ClientApp')
 
     $scope.query = ''
 
+    $scope.chartType = 'polarArea'
+
     $scope.commentGraphData = []
 
     $scope.downloadGraphData = []
@@ -57,6 +59,9 @@ angular.module('ass01ClientApp')
 
     $scope.trackSelected = (track) ->
       $scope.tracks.indexOf(track) > -1
+
+    $scope.setChartType = (type) ->
+      $scope.chartType = type
 
     $scope.$watch 'query', (query) ->
       if query == ''

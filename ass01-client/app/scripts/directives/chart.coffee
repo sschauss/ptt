@@ -15,12 +15,12 @@ angular.module('ass01ClientApp')
 
       render = () ->
         switch scope.type
-          when 'pie' then chart.Pie(scope.data)
-          when 'doughnut' then chart.Doughnut(scope.data)
-          when 'bar' then chart.Bar(scope.data)
-          else chart.PolarArea scope.data
+          when 'pie' then chart.Pie scope.data
+          when 'doughnut' then chart.Doughnut scope.data
+          when 'polarArea' then chart.PolarArea scope.data
+          else chart.Pie scope.data
 
-      scope.$watch 'data', (data) ->
+      scope.$watch '[data, type]', (data) ->
         if data != []
           render()
       , true
