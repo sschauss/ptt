@@ -72,7 +72,7 @@ angular.module('ass01ClientApp')
 
     generateColor = (dataSet) ->
       h = 0
-      step = 360 / dataSet.length
+      step = 360 / (dataSet.length + 1)
       for i, data of dataSet
         h = (i * step).toFixed 0
         color =  "hsl(#{h},70%,35%)"
