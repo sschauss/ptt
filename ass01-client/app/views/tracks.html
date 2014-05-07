@@ -1,7 +1,29 @@
 <div ng-include src="'views/navigation.html'"></div>
-<chart data="commentsData" type="'doughnut'"></chart>
-<input type="text" ng-model="trackId">
-<button ng-click="getChartData()">Add</button>
+<div class="row">
+    <div class="col-md-12">
+        <button class="btn btn-default pull-right" data-toggle="modal" data-target="#track-search-modal">
+            <i class="glyphicon glyphicon-plus"></i>
+            Add Track
+        </button>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-3" ng-repeat="category in categories">
+        {{category.label}}
+    </div>
+    <div class="col-md-3">
+        <chart data="commentGraphData" type="'pie'"></chart>
+    </div>
+    <div class="col-md-3">
+        <chart data="downloadGraphData" type="'pie'"></chart>
+    </div>
+    <div class="col-md-3">
+        <chart data="playbackGraphData" type="'pie'"></chart>
+    </div>
+    <div class="col-md-3">
+        <chart data="favoritingsGraphData" type="'pie'"></chart>
+    </div>
+</div>
 <table class="table" ng-if="tracks.length > 0">
     <thead>
     <tr>
@@ -10,9 +32,37 @@
     </tr>
     </thead>
     <tbody>
-        <tr ng-repeat="category in categories">
-            <td>{{category}}</td>
-            <td ng-repeat="track in tracks">{{track[category]}}</td>
-        </tr>
+    <tr ng-repeat="category in categories">
+        <td>{{category.label}}</td>
+        <td ng-repeat="track in tracks">{{track[category.key]}}</td>
+    </tr>
     </tbody>
 </table>
+<div class="modal fade" id="track-search-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form role="form">
+                    <div class="form-group">
+                        <label for="query">Search for</label>
+                        <input type="text" class="form-control" id="query" placeholder="Enter track title"
+                               ng-model="query">
+                    </div>
+                </form>
+                <table ng-repeat="track in searchResult">
+                    <tbody>
+                    {{track.title}}
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Ok</button>
+            </div>
+        </div>
+    </div>
+</div>

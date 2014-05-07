@@ -14,11 +14,14 @@ angular.module('ass01ClientApp')
       render = () ->
         chart = new Chart(context)
         switch scope.type
+          when 'pie' then chart.Pie(scope.data)
           when 'doughnut' then chart.Doughnut(scope.data)
+          when 'bar' then chart.Bar(scope.data)
           else chart.PolarArea scope.data
 
       scope.$watch 'data', (data) ->
-        if data
+        if data != []
+          console.log data
           render()
           console.log data
       , true

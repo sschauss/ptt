@@ -8,6 +8,8 @@ public class Track {
 
 	private int id;
 
+	private String title;
+
 	@JsonProperty("comment_count")
 	private int commentCount;
 
@@ -26,6 +28,10 @@ public class Track {
 
 	public int getId() {
 		return id;
+	}
+
+	public String getTitle() {
+		return title;
 	}
 
 	public int getCommentCount() {

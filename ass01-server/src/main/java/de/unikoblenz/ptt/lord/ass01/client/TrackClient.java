@@ -26,7 +26,7 @@ public class TrackClient extends SoundCloudClient {
 	}
 
 	public List<Track> getTracks(final String q) {
-		return hostResource.path("tracks.json").queryParam("q", q).get(new GenericType<List<Track>>() {
+		return hostResource.path("tracks.json").queryParam("q", q).queryParam("limit", "10").get(new GenericType<List<Track>>() {
 		});
 	}
 }

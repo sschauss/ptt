@@ -3,25 +3,66 @@
 angular.module('ass01ClientApp')
   .controller 'TracksCtrl', ($scope, $resource) ->
     $scope.categories = [
-      'Downloads'
-      'Playbacks'
+      {
+        label: 'Comments'
+        key: 'comment_count'
+      }
+      {
+        label: 'Downloads'
+        key: 'download_count'
+      }
+      {
+        label: 'Playbacks'
+        key: 'playback_count'
+      }
+      {
+        label: 'Favorites'
+        key: 'favoritings_count'
+      }
     ]
 
-    $scope.trackId = null
+    $scope.id = ''
 
-    $scope.commentsData = []
+    $scope.query = ''
 
-    GraphData = $resource '/api/tracks/:id', {id: '@id'}
+    $scope.commentGraphData = []
+
+    $scope.downloadGraphData = []
+
+    $scope.playbackGraphData = []
+
+    $scope.favoritingsGraphData = []
+
+    $scope.tracks = []
+
+    Track = $resource '/api/tracks/:id', {id: '@id'}
 
     $scope.getChartData = ->
-      GraphData.get {id: $scope.trackId}, (response) ->
-        $scope.commentsData.push {value: response.comment_count}
-        generate($scope.commentsData)
+      Track.get {id: $scope.id}, (response) ->
+        $scope.tracks.push response
+        $scope.commentGraphData.push {value: response.comment_count}
+        $scope.downloadGraphData.push {value: response.download_count}
+        $scope.playbackGraphData.push {value: response.playback_count}
+        $scope.favoritingsGraphData.push {value: response.favoritings_count}
+        generateColor $scope.commentGraphData
+        generateColor $scope.downloadGraphData
+        generateColor $scope.playbackGraphData
+        generateColor $scope.favoritingsGraphData
 
-    generate = (dataSet) ->
-      r = 0
-      g = 0
-      b = 0
+    $scope.$watch 'query', (query) ->
+      if query == ''
+        $scope.searchResult = []
+      else
+        search query
+
+    search = ->
+      if $scope.query
+        Track.query {q: $scope.query}, (response) ->
+          $scope.searchResult = response
+
+
+    generateColor = (dataSet) ->
+      r = g = b = 0
       for i, data of dataSet
         step = 43331 / (dataSet.length )
         switch i % 3
