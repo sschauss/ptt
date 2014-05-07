@@ -11,8 +11,9 @@ angular.module('ass01ClientApp')
 
       context = $('.chart', element).get(0).getContext('2d')
 
+      chart = new Chart(context)
+
       render = () ->
-        chart = new Chart(context)
         switch scope.type
           when 'doughnut' then chart.Doughnut(scope.data)
           else chart.PolarArea scope.data
