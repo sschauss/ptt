@@ -37,17 +37,16 @@ angular.module('ass01ClientApp')
 
     Track = $resource '/api/tracks/:id', {id: '@id'}
 
-    $scope.getChartData = ->
-      Track.get {id: $scope.id}, (response) ->
-        $scope.tracks.push response
-        $scope.commentGraphData.push {value: response.comment_count}
-        $scope.downloadGraphData.push {value: response.download_count}
-        $scope.playbackGraphData.push {value: response.playback_count}
-        $scope.favoritingsGraphData.push {value: response.favoritings_count}
-        generateColor $scope.commentGraphData
-        generateColor $scope.downloadGraphData
-        generateColor $scope.playbackGraphData
-        generateColor $scope.favoritingsGraphData
+    $scope.addChartData = (track) ->
+      $scope.tracks.push track
+      $scope.commentGraphData.push {value: track.comment_count}
+      $scope.downloadGraphData.push {value: track.download_count}
+      $scope.playbackGraphData.push {value: track.playback_count}
+      $scope.favoritingsGraphData.push {value: track.favoritings_count}
+      generateColor $scope.commentGraphData
+      generateColor $scope.downloadGraphData
+      generateColor $scope.playbackGraphData
+      generateColor $scope.favoritingsGraphData
 
     $scope.$watch 'query', (query) ->
       if query == ''
@@ -69,4 +68,7 @@ angular.module('ass01ClientApp')
           when 0 then r = ((r + step) % 256).toFixed 0
           when 1 then g = ((g + step) % 256).toFixed 0
           when 2 then b = ((b + step) % 256).toFixed 0
-        data.color =  "rgb(#{r},#{g},#{b})"
+          else
+        color =  "rgb(#{r},#{g},#{b})"
+        data.color = color
+        $scope.tracks[i].color =  color
