@@ -1,27 +1,38 @@
 <div ng-include src="'views/navigation.html'"></div>
 <div class="row">
-    <div class="col-md-12">
-        <button class="btn btn-default pull-right" data-toggle="modal" data-target="#track-search-modal">
-            <i class="glyphicon glyphicon-plus"></i>
-            Add Track
-        </button>
+    <div class="col-md-4 col-md-offset-4">
+        <div class="btn-group btn-group-justified">
+            <div class="btn-group">
+                <button class="btn btn-default" data-toggle="modal" data-target="#track-add-modal">
+                    <i class="glyphicon glyphicon-plus"></i>
+                    Add Track
+                </button>
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-default" data-toggle="modal" data-target="#track-remove-modal" ng-disabled="tracks.length < 1">
+                    <i class="glyphicon glyphicon-minus"></i>
+                    Remove Track
+                </button>
+            </div>
+        </div>
     </div>
 </div>
-<div class="row">
-    <div class="col-md-3" ng-repeat="category in categories">
-        {{category.label}}
+<div class="row text-center">
+    <div class="col-md-3">
+        <h4>{{categories[0].label}}</h4>
+        <chart data="commentGraphData" type="'doughnut'"></chart>
     </div>
     <div class="col-md-3">
-        <chart data="commentGraphData" type="'pie'"></chart>
+        <h4>{{categories[1].label}}</h4>
+        <chart data="downloadGraphData" type="'doughnut'"></chart>
     </div>
     <div class="col-md-3">
-        <chart data="downloadGraphData" type="'pie'"></chart>
+        <h4>{{categories[2].label}}</h4>
+        <chart data="playbackGraphData" type="'doughnut'"></chart>
     </div>
     <div class="col-md-3">
-        <chart data="playbackGraphData" type="'pie'"></chart>
-    </div>
-    <div class="col-md-3">
-        <chart data="favoritingsGraphData" type="'pie'"></chart>
+        <h4>{{categories[3].label}}</h4>
+        <chart data="favoritingsGraphData" type="'doughnut'"></chart>
     </div>
 </div>
 <table class="table" ng-if="tracks.length > 0">
@@ -38,27 +49,63 @@
     </tr>
     </tbody>
 </table>
-<div class="modal fade" id="track-search-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+<div class="modal fade" id="track-add-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
      aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
+                <h2>Add Tracks</h2>
             </div>
             <div class="modal-body">
                 <form role="form">
                     <div class="form-group">
                         <label for="query">Search for</label>
-                        <input type="text" class="form-control" id="query" placeholder="Enter track title"
-                               ng-model="query">
+                        <input type="text" class="form-control" id="query" ng-model="query">
                     </div>
                 </form>
-                <div class="table" ng-repeat="track in searchResult" ng-click="addChartData(track)">
-                    {{track.title}}
+                <div class="row" ng-repeat="track in searchResult">
+                    <div class="col-md-11 hide-overflow">
+                        {{track.title}}
+                    </div>
+                    <div class="col-md-1">
+                        <button class="btn-xs btn-default" ng-if="!trackSelected(track)"
+                                ng-click="addChartData(track)">
+                            <i class="glyphicon glyphicon-unchecked"></i>
+                        </button>
+                        <button class="btn-xs btn-success" ng-if="trackSelected(track)"
+                                ng-click="removeChartData(track)">
+                            <i class="glyphicon glyphicon-check"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Ok</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="track-remove-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Remove Tracks</h2>
+            </div>
+            <div class="modal-body">
+                <div class="row" ng-repeat="track in tracks" ng-click="removeChartData(track)">
+                    <div class="col-md-9 col-md-offset-1 hide-overflow">
+                        {{track.title}}
+                    </div>
+                    <div class="col-md-1">
+                        <button class="btn-xs btn-danger pull-right" ng-click="removeChartData(track)">
+                            <i class="glyphicon glyphicon-remove"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>

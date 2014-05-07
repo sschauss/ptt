@@ -5,11 +5,14 @@ import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.client.JerseyClientBuilder;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import io.dropwizard.util.Duration;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.sun.jersey.api.client.Client;
 
 import de.unikoblenz.ptt.lord.ass01.client.TrackClient;
+import de.unikoblenz.ptt.lord.ass01.core.jackson.DurationDeserializer;
+import de.unikoblenz.ptt.lord.ass01.core.jackson.DurationSerializer;
 import de.unikoblenz.ptt.lord.ass01.resources.TrackResource;
 
 public class JSoundApplication extends Application<JSoundConfiguration> {
@@ -24,7 +27,10 @@ public class JSoundApplication extends Application<JSoundConfiguration> {
 
 	@Override
 	public void initialize(final Bootstrap<JSoundConfiguration> bootstrap) {
-		bootstrap.getObjectMapper().configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
+		SimpleModule durationModule = new SimpleModule();
+		durationModule.addDeserializer(Duration.class, new DurationDeserializer());
+		durationModule.addSerializer(Duration.class, new DurationSerializer());
+		bootstrap.getObjectMapper().registerModule(durationModule);
 		bootstrap.addBundle(new AssetsBundle("/assets", "/", "index.html"));
 	}
 

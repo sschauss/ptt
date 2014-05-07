@@ -45,6 +45,19 @@ angular.module('ass01ClientApp')
       $scope.favoritingsGraphData.push {value: track.favoritings_count}
       generateColor $scope.tracks
 
+    $scope.removeChartData = (track) ->
+      index = $scope.tracks.indexOf(track)
+      if index > -1
+        $scope.tracks.splice index, 1
+        $scope.commentGraphData.splice index, 1
+        $scope.downloadGraphData.splice index, 1
+        $scope.playbackGraphData.splice index, 1
+        $scope.favoritingsGraphData.splice index, 1
+
+
+    $scope.trackSelected = (track) ->
+      $scope.tracks.indexOf(track) > -1
+
     $scope.$watch 'query', (query) ->
       if query == ''
         $scope.searchResult = []
@@ -62,7 +75,7 @@ angular.module('ass01ClientApp')
       step = 360 / dataSet.length
       for i, data of dataSet
         h = (i * step).toFixed 0
-        color =  "hsl(#{h},75%,35%)"
+        color =  "hsl(#{h},70%,35%)"
         data.color = color
         $scope.tracks[i].color =  color
         $scope.commentGraphData[i].color = color

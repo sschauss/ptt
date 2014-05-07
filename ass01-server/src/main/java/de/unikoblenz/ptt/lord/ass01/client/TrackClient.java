@@ -20,8 +20,6 @@ public class TrackClient extends SoundCloudClient {
 	}
 
 	public Track getTrack(final String id) {
-		// System.out.println(baseResource.path(id +
-		// ".json").getURI().toString());
 		return baseResource.path(id + ".json").get(Track.class);
 	}
 
