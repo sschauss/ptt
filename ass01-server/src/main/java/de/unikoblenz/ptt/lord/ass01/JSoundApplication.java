@@ -10,7 +10,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.sun.jersey.api.client.Client;
 
 import de.unikoblenz.ptt.lord.ass01.client.TrackClient;
-import de.unikoblenz.ptt.lord.ass01.core.DoughnutGraphService;
+import de.unikoblenz.ptt.lord.ass01.core.TrackGraphService;
 import de.unikoblenz.ptt.lord.ass01.resources.TrackResource;
 
 public class JSoundApplication extends Application<JSoundConfiguration> {
@@ -35,8 +35,8 @@ public class JSoundApplication extends Application<JSoundConfiguration> {
 		jerseyClientBuilder.using(config.getJerseyClientConfiguration());
 		final Client client = jerseyClientBuilder.build(SC_CLIENT_NAME);
 		final TrackClient trackClient = new TrackClient(client, config.getClientId());
-		final DoughnutGraphService doughnutGraphService = new DoughnutGraphService(trackClient);
-		final TrackResource trackResource = new TrackResource(doughnutGraphService);
+		final TrackGraphService trackGraphService = new TrackGraphService(trackClient);
+		final TrackResource trackResource = new TrackResource(trackGraphService);
 		registerResource(environment, trackResource);
 		environment.jersey().setUrlPattern("/api/*");
 	}

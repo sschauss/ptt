@@ -1,5 +1,7 @@
 <div ng-include src="'views/navigation.html'"></div>
-<chart data="data"></chart>
+<chart data="commentsData" type="'doughnut'"></chart>
+<input type="text" ng-model="trackId">
+<button ng-click="getChartData()">Add</button>
 <table class="table" ng-if="tracks.length > 0">
     <thead>
     <tr>

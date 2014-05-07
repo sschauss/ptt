@@ -6,8 +6,20 @@ angular.module('ass01ClientApp')
     restrict: 'E'
     scope:
       data: '='
-    link: (scope, element, attrs) ->
-      context = $('.chart', element).get(0).getContext('2d')
-      chart = new Chart(context).Doughnut(scope.data)
+      type: '='
+    link: (scope, element) ->
 
+      context = $('.chart', element).get(0).getContext('2d')
+
+      render = () ->
+        chart = new Chart(context)
+        switch scope.type
+          when 'doughnut' then chart.Doughnut(scope.data)
+          else chart.PolarArea scope.data
+
+      scope.$watch 'data', (data) ->
+        if data
+          render()
+          console.log data
+      , true
   )
