@@ -22,8 +22,6 @@ angular.module('ass01ClientApp')
 
       scope.$watch 'data', (data) ->
         if data != []
-          console.log data
           render()
-          console.log data
       , true
   )

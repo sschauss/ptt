@@ -43,10 +43,7 @@ angular.module('ass01ClientApp')
       $scope.downloadGraphData.push {value: track.download_count}
       $scope.playbackGraphData.push {value: track.playback_count}
       $scope.favoritingsGraphData.push {value: track.favoritings_count}
-      generateColor $scope.commentGraphData
-      generateColor $scope.downloadGraphData
-      generateColor $scope.playbackGraphData
-      generateColor $scope.favoritingsGraphData
+      generateColor $scope.tracks
 
     $scope.$watch 'query', (query) ->
       if query == ''
@@ -61,14 +58,14 @@ angular.module('ass01ClientApp')
 
 
     generateColor = (dataSet) ->
-      r = g = b = 0
+      h = 0
+      step = 360 / dataSet.length
       for i, data of dataSet
-        step = 43331 / (dataSet.length )
-        switch i % 3
-          when 0 then r = ((r + step) % 256).toFixed 0
-          when 1 then g = ((g + step) % 256).toFixed 0
-          when 2 then b = ((b + step) % 256).toFixed 0
-          else
-        color =  "rgb(#{r},#{g},#{b})"
+        h = (i * step).toFixed 0
+        color =  "hsl(#{h},75%,35%)"
         data.color = color
         $scope.tracks[i].color =  color
+        $scope.commentGraphData[i].color = color
+        $scope.downloadGraphData[i].color = color
+        $scope.playbackGraphData[i].color = color
+        $scope.favoritingsGraphData[i].color = color
