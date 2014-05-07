@@ -1,4 +1,4 @@
-package de.unikoblenz.ptt.lord.ass01.core;
+package de.unikoblenz.ptt.lord.ass01.api;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
