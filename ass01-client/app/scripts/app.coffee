@@ -14,6 +14,9 @@ angular
       .when '/tracks',
         templateUrl: 'views/tracks.html'
         controller: 'TracksCtrl'
+      .when '/users',
+        templateUrl: 'views/users.html'
+        controller: 'UsersCtrl'
       .otherwise
         redirectTo: '/'
 

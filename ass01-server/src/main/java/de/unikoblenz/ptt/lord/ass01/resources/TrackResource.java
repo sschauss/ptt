@@ -31,7 +31,7 @@ public class TrackResource {
 	@GET
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Track createTrackGraphData(@PathParam("id") final String id) {
+	public Track getTrack(@PathParam("id") final String id) {
 		return trackClient.getTrack(id);
 	}
 
