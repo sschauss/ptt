@@ -19,4 +19,3 @@ angular
         controller: 'UsersCtrl'
       .otherwise
         redirectTo: '/'
-

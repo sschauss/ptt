@@ -9,6 +9,4 @@ angular.module('ass01ClientApp')
       id: '=ngId'
       title: '='
     }
-    link: (scope, element, attrs) ->
-
   )

@@ -45,7 +45,6 @@ angular.module('ass01ClientApp')
         User.query {q: query}, (response) ->
           $scope.searchResult = response
 
-
     generateColor = (dataSet) ->
       h = 0
       step = 360 / (dataSet.length + 1)

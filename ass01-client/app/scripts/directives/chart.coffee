@@ -8,7 +8,6 @@ angular.module('ass01ClientApp')
       data: '='
       type: '='
     link: (scope, element) ->
-
       context = $('.chart', element).get(0).getContext('2d')
 
       chart = new Chart(context)

@@ -2,6 +2,7 @@
 
 angular.module('ass01ClientApp')
   .controller 'TracksCtrl', ($scope, $resource, categoryFactory) ->
+
     $scope.categories = [
       categoryFactory.create 'Comments', 'comment_count'
       categoryFactory.create 'Downloads', 'download_count'
@@ -28,7 +29,6 @@ angular.module('ass01ClientApp')
         for category in $scope.categories
           category.data.splice index, 1
         generateColor $scope.tracks
-
 
     $scope.trackSelected = (track) ->
       $scope.tracks.indexOf(track) > -1
