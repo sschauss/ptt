@@ -1,37 +1,17 @@
 'use strict'
 
 angular.module('ass01ClientApp')
-  .controller 'TracksCtrl', ($scope, $resource) ->
+  .controller 'TracksCtrl', ($scope, $resource, categoryFactory) ->
     $scope.categories = [
-      {
-        label: 'Comments'
-        key: 'comment_count'
-      }
-      {
-        label: 'Downloads'
-        key: 'download_count'
-      }
-      {
-        label: 'Playbacks'
-        key: 'playback_count'
-      }
-      {
-        label: 'Favorites'
-        key: 'favoritings_count'
-      }
+      categoryFactory.create 'Comments', 'comment_count'
+      categoryFactory.create 'Downloads', 'download_count'
+      categoryFactory.create 'Playbacks', 'playback_count'
+      categoryFactory.create 'Favorites', 'favoritings_count'
     ]
 
     $scope.query = ''
 
     $scope.chartType = 'polarArea'
-
-    $scope.commentGraphData = []
-
-    $scope.downloadGraphData = []
-
-    $scope.playbackGraphData = []
-
-    $scope.favoritingsGraphData = []
 
     $scope.tracks = []
 
@@ -39,20 +19,16 @@ angular.module('ass01ClientApp')
 
     $scope.addChartData = (track) ->
       $scope.tracks.push track
-      $scope.commentGraphData.push {value: track.comment_count}
-      $scope.downloadGraphData.push {value: track.download_count}
-      $scope.playbackGraphData.push {value: track.playback_count}
-      $scope.favoritingsGraphData.push {value: track.favoritings_count}
+      for category in $scope.categories
+        category.data.push {value: track[category.key]}
       generateColor $scope.tracks
 
     $scope.removeChartData = (track) ->
-      index = $scope.tracks.indexOf(track)
+      index = $scope.tracks.indexOf track
       if index > -1
         $scope.tracks.splice index, 1
-        $scope.commentGraphData.splice index, 1
-        $scope.downloadGraphData.splice index, 1
-        $scope.playbackGraphData.splice index, 1
-        $scope.favoritingsGraphData.splice index, 1
+        for category in $scope.categories
+          category.data.splice index, 1
         generateColor $scope.tracks
 
 
@@ -81,8 +57,5 @@ angular.module('ass01ClientApp')
         h = (i * step).toFixed 0
         color =  "hsl(#{h},70%,35%)"
         data.color = color
-        $scope.tracks[i].color =  color
-        $scope.commentGraphData[i].color = color
-        $scope.downloadGraphData[i].color = color
-        $scope.playbackGraphData[i].color = color
-        $scope.favoritingsGraphData[i].color = color
+        for category in $scope.categories
+          category.data[i].color = color

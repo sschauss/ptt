@@ -1,75 +1,69 @@
 <div ng-include src="'views/navigation.html'"></div>
 <div class="text-center well" ng-if="tracks.length > 0">
     <div class="row">
-        <div class="col-md-3">
-            <h4>{{categories[0].label}}</h4>
-            <chart data="commentGraphData" type="chartType"></chart>
-        </div>
-        <div class="col-md-3">
-            <h4>{{categories[1].label}}</h4>
-            <chart data="downloadGraphData" type="chartType"></chart>
-        </div>
-        <div class="col-md-3">
-            <h4>{{categories[2].label}}</h4>
-            <chart data="playbackGraphData" type="chartType"></chart>
-        </div>
-        <div class="col-md-3">
-            <h4>{{categories[3].label}}</h4>
-            <chart data="favoritingsGraphData" type="chartType"></chart>
+        <div class="col-md-3" ng-repeat="category in categories">
+            <h4>{{category.label}}</h4>
+            <chart data="category.data" type="chartType"></chart>
         </div>
     </div>
 </div>
-<table class="table" ng-if="tracks.length > 0">
-    <thead>
-    <tr>
-        <th></th>
-        <th ng-repeat="track in tracks" ng-style="{color: track.color}">{{track.title}}</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr ng-repeat="category in categories">
-        <td>{{category.label}}</td>
-        <td ng-repeat="track in tracks">{{track[category.key]}}</td>
-    </tr>
-    </tbody>
-</table>
-<div class="row">
-    <div class="col-md-6">
-        <div class="btn-group btn-group-justified">
-            <div class="btn-group">
-                <button class="btn btn-default" ng-click="setChartType('polarArea')" ng-disabled="chartType == 'polarArea'">
-                    <i class="glyphicon "></i>
-                    Polar Area
-                </button>
-            </div>
-            <div class="btn-group">
-                <button class="btn btn-default" ng-click="setChartType('pie')" ng-disabled="chartType == 'pie'">
-                    <i class="glyphicon "></i>
-                    Pie Chart
-                </button>
-            </div>
-            <div class="btn-group">
-                <button class="btn btn-default" ng-click="setChartType('doughnut')" ng-disabled="chartType == 'doughnut'">
-                    <i class="glyphicon "></i>
-                    Doughnut Chart
-                </button>
+<div class="table-responsive">
+    <table class="table" ng-if="tracks.length > 0">
+        <thead>
+        <tr>
+            <th></th>
+            <th ng-repeat="track in tracks" ng-style="{color: track.color}">{{track.title}}</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="category in categories">
+            <td>{{category.label}}</td>
+            <td ng-repeat="track in tracks">{{track[category.key]}}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div class="well">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="btn-group btn-group-justified">
+                <div class="btn-group">
+                    <button class="btn btn-default" ng-click="setChartType('polarArea')"
+                            ng-disabled="chartType == 'polarArea'">
+                        <i class="glyphicon "></i>
+                        Polar Area
+                    </button>
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-default" ng-click="setChartType('pie')" ng-disabled="chartType == 'pie'">
+                        <i class="glyphicon "></i>
+                        Pie Chart
+                    </button>
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-default" ng-click="setChartType('doughnut')"
+                            ng-disabled="chartType == 'doughnut'">
+                        <i class="glyphicon "></i>
+                        Doughnut Chart
+                    </button>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="col-md-4 col-md-offset-2">
-        <div class="btn-group btn-group-justified">
-            <div class="btn-group">
-                <button class="btn btn-default" data-toggle="modal" data-target="#track-add-modal">
-                    <i class="glyphicon glyphicon-plus"></i>
-                    Add Track
-                </button>
-            </div>
-            <div class="btn-group">
-                <button class="btn btn-default" data-toggle="modal" data-target="#track-remove-modal"
-                        ng-disabled="tracks.length < 1">
-                    <i class="glyphicon glyphicon-minus"></i>
-                    Remove Track
-                </button>
+        <div class="col-md-4 col-md-offset-2">
+            <div class="btn-group btn-group-justified">
+                <div class="btn-group">
+                    <button class="btn btn-default" data-toggle="modal" data-target="#track-add-modal">
+                        <i class="glyphicon glyphicon-plus"></i>
+                        Add Track
+                    </button>
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-default" data-toggle="modal" data-target="#track-remove-modal"
+                            ng-disabled="tracks.length < 1">
+                        <i class="glyphicon glyphicon-minus"></i>
+                        Remove Track
+                    </button>
+                </div>
             </div>
         </div>
     </div>
