@@ -5,7 +5,6 @@ angular
     'ngResource'
     'ngSanitize'
     'ngRoute'
-    'ngAnimate'
   ])
   .config ($routeProvider) ->
     $routeProvider
