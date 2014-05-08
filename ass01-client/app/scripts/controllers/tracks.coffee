@@ -21,8 +21,6 @@ angular.module('ass01ClientApp')
       }
     ]
 
-    $scope.id = ''
-
     $scope.query = ''
 
     $scope.chartType = 'polarArea'
@@ -55,6 +53,7 @@ angular.module('ass01ClientApp')
         $scope.downloadGraphData.splice index, 1
         $scope.playbackGraphData.splice index, 1
         $scope.favoritingsGraphData.splice index, 1
+        generateColor $scope.tracks
 
 
     $scope.trackSelected = (track) ->
