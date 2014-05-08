@@ -9,8 +9,6 @@ angular.module('ass01ClientApp')
       categoryFactory.create 'Favorites', 'favoritings_count'
     ]
 
-    $scope.query = ''
-
     $scope.chartType = 'polarArea'
 
     $scope.tracks = []
@@ -38,15 +36,9 @@ angular.module('ass01ClientApp')
     $scope.setChartType = (type) ->
       $scope.chartType = type
 
-    $scope.$watch 'query', (query) ->
-      if query == ''
-        $scope.searchResult = []
-      else
-        search query
-
-    search = ->
-      if $scope.query
-        Track.query {q: $scope.query}, (response) ->
+    $scope.search = (query) ->
+      if query
+        Track.query {q: query}, (response) ->
           $scope.searchResult = response
 
 

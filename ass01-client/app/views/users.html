@@ -31,8 +31,7 @@
         <div class="col-md-6">
             <div class="btn-group btn-group-justified">
                 <div class="btn-group">
-                    <button class="btn btn-default" ng-click="setChartType('polarArea')"
-                            ng-disabled="chartType == 'polarArea'">
+                    <button class="btn btn-default" ng-click="setChartType('polarArea')" ng-disabled="chartType == 'polarArea'">
                         <i class="glyphicon "></i>
                         Polar Area
                     </button>
@@ -44,8 +43,7 @@
                     </button>
                 </div>
                 <div class="btn-group">
-                    <button class="btn btn-default" ng-click="setChartType('doughnut')"
-                            ng-disabled="chartType == 'doughnut'">
+                    <button class="btn btn-default" ng-click="setChartType('doughnut')" ng-disabled="chartType == 'doughnut'">
                         <i class="glyphicon "></i>
                         Doughnut Chart
                     </button>
@@ -61,8 +59,7 @@
                     </button>
                 </div>
                 <div class="btn-group">
-                    <button class="btn btn-default" data-toggle="modal" data-target="#user-remove-modal"
-                            ng-disabled="users.length < 1">
+                    <button class="btn btn-default" data-toggle="modal" data-target="#user-remove-modal" ng-disabled="users.length < 1">
                         <i class="glyphicon glyphicon-minus"></i>
                         Remove User
                     </button>
@@ -75,7 +72,7 @@
     <form role="form">
         <div class="form-group">
             <label for="query">Search for</label>
-            <input type="text" class="form-control" id="query" ng-model="$parent.query">
+            <input type="text" class="form-control" id="query" ng-keydown="search(query)" ng-model="query">
         </div>
     </form>
     <div class="row" ng-repeat="user in searchResult">
@@ -83,12 +80,10 @@
             {{user.username}}
         </div>
         <div class="col-md-1">
-            <a ng-if="!userSelected(user)"
-               ng-click="addChartData(user)">
+            <a href ng-if="!userSelected(user)" ng-click="addChartData(user)">
                 <i class="glyphicon glyphicon-unchecked"></i>
             </a>
-            <a ng-if="userSelected(user)"
-               ng-click="removeChartData(user)">
+            <a href ng-if="userSelected(user)" ng-click="removeChartData(user)">
                 <i class="glyphicon glyphicon-check"></i>
             </a>
         </div>
@@ -100,9 +95,9 @@
             {{user.username}}
         </div>
         <div class="col-md-1">
-            <button ng-click="removeChartData(user)">
+            <a href ng-click="removeChartData(user)">
                 <i class="glyphicon glyphicon-remove"></i>
-            </button>
+            </a>
         </div>
     </div>
 </modal>

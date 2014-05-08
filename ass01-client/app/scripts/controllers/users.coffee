@@ -40,15 +40,9 @@ angular.module('ass01ClientApp')
     $scope.setChartType = (type) ->
       $scope.chartType = type
 
-    $scope.$watch 'query', (query) ->
-      if query == ''
-        $scope.searchResult = []
-      else
-        search query
-
-    search = ->
-      if $scope.query
-        User.query {q: $scope.query}, (response) ->
+    $scope.search = (query) ->
+      if query
+        User.query {q: query}, (response) ->
           $scope.searchResult = response
 
 

@@ -72,7 +72,7 @@
     <form role="form">
         <div class="form-group">
             <label for="query">Search for</label>
-            <input type="text" class="form-control" id="query" ng-model="$parent.query">
+            <input type="text" class="form-control" id="query" ng-keydown="search(query)" ng-model="query">
         </div>
     </form>
     <div class="row" ng-repeat="track in searchResult">
@@ -80,11 +80,11 @@
             {{track.title}}
         </div>
         <div class="col-md-1">
-            <a ng-if="!trackSelected(track)"
+            <a href ng-if="!trackSelected(track)"
                ng-click="addChartData(track)">
                 <i class="glyphicon glyphicon-unchecked"></i>
             </a>
-            <a ng-if="trackSelected(track)"
+            <a href ng-if="trackSelected(track)"
                ng-click="removeChartData(track)">
                 <i class="glyphicon glyphicon-check"></i>
             </a>
@@ -92,14 +92,14 @@
     </div>
 </modal>
 <modal ng-id="'track-remove-modal'" title="'Remove Tracks'">
-    <div class="row" ng-repeat="track in tracks" ng-click="removeChartData(track)">
+    <div class="row" ng-repeat="track in tracks" ng-click="removeChartData(track)" >
         <div class="col-md-9 col-md-offset-1 hide-overflow">
             {{track.title}}
         </div>
         <div class="col-md-1">
-            <button ng-click="removeChartData(track)">
+            <a href ng-click="removeChartData(track)">
                 <i class="glyphicon glyphicon-remove"></i>
-            </button>
+            </a>
         </div>
     </div>
 </modal>

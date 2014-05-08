@@ -2,9 +2,10 @@
 
 angular
   .module('ass01ClientApp', [
-    'ngResource',
-    'ngSanitize',
+    'ngResource'
+    'ngSanitize'
     'ngRoute'
+    'ngAnimate'
   ])
   .config ($routeProvider) ->
     $routeProvider
