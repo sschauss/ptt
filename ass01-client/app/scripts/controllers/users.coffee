@@ -35,15 +35,20 @@ angular.module('ass01ClientApp')
 
 
     $scope.userSelected = (user) ->
-      $scope.users.indexOf(user) > -1
+      for u in $scope.users
+        if u.id == user.id
+          return true
+      return false
 
     $scope.setChartType = (type) ->
       $scope.chartType = type
 
     $scope.search = (query) ->
-      if query
+      if query != ''
         User.query {q: query}, (response) ->
           $scope.searchResult = response
+      else
+        $scope.searchResult = []
 
     generateColor = (dataSet) ->
       h = 0

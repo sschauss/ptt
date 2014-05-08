@@ -72,7 +72,7 @@
     <form role="form">
         <div class="form-group">
             <label for="query">Search for</label>
-            <input type="text" class="form-control" id="query" ng-keydown="search(query)" ng-model="query">
+            <input type="text" class="form-control" id="query" ng-model="query" ng-change="search(query)">
         </div>
     </form>
     <div class="row" ng-repeat="track in searchResult">

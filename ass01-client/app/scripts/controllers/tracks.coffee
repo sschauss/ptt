@@ -31,15 +31,20 @@ angular.module('ass01ClientApp')
         generateColor $scope.tracks
 
     $scope.trackSelected = (track) ->
-      $scope.tracks.indexOf(track) > -1
+      for t in $scope.tracks
+        if t.id == track.id
+          return true
+      return false
 
     $scope.setChartType = (type) ->
       $scope.chartType = type
 
     $scope.search = (query) ->
-      if query
+      if query != ''
         Track.query {q: query}, (response) ->
           $scope.searchResult = response
+      else
+        $scope.searchResult = []
 
 
     generateColor = (dataSet) ->
