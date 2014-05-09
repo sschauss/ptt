@@ -17,8 +17,9 @@ $icon-font-path: "/bower_components/bootstrap-sass-official/vendor/assets/fonts/
 }
 
 .navbar-brand {
-  background: url(../images/JSound_Logo.png) no-repeat left center;
-  width: 70px;
+  background: url(../images/JSound_Logo.png) no-repeat 50% 50%;
+  background-size: 60px;
+  width: 90px;
 }
 
 body{
