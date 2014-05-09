@@ -22,6 +22,7 @@ angular.module('ass01ClientApp')
       $scope.tracks.push track
       for category in $scope.categories
         category.data.push {value: track[category.key]}
+      localStorage.setItem 'tracks', JSON.stringify $scope.tracks
       generateColor $scope.tracks
 
     $scope.removeChartData = (track) ->
@@ -30,6 +31,7 @@ angular.module('ass01ClientApp')
         $scope.tracks.splice index, 1
         for category in $scope.categories
           category.data.splice index, 1
+        localStorage.setItem 'tracks', JSON.stringify $scope.tracks
         generateColor $scope.tracks
 
     $scope.trackSelected = (track) ->
@@ -60,3 +62,10 @@ angular.module('ass01ClientApp')
         data.color = color
         for category in $scope.categories
           category.data[i].color = color
+
+    if (tracks = localStorage.getItem 'tracks') != null
+      $scope.tracks = JSON.parse tracks
+      for track in $scope.tracks
+        for category in $scope.categories
+          category.data.push {value: track[category.key]}
+      generateColor $scope.tracks

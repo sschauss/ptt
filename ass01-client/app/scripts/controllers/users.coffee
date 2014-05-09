@@ -25,14 +25,16 @@ angular.module('ass01ClientApp')
       $scope.users.push user
       for category in $scope.categories
         category.data.push {value: user[category.key]}
+      localStorage.setItem 'users', JSON.stringify $scope.users
       generateColor $scope.users
 
     $scope.removeChartData = (user) ->
-      index = $scope.users.indexOf(user)
+      index = $scope.users.indexOf user
       if index > -1
         $scope.users.splice index, 1
         for category in $scope.categories
           category.data.splice index, 1
+        localStorage.setItem 'users', JSON.stringify $scope.users
         generateColor $scope.users
 
 
@@ -63,3 +65,10 @@ angular.module('ass01ClientApp')
         data.color = color
         for category in $scope.categories
           category.data[i].color = color
+
+    if (users = localStorage.getItem 'users') != null
+      $scope.users = JSON.parse users
+      for user in $scope.users
+        for category in $scope.categories
+          category.data.push {value: user[category.key]}
+      generateColor $scope.users
