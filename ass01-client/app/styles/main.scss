@@ -6,6 +6,11 @@ $icon-font-path: "/bower_components/bootstrap-sass-official/vendor/assets/fonts/
 @import "../bower_components/bootstrap-sass-official/vendor/assets/stylesheets/bootstrap.scss";
 // endbower
 
+body {
+  background-image: url("../images/bg.png");
+  padding-top: 70px;
+}
+
 .btn {
   outline: none;
 }
@@ -20,8 +25,4 @@ $icon-font-path: "/bower_components/bootstrap-sass-official/vendor/assets/fonts/
   background: url(../images/JSound_Logo.png) no-repeat 50% 50%;
   background-size: 60px;
   width: 90px;
-}
-
-body{
-  background-image: url("../images/bg.png");
 }
