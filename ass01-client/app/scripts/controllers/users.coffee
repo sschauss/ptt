@@ -19,6 +19,8 @@ angular.module('ass01ClientApp')
 
     User = $resource '/api/users/:id', {id: '@id'}
 
+    currentRequestId = 0
+
     $scope.addChartData = (user) ->
       $scope.users.push user
       for category in $scope.categories
@@ -44,9 +46,11 @@ angular.module('ass01ClientApp')
       $scope.chartType = type
 
     $scope.search = (query) ->
+      requestId = ++currentRequestId
       if query != ''
         User.query {q: query}, (response) ->
-          $scope.searchResult = response
+          if requestId == currentRequestId
+            $scope.searchResult = response
       else
         $scope.searchResult = []
 

@@ -16,6 +16,8 @@ angular.module('ass01ClientApp')
 
     Track = $resource '/api/tracks/:id', {id: '@id'}
 
+    currentRequestId = 0
+
     $scope.addChartData = (track) ->
       $scope.tracks.push track
       for category in $scope.categories
@@ -40,9 +42,11 @@ angular.module('ass01ClientApp')
       $scope.chartType = type
 
     $scope.search = (query) ->
+      requestId = ++currentRequestId
       if query != ''
         Track.query {q: query}, (response) ->
-          $scope.searchResult = response
+          if requestId == currentRequestId
+            $scope.searchResult = response
       else
         $scope.searchResult = []
 
