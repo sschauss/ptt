@@ -1,16 +1,11 @@
 'use strict'
 
-angular.module('ass01ClientApp')
-  .factory 'categoryFactory', ->
-    # Service logic
-    # ...
+angular.module('ass01ClientApp').factory 'categoryFactory', ->
+  class Category
+    constructor: (@label, @key) ->
+      @data = []
 
-    class Category
-      constructor: (@label, @key) ->
-        @data = []
-
-    # Public API here
-    {
-      create: (label, key)->
-        new Category label, key
-    }
+  {
+  create: (label, key)->
+    new Category label, key
+  }
