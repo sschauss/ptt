@@ -1,7 +1,7 @@
 'use strict'
 
 angular.module('ass01ClientApp')
-  .controller 'TracksCtrl', ($scope, $resource, categoryFactory) ->
+  .controller 'TracksCtrl', ($scope, $resource, categoryFactory, $location) ->
 
     $scope.categories = [
       categoryFactory.create 'Comments', 'comment_count'
@@ -42,6 +42,7 @@ angular.module('ass01ClientApp')
 
     $scope.setChartType = (type) ->
       $scope.chartType = type
+      localStorage.setItem $location.path(), type
 
     $scope.search = (query) ->
       requestId = ++currentRequestId
@@ -62,6 +63,9 @@ angular.module('ass01ClientApp')
         data.color = color
         for category in $scope.categories
           category.data[i].color = color
+
+    if (oldChartType = localStorage.getItem $location.path()) != null
+      $scope.setChartType(oldChartType)
 
     if (tracks = localStorage.getItem 'tracks') != null
       $scope.tracks = JSON.parse tracks

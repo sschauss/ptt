@@ -1,7 +1,7 @@
 'use strict'
 
 angular.module('ass01ClientApp')
-  .controller 'UsersCtrl', ($scope, $resource, categoryFactory) ->
+  .controller 'UsersCtrl', ($scope, $resource, categoryFactory, $location) ->
 
     $scope.categories = [
       categoryFactory.create 'Tracks', 'track_count'
@@ -46,6 +46,7 @@ angular.module('ass01ClientApp')
 
     $scope.setChartType = (type) ->
       $scope.chartType = type
+      localStorage.setItem $location.path(), type
 
     $scope.search = (query) ->
       requestId = ++currentRequestId
@@ -72,3 +73,7 @@ angular.module('ass01ClientApp')
         for category in $scope.categories
           category.data.push {value: user[category.key]}
       generateColor $scope.users
+
+
+    if (oldChartType = localStorage.getItem $location.path()) != null
+      $scope.setChartType(oldChartType)
