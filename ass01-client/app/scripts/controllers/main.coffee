@@ -1,4 +1,3 @@
 'use strict'
 
-angular.module('ass01ClientApp')
-  .controller 'MainCtrl', ($scope) ->
+angular.module('ass01ClientApp').controller 'MainCtrl', ($scope) ->
