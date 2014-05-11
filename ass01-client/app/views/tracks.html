@@ -1,7 +1,8 @@
 <div ng-include src="'views/navigation.html'"></div>
 <div class="text-center well" ng-if="tracks.length > 0">
     <div class="row">
-        <div class="col-md-3" ng-repeat="category in categories">
+        <div class="col-md-1"></div>
+        <div class="col-md-2" ng-repeat="category in categories">
             <h4>{{category.label}}</h4>
             <chart data="category.data" type="chartType"></chart>
         </div>
