@@ -6,6 +6,7 @@ angular.module('ass01ClientApp').controller 'TracksCtrl', ($scope, $resource, ca
     categoryFactory.create 'Downloads', 'download_count'
     categoryFactory.create 'Playbacks', 'playback_count'
     categoryFactory.create 'Favorites', 'favoritings_count'
+    categoryFactory.create 'Interestingness', 'interestingness'
   ]
 
   $scope.chartType = 'polarArea'
