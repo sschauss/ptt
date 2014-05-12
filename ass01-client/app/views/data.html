@@ -1,0 +1,102 @@
+<div class="text-center well" ng-if="entities.length > 0">
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-2" ng-repeat="category in categories">
+            <h4>{{category.label}}</h4>
+            <chart data="category.data" type="chartType"></chart>
+        </div>
+    </div>
+</div>
+<div class="table-responsive">
+    <table class="table" ng-if="entities.length > 0">
+        <thead>
+        <tr>
+            <th></th>
+            <th ng-repeat="entity in entities" ng-style="{color: entity.color}">{{entity.label}}</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="category in categories">
+            <td>{{category.label}}</td>
+            <td ng-repeat="entity in entities">{{entity[category.key]}}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div class="well">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="btn-group btn-group-justified">
+                <div class="btn-group">
+                    <button class="btn btn-default" ng-click="setChartType('polarArea')"
+                            ng-disabled="chartType == 'polarArea'">
+                        Polar Area
+                    </button>
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-default" ng-click="setChartType('pie')" ng-disabled="chartType == 'pie'">
+                        Pie Chart
+                    </button>
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-default" ng-click="setChartType('doughnut')"
+                            ng-disabled="chartType == 'doughnut'">
+                        Doughnut Chart
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 col-md-offset-2">
+            <div class="btn-group btn-group-justified">
+                <div class="btn-group">
+                    <button class="btn btn-default" data-toggle="modal" data-target="#entity-add-modal">
+                        <i class="glyphicon glyphicon-plus"></i>
+                        Add
+                    </button>
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-default" data-toggle="modal" data-target="#entity-remove-modal"
+                            ng-disabled="entities.length < 1">
+                        <i class="glyphicon glyphicon-minus"></i>
+                        Remove
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<modal ng-id="'entity-add-modal'" title="'Add'">
+    <form role="form">
+        <div class="form-group">
+            <label for="query">Search for</label>
+            <input type="text" class="form-control" id="query" ng-model="query" ng-change="search(query)">
+        </div>
+    </form>
+    <div class="row" ng-repeat="entity in searchResult">
+        <div class="col-md-11 hide-overflow">
+            {{entity.label}}
+        </div>
+        <div class="col-md-1">
+            <a href ng-if="!entitySelected(entity)"
+               ng-click="addChartData(entity)">
+                <i class="glyphicon glyphicon-unchecked"></i>
+            </a>
+            <a href ng-if="entitySelected(entity)"
+               ng-click="removeChartData(entity)">
+                <i class="glyphicon glyphicon-check"></i>
+            </a>
+        </div>
+    </div>
+</modal>
+<modal ng-id="'entity-remove-modal'" title="'Remove'">
+    <div class="row" ng-repeat="entity in entities" ng-click="removeChartData(entity)" >
+        <div class="col-md-9 col-md-offset-1 hide-overflow">
+            {{entity.label}}
+        </div>
+        <div class="col-md-1">
+            <a href ng-click="removeChartData(entity)">
+                <i class="glyphicon glyphicon-remove"></i>
+            </a>
+        </div>
+    </div>
+</modal>

@@ -2,7 +2,7 @@
 
 angular.module('ass01ClientApp').factory 'categoryFactory', ->
   class Category
-    constructor: (@label, @key) ->
+    constructor: (@key, @label) ->
       @data = []
 
   {
