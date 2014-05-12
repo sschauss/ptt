@@ -9,7 +9,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import de.unikoblenz.ptt.lord.ass01.api.Track;
+import de.unikoblenz.ptt.lord.ass01.api.TrackView;
 import de.unikoblenz.ptt.lord.ass01.client.TrackClient;
 
 @Path("/tracks")
@@ -24,14 +24,14 @@ public class TrackResource {
 	@GET
 	@Path("/")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<Track> getTracks(@QueryParam("q") final String q) {
+	public List<TrackView> getTracks(@QueryParam("q") final String q) {
 		return trackClient.getTracks(q);
 	}
 
 	@GET
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Track getTrack(@PathParam("id") final String id) {
+	public TrackView getTrack(@PathParam("id") final String id) {
 		return trackClient.getTrack(id);
 	}
 

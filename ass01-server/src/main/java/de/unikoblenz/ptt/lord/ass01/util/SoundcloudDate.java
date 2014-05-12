@@ -1,28 +1,31 @@
 package de.unikoblenz.ptt.lord.ass01.util;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class SoundcloudDate extends Date{
+public class SoundcloudDate extends Date {
 
 	private static final long serialVersionUID = 3114913857923196811L;
-	private SimpleDateFormat soundcloudDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss +0000");
-	
-	public SoundcloudDate(String soundcloudDateString) {
-		super();
-		Date helperDate = new Date();
+
+	private DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss +0000");
+
+	public SoundcloudDate(final String soundcloudDateString) {
+		Date date = new Date();
 		try {
-			helperDate = soundcloudDateFormat.parse(soundcloudDateString);
+			date = dateFormat.parse(soundcloudDateString);
 		} catch (ParseException e) {
-			helperDate = new Date();
+
 		}
-		this.setTime(helperDate.getTime());
+		this.setTime(date.getTime());
 	}
-	
-	public int getTimeDifferenceFromTodayInDays(){
-		Date timestamp = new Date();
-		long timeDifference = timestamp.getTime() - this.getTime();  
-		return (int) Math.round((double)timeDifference / (24. * 60.*60.*1000.)); 
+
+	public int getTimeDifferenceFromTodayInDays() {
+		Date date = new Date();
+		long timeDifference = date.getTime() - this.getTime();
+		return (int) Math.round((double) timeDifference / (24 * 60 * 60 * 1000)); // casten
+																					// igitt
 	}
+
 }

@@ -9,8 +9,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import de.unikoblenz.ptt.lord.ass01.api.User;
 import de.unikoblenz.ptt.lord.ass01.client.UserClient;
+import de.unikoblenz.ptt.lord.ass01.core.soundcloud.User;
 
 @Path("/users")
 public class UserResource {

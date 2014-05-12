@@ -1,10 +1,10 @@
 package de.unikoblenz.ptt.lord.ass01.api;
 
-public class Entity {
+public class EntityView {
 
 	protected String label;
 
-	public Entity(final String label) {
+	public EntityView(final String label) {
 		this.label = label;
 	}
 

@@ -6,7 +6,7 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.GenericType;
 import com.sun.jersey.api.client.WebResource;
 
-import de.unikoblenz.ptt.lord.ass01.api.User;
+import de.unikoblenz.ptt.lord.ass01.core.soundcloud.User;
 
 public class UserClient extends SoundCloudClient {
 

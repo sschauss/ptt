@@ -1,10 +1,12 @@
-package de.unikoblenz.ptt.lord.ass01.api;
+package de.unikoblenz.ptt.lord.ass01.core.soundcloud;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import de.unikoblenz.ptt.lord.ass01.api.EntityView;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class User extends Entity {
+public class User extends EntityView {
 
 	private int id;
 
