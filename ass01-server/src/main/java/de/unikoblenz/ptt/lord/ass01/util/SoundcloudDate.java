@@ -24,8 +24,7 @@ public class SoundcloudDate extends Date {
 	public int getTimeDifferenceFromTodayInDays() {
 		Date date = new Date();
 		long timeDifference = date.getTime() - this.getTime();
-		return (int) Math.round((double) timeDifference / (24 * 60 * 60 * 1000)); // casten
-																					// igitt
+		return (int) Math.round(timeDifference / (24 * 60 * 60 * 1000));
 	}
 
 }
