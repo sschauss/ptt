@@ -67,11 +67,8 @@ angular.module('ass01ClientApp').controller 'DataCtrl', ($scope, $resource, cate
   if (options = localStorage.getItem entityId + 'options') != null
     $scope.setChartType (JSON.parse options).chartType
 
-  if (users = localStorage.getItem entityId) != null
-    ids = JSON.parse users
+  if (entities = localStorage.getItem entityId) != null
+    ids = JSON.parse entities
     for id in ids
       Entity.get {id: id}, (response) ->
         $scope.addChartData response
-
-
-
