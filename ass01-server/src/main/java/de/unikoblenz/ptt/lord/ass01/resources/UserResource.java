@@ -9,8 +9,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import de.unikoblenz.ptt.lord.ass01.api.UserView;
 import de.unikoblenz.ptt.lord.ass01.client.UserClient;
-import de.unikoblenz.ptt.lord.ass01.core.soundcloud.User;
 
 @Path("/users")
 public class UserResource {
@@ -25,14 +25,14 @@ public class UserResource {
 	@GET
 	@Path("/")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<User> getUsers(@QueryParam("q") final String q) {
+	public List<UserView> getUsers(@QueryParam("q") final String q) {
 		return userClient.getUsers(q);
 	}
 
 	@GET
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public User getUser(@PathParam("id") final String id) {
+	public UserView getUser(@PathParam("id") final String id) {
 		return userClient.getUser(id);
 	}
 

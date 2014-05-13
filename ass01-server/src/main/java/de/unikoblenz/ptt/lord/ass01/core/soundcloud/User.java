@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class User extends Entity {
 
+	private String username;
+
 	@JsonProperty("track_count")
 	private int trackCount;
 
@@ -22,7 +24,11 @@ public class User extends Entity {
 	private int publicFavoritesCount;
 
 	public User() {
-		super();
+
+	}
+
+	public String getUsername() {
+		return username;
 	}
 
 	public int getTrackCount() {
