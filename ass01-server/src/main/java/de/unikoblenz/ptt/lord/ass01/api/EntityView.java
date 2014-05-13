@@ -2,10 +2,17 @@ package de.unikoblenz.ptt.lord.ass01.api;
 
 public class EntityView {
 
-	protected String label;
+	private int id;
 
-	public EntityView(final String label) {
+	private String label;
+
+	public EntityView(final int id, final String label) {
+		this.id = id;
 		this.label = label;
+	}
+
+	public int getId() {
+		return id;
 	}
 
 	public String getLabel() {

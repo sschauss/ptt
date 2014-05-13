@@ -3,41 +3,26 @@ package de.unikoblenz.ptt.lord.ass01.core.soundcloud;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import de.unikoblenz.ptt.lord.ass01.api.EntityView;
-
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class User extends EntityView {
+public class User extends Entity {
 
-	private int id;
-
+	@JsonProperty("track_count")
 	private int trackCount;
 
+	@JsonProperty("playlist_count")
 	private int playlistCount;
 
+	@JsonProperty("followers_count")
 	private int followersCount;
 
+	@JsonProperty("followings_count")
 	private int followingsCount;
 
+	@JsonProperty("public_favorites_count")
 	private int publicFavoritesCount;
 
-	public User(
-			@JsonProperty("username") final String label,
-			@JsonProperty("track_count") final int trackCount,
-			@JsonProperty("playlist_count") final int playlistCount,
-			@JsonProperty("followers_count") final int followersCount,
-			@JsonProperty("followings_count") final int followingsCount,
-			@JsonProperty("public_favorites_count") final int publicFavoritesCount
-			) {
-		super(label);
-		this.trackCount = trackCount;
-		this.playlistCount = playlistCount;
-		this.followersCount = followersCount;
-		this.followingsCount = followingsCount;
-		this.publicFavoritesCount = publicFavoritesCount;
-	}
-
-	public int getId() {
-		return id;
+	public User() {
+		super();
 	}
 
 	public int getTrackCount() {

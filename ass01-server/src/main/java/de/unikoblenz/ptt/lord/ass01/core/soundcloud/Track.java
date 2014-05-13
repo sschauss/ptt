@@ -6,9 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import de.unikoblenz.ptt.lord.ass01.util.SoundcloudDate;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Track {
-
-	private int id;
+public class Track extends Entity {
 
 	private String title;
 
@@ -31,10 +29,6 @@ public class Track {
 
 	public Track() {
 
-	}
-
-	public int getId() {
-		return id;
 	}
 
 	public String getTitle() {
