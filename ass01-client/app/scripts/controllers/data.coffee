@@ -30,7 +30,6 @@ angular.module('ass01ClientApp').controller 'DataCtrl', ($scope, $resource, cate
       category.data.push {value: entity[category.key]}
     localStorage.setItem entityId, JSON.stringify (for entity in $scope.entities
       entity.id)
-    console.log $scope.entities
     generateColor $scope.entities
 
   $scope.removeChartData = (entity) ->
