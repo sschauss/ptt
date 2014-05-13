@@ -38,9 +38,9 @@ angular.module('ass01ClientApp').controller 'DataCtrl', ($scope, $resource, cate
       $scope.entities.splice index, 1
       for category in $scope.categories
         category.data.splice index, 1
-      localStorage.setItem entityId, JSON.stringify (for track in $scope.tracks
-        track.id)
-      generateColor $scope.tracks
+      localStorage.setItem entityId, JSON.stringify (for entity in $scope.entities
+        entity.id)
+      generateColor $scope.entities
 
   $scope.entitySelected = (entity) ->
     for e in $scope.entities
@@ -62,6 +62,7 @@ angular.module('ass01ClientApp').controller 'DataCtrl', ($scope, $resource, cate
       $scope.searchResult = []
 
   generateColor = (dataSet) ->
+    console.log 'generate'
     h = 0
     step = 360 / (dataSet.length + 1)
     for i, data of dataSet
