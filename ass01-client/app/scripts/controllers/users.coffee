@@ -29,4 +29,8 @@ angular.module('ass01ClientApp').controller 'UsersCtrl', ($controller, $scope, $
           key: 'publicFavoritesCount'
           label: 'Favorites'
         }
+        {
+          key: 'interestingness'
+          label: 'Interestingness'
+        }
       ]

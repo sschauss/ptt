@@ -13,6 +13,17 @@ angular.module('ass01ClientApp').controller 'DataCtrl', ($scope, $resource, cate
 
   currentRequestId = 0
 
+  $scope.chartColClass = (categories) ->
+    col = Math.floor 12 / categories.length
+    'col-md-' + col
+
+  $scope.chartOffsetClass = ->
+    offset = Math.floor (12 % $scope.categories.length) / 2
+    if offset > 0
+      'col-md-' + offset
+    else
+      ''
+
   $scope.addChartData = (entity) ->
     $scope.entities.push entity
     for category in $scope.categories
