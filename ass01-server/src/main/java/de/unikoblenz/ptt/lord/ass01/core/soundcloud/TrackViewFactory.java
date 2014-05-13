@@ -29,7 +29,8 @@ public final class TrackViewFactory {
 		final int playbackCount = track.getPlaybackCount();
 		final int favoritingsCount = track.getFavoritingsCount();
 		final double interestingness = calculateInterestingness(track);
-		return new TrackView(label, id, commentCount, downloadCount, playbackCount, favoritingsCount, interestingness);
+		return new TrackView(label, id, commentCount, downloadCount,
+				playbackCount, favoritingsCount, interestingness);
 	}
 
 	private static double calculateInterestingness(final Track track) {
@@ -42,19 +43,19 @@ public final class TrackViewFactory {
 		SoundcloudDate createAt = track.getCreatedAt();
 		int daysOnline = createAt.getTimeDifferenceFromTodayInDays();
 
-		double baseFactor = Math.log(plays);
-		double favoritingsBonus = (favs / plays) * 100.0;
-		double commentBonus = (comments / plays) * 100.0;
+		double baseFactor = Math.log(plays + 1);
+		double favoritingsBonus = (favs / (plays + 1)) * 100.0;
+		double commentBonus = (comments / (plays + 1)) * 100.0;
 
 		double downloadMalus = 0.0;
 		if (downloadable) {
-			double downloadPercentage = (downloads / plays) * 100.0;
+			double downloadPercentage = (downloads / (plays + 1)) * 100.0;
 			if (downloadPercentage < 7.5) {
 				downloadMalus = downloadPercentage / 15.0;
 			}
 		}
 
-		double timeBonus = Math.log((plays / daysOnline) + 1);
+		double timeBonus = Math.log((plays / (daysOnline + 1)) + 1);
 
 		double interestingness = Math.log(baseFactor + favoritingsBonus + commentBonus - downloadMalus + timeBonus);
 

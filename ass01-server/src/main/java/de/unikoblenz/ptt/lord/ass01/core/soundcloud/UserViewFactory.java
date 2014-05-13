@@ -33,8 +33,26 @@ public final class UserViewFactory {
 	}
 
 	private static double calculateInterestingness(final User user) {
-		// TODO Auto-generated method stub
-		return 0;
+		double tracks = user.getTrackCount();
+		double playlists = user.getPlaylistCount();
+		double followers = user.getFollowersCount();
+		double followings = user.getFollowingsCount();
+		double favorites = user.getPublicFavoritesCount();
+		
+		double baseFactor1 = Math.log(tracks + 1) * 2;
+		double baseFactor2 = Math.log(followers + 1);
+		
+		double followingsBonus = (followings / (followers + 1)) * 100.0;
+		double favoritesBonus = (favorites / (followers + 1)) * 100.0;
+		
+		double playlistsBonus = 0;
+		double playlistsFactor = (playlists / (tracks + 1)) * 100.0;
+		if (playlistsFactor > 0.1) playlistsBonus = 0.3;
+		if (playlistsFactor > 0.2) playlistsBonus = -0.3;
+		
+		double interestingness = Math.log(baseFactor1 + baseFactor2 + followingsBonus + favoritesBonus + playlistsBonus + 1);
+		
+		return Math.round(interestingness * 100.0) / 100.0;
 	}
 
 }
