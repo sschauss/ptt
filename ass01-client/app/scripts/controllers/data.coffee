@@ -1,7 +1,8 @@
 'use strict'
 
 angular.module('ass01ClientApp').controller 'DataCtrl', ($scope, $resource, categoryFactory, options) ->
-  $scope.categories = []
+  $scope.categories = for category in options.categories
+    categoryFactory.create category.key, category.label
 
   $scope.chartType = 'polarArea'
 
@@ -26,7 +27,7 @@ angular.module('ass01ClientApp').controller 'DataCtrl', ($scope, $resource, cate
 
   $scope.addChartData = (entity) ->
     $scope.entities.push entity
-    for category in $scope.categories
+    forEachIn $scope.categories, (category) ->
       category.data.push {value: entity[category.key]}
     localStorage.setItem entityId, JSON.stringify (for entity in $scope.entities
       entity.id)
@@ -36,14 +37,14 @@ angular.module('ass01ClientApp').controller 'DataCtrl', ($scope, $resource, cate
     index = $scope.entities.indexOf entity
     if index > -1
       $scope.entities.splice index, 1
-      for category in $scope.categories
+      forEachIn $scope.categories, (category) ->
         category.data.splice index, 1
       localStorage.setItem entityId, JSON.stringify (for entity in $scope.entities
         entity.id)
       generateColor $scope.entities
 
   $scope.entitySelected = (entity) ->
-    for e in $scope.entities
+    foeEachIn $scope.entities, e ->
       if e.id == entity.id
         return true
     return false
@@ -62,24 +63,29 @@ angular.module('ass01ClientApp').controller 'DataCtrl', ($scope, $resource, cate
       $scope.searchResult = []
 
   generateColor = (dataSet) ->
-    console.log 'generate'
     h = 0
     step = 360 / (dataSet.length + 1)
-    for i, data of dataSet
+    forEachOf dataSet, (i, data) ->
       h = (i * step).toFixed 0
       color = "hsl(#{h},70%,35%)"
       data.color = color
       for category in $scope.categories
         category.data[i].color = color
 
-  for category in options.categories
-    $scope.categories.push categoryFactory.create(category.key, category.label)
+  forEachIn = (array, action) ->
+    for e in array
+      action e
+
+  forEachOf = (array, action) ->
+    for i, e of array
+      action i, e
 
   if (options = localStorage.getItem entityId + 'options') != null
     $scope.setChartType (JSON.parse options).chartType
 
   if (entities = localStorage.getItem entityId) != null
     ids = JSON.parse entities
-    for id in ids
+    forEachIn ids, (id) ->
       Entity.get {id: id}, (response) ->
         $scope.addChartData response
+
