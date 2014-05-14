@@ -44,7 +44,7 @@ angular.module('ass01ClientApp').controller 'DataCtrl', ($scope, $resource, cate
       generateColor $scope.entities
 
   $scope.entitySelected = (entity) ->
-    foeEachIn $scope.entities, e ->
+    for e in  $scope.entities
       if e.id == entity.id
         return true
     return false
