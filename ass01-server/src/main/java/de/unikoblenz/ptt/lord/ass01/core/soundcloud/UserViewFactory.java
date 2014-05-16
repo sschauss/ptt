@@ -12,7 +12,7 @@ public final class UserViewFactory {
 	}
 
 	public static List<UserView> build(final List<User> users) {
-		List<UserView> userViews = new ArrayList<>();
+		final List<UserView> userViews = new ArrayList<>();
 		for (final User user : users) {
 			UserView userView = build(user);
 			userViews.add(userView);
@@ -33,17 +33,17 @@ public final class UserViewFactory {
 	}
 
 	private static double calculateInterestingness(final User user) {
-		double tracks = user.getTrackCount();
-		double playlists = user.getPlaylistCount();
-		double followers = user.getFollowersCount();
-		
-		double baseFactor1 = Math.log(tracks + 1);
-		double baseFactor2 = Math.log(followers + 1) * 2;
-				
-		double playlistsBonus = Math.log(playlists + 1);
-		
-		double interestingness = Math.log(baseFactor1 + baseFactor2 + playlistsBonus + 1);
-		
+		final double tracks = user.getTrackCount();
+		final double playlists = user.getPlaylistCount();
+		final double followers = user.getFollowersCount();
+
+		final double trackBaseFactor = Math.log(tracks + 1);
+		final double followersBaseFactor = Math.log(followers + 1) * 2;
+
+		final double playlistsBonus = Math.log(playlists + 1);
+
+		final double interestingness = Math.log(trackBaseFactor + followersBaseFactor + playlistsBonus + 1);
+
 		return Math.round(interestingness * 100.0) / 100.0;
 	}
 

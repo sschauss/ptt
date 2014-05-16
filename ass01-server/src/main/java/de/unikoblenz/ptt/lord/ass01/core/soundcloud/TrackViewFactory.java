@@ -13,7 +13,7 @@ public final class TrackViewFactory {
 	}
 
 	public static List<TrackView> build(final List<Track> tracks) {
-		List<TrackView> trackViews = new ArrayList<>();
+		final List<TrackView> trackViews = new ArrayList<>();
 		for (final Track track : tracks) {
 			final TrackView trackView = build(track);
 			trackViews.add(trackView);
@@ -29,35 +29,34 @@ public final class TrackViewFactory {
 		final int playbackCount = track.getPlaybackCount();
 		final int favoritingsCount = track.getFavoritingsCount();
 		final double interestingness = calculateInterestingness(track);
-		return new TrackView(label, id, commentCount, downloadCount,
-				playbackCount, favoritingsCount, interestingness);
+		return new TrackView(label, id, commentCount, downloadCount, playbackCount, favoritingsCount, interestingness);
 	}
 
 	private static double calculateInterestingness(final Track track) {
 
-		double favs = track.getFavoritingsCount();
-		double plays = track.getPlaybackCount();
-		double downloads = track.getDownloadCount();
-		double comments = track.getCommentCount();
-		boolean downloadable = track.isDownloadable();
-		SoundcloudDate createAt = track.getCreatedAt();
-		int daysOnline = createAt.getTimeDifferenceFromTodayInDays();
+		final double favs = track.getFavoritingsCount();
+		final double plays = track.getPlaybackCount();
+		final double downloads = track.getDownloadCount();
+		final double comments = track.getCommentCount();
+		final boolean downloadable = track.isDownloadable();
+		final SoundcloudDate createAt = track.getCreatedAt();
+		final int daysOnline = createAt.getTimeDifferenceFromTodayInDays();
 
-		double baseFactor = Math.log(plays + 1);
-		double favoritingsBonus = (favs / (plays + 1)) * 100.0;
-		double commentBonus = (comments / (plays + 1)) * 100.0;
+		final double playsBaseFactor = Math.log(plays + 1);
+		final double favoritingsBonus = (favs / (plays + 1)) * 100.0;
+		final double commentBonus = (comments / (plays + 1)) * 100.0;
 
 		double downloadMalus = 0.0;
 		if (downloadable) {
-			double downloadPercentage = (downloads / (plays + 1)) * 100.0;
+			final double downloadPercentage = (downloads / (plays + 1)) * 100.0;
 			if (downloadPercentage < 7.5) {
 				downloadMalus = downloadPercentage / 15.0;
 			}
 		}
 
-		double timeBonus = Math.log((plays / (daysOnline + 1)) + 1);
+		final double timeBonus = Math.log((plays / (daysOnline + 1)) + 1);
 
-		double interestingness = Math.log(baseFactor + favoritingsBonus + commentBonus - downloadMalus + timeBonus);
+		final double interestingness = Math.log(playsBaseFactor + favoritingsBonus + commentBonus - downloadMalus + timeBonus);
 
 		return Math.round(interestingness * 100.0) / 100.0;
 
