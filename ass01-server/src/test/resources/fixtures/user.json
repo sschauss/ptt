@@ -1,27 +1,2 @@
-{
-id: 4444170,
-kind: "user",
-permalink: "schauboga",
-username: "schauboga",
-uri: "http://api.soundcloud.com/users/4444170",
-permalink_url: "http://soundcloud.com/schauboga",
-avatar_url: "http://a1.sndcdn.com/images/default_avatar_large.png?30a2558",
-country: "Germany",
-first_name: "S.",
-last_name: "Schauß",
-full_name: "S. Schauß",
-description: null,
-city: "Koblenz",
-discogs_name: null,
-myspace_name: null,
-website: null,
-website_title: null,
-online: false,
-track_count: 0,
-playlist_count: 0,
-plan: "Free",
-public_favorites_count: 210,
-followers_count: 106,
-followings_count: 536,
-subscriptions: [ ]
-}
+
+{"id":4444170,"kind":"user","permalink":"schauboga","username":"schauboga","uri":"http://api.soundcloud.com/users/4444170","permalink_url":"http://soundcloud.com/schauboga","avatar_url":"http://a1.sndcdn.com/images/default_avatar_large.png?30a2558","country":"Germany","first_name":"S.","last_name":"Schau\u00df","full_name":"S. Schau\u00df","description":null,"city":"Koblenz","discogs_name":null,"myspace_name":null,"website":null,"website_title":null,"online":false,"track_count":0,"playlist_count":0,"plan":"Free","public_favorites_count":210,"followers_count":106,"followings_count":536,"subscriptions":[]}

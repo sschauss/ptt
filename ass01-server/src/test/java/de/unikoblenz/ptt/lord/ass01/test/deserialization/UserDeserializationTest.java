@@ -2,7 +2,7 @@ package de.unikoblenz.ptt.lord.ass01.test.deserialization;
 
 import static io.dropwizard.testing.FixtureHelpers.fixture;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.Is.*;
 
 import java.util.ArrayList;
 import java.util.List;
