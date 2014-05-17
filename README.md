@@ -1,3 +1,3 @@
-##Programming Techniques and Theories - UNI Koblenz-Landau
+##Programming Techniques and Theories
 ###Team lord
 ####Felix Engelmann(fengelmann), Jonas Münch(jonasm), Simon Schauß(sschauss)
