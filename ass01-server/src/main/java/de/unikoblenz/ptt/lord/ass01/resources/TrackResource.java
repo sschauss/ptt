@@ -22,7 +22,6 @@ public class TrackResource {
 	}
 
 	@GET
-	@Path("/")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<TrackView> getTracks(@QueryParam("q") final String q) {
 		return trackClient.getTracks(q);

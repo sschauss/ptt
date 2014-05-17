@@ -23,7 +23,6 @@ public class UserResource {
 	}
 
 	@GET
-	@Path("/")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<UserView> getUsers(@QueryParam("q") final String q) {
 		return userClient.getUsers(q);

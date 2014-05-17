@@ -27,6 +27,16 @@ public class User extends Entity {
 
 	}
 
+	public User(final int id, final String username, final int trackCount, final int playlistCount, final int followersCount, final int followingsCount, final int publicFavoritesCount) {
+		super(id);
+		this.username = username;
+		this.trackCount = trackCount;
+		this.playlistCount = playlistCount;
+		this.followersCount = followersCount;
+		this.followingsCount = followingsCount;
+		this.publicFavoritesCount = publicFavoritesCount;
+	}
+
 	public String getUsername() {
 		return username;
 	}
@@ -49,6 +59,21 @@ public class User extends Entity {
 
 	public int getPublicFavoritesCount() {
 		return publicFavoritesCount;
+	}
+
+	public boolean equals(final Object object) {
+		if (object instanceof User) {
+			final User user = (User) object;
+			return getId() == user.getId() &&
+				   username.equals(user.getUsername()) &&
+				   trackCount == user.getTrackCount() &&
+				   playlistCount == user.getPlaylistCount() &&
+				   followersCount == user.getFollowersCount() &&
+				   followingsCount == user.getFollowingsCount() &&
+				   publicFavoritesCount == user.getPublicFavoritesCount();
+		} else {
+			return false;
+		}
 	}
 
 }

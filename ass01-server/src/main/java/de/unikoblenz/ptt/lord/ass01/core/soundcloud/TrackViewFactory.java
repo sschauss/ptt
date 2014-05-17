@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.unikoblenz.ptt.lord.ass01.api.TrackView;
-import de.unikoblenz.ptt.lord.ass01.util.SoundcloudDate;
+import de.unikoblenz.ptt.lord.ass01.util.SoundCloudDate;
 
 public final class TrackViewFactory {
 
@@ -39,7 +39,7 @@ public final class TrackViewFactory {
 		final double downloads = track.getDownloadCount();
 		final double comments = track.getCommentCount();
 		final boolean downloadable = track.isDownloadable();
-		final SoundcloudDate createAt = track.getCreatedAt();
+		final SoundCloudDate createAt = track.getCreatedAt();
 		final int daysOnline = createAt.getTimeDifferenceFromTodayInDays();
 
 		final double playsBaseFactor = Math.log(plays + 1);

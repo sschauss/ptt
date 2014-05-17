@@ -7,6 +7,7 @@ import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import io.dropwizard.util.Duration;
 
+import com.codahale.metrics.health.HealthCheck;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.sun.jersey.api.client.Client;
 
@@ -14,6 +15,8 @@ import de.unikoblenz.ptt.lord.ass01.client.TrackClient;
 import de.unikoblenz.ptt.lord.ass01.client.UserClient;
 import de.unikoblenz.ptt.lord.ass01.core.jackson.DurationDeserializer;
 import de.unikoblenz.ptt.lord.ass01.core.jackson.DurationSerializer;
+import de.unikoblenz.ptt.lord.ass01.health.TrackClientHealthCheck;
+import de.unikoblenz.ptt.lord.ass01.health.UserClientHealthCheck;
 import de.unikoblenz.ptt.lord.ass01.resources.TrackResource;
 import de.unikoblenz.ptt.lord.ass01.resources.UserResource;
 
@@ -43,10 +46,15 @@ public class JSoundApplication extends Application<JSoundConfiguration> {
 		final Client client = jerseyClientBuilder.build(SC_CLIENT_NAME);
 
 		final TrackClient trackClient = new TrackClient(client, config.getClientId());
+		final TrackClientHealthCheck trackClientHealthCheck = new TrackClientHealthCheck(trackClient);
 		final TrackResource trackResource = new TrackResource(trackClient);
 
 		final UserClient userClient = new UserClient(client, config.getClientId());
+		final UserClientHealthCheck userClientHealthCheck = new UserClientHealthCheck(userClient);
 		final UserResource userResource = new UserResource(userClient);
+
+		registerHealthCheck(environment, trackClientHealthCheck);
+		registerHealthCheck(environment, userClientHealthCheck);
 
 		registerResource(environment, trackResource);
 		registerResource(environment, userResource);
@@ -57,6 +65,10 @@ public class JSoundApplication extends Application<JSoundConfiguration> {
 	@Override
 	public String getName() {
 		return NAME;
+	}
+
+	private void registerHealthCheck(final Environment environment, final HealthCheck healthCheck) {
+		environment.healthChecks().register(healthCheck.getClass().getSimpleName(), healthCheck);
 	}
 
 	private void registerResource(final Environment environment, final Object resource) {

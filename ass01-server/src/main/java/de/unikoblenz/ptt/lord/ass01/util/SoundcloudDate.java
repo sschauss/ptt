@@ -5,13 +5,13 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class SoundcloudDate extends Date {
+public class SoundCloudDate extends Date {
 
 	private static final long serialVersionUID = 3114913857923196811L;
 
 	private DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss +0000");
 
-	public SoundcloudDate(final String soundcloudDateString) {
+	public SoundCloudDate(final String soundcloudDateString) {
 		Date date = new Date();
 		try {
 			date = dateFormat.parse(soundcloudDateString);
