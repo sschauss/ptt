@@ -18,8 +18,8 @@ public class UserDeserializationTest extends DeserializationTest {
 	@Test
 	public void deserializeUser() throws Exception {
 		final User user = new User(4444170, "schauboga", 0, 0, 106, 536, 210);
-		final User userFromJson = OBJECT_MAPPER.readValue(fixture("fixtures/user.json"), User.class);
-		assertThat("a user can be deserialized from JSON", user, is(userFromJson));
+		final User userFromJSON = OBJECT_MAPPER.readValue(fixture("fixtures/entities/user.json"), User.class);
+		assertThat("a user can be deserialized from JSON", user, is(userFromJSON));
 	}
 
 	@Test
@@ -37,9 +37,9 @@ public class UserDeserializationTest extends DeserializationTest {
 		users.add(new User(9455794, "SCHAU ORT", 1, 0, 0, 0, 1));
 		users.add(new User(61953736, "Jackson Lee Schau", 0, 0, 7, 100, 0));
 
-		final List<User> usersFromJson = OBJECT_MAPPER.readValue(fixture("fixtures/users.json"), new TypeReference<List<User>>() {
+		final List<User> usersFromJSON = OBJECT_MAPPER.readValue(fixture("fixtures/entities/users.json"), new TypeReference<List<User>>() {
 		});
-		assertThat("users can be deserialized from JSON", users, is(usersFromJson));
+		assertThat("users can be deserialized from JSON", users, is(usersFromJSON));
 	}
 
 }

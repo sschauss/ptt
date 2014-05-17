@@ -29,7 +29,7 @@ public final class UserViewFactory {
 		final int followingsCount = user.getFollowingsCount();
 		final int publicFavoritesCount = user.getPublicFavoritesCount();
 		final double interestingness = calculateInterestingness(user);
-		return new UserView(label, id, trackCount, playlistCount, followersCount, followingsCount, publicFavoritesCount, interestingness);
+		return new UserView(id, label, trackCount, playlistCount, followersCount, followingsCount, publicFavoritesCount, interestingness);
 	}
 
 	private static double calculateInterestingness(final User user) {

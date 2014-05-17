@@ -14,7 +14,7 @@ public class UserView extends EntityView {
 
 	private double interestingness;
 
-	public UserView(final String label, final int id, final int trackCount, final int playlistCount, final int followersCount, final int followingsCount, final int publicFavoritesCount, final double interestingness) {
+	public UserView(final int id, final String label, final int trackCount, final int playlistCount, final int followersCount, final int followingsCount, final int publicFavoritesCount, final double interestingness) {
 		super(id, label);
 		this.trackCount = trackCount;
 		this.playlistCount = playlistCount;

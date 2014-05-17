@@ -22,14 +22,14 @@ public final class TrackViewFactory {
 	}
 
 	public static TrackView build(final Track track) {
-		final String label = track.getTitle();
 		final int id = track.getId();
+		final String label = track.getTitle();
 		final int commentCount = track.getCommentCount();
 		final int downloadCount = track.getDownloadCount();
 		final int playbackCount = track.getPlaybackCount();
 		final int favoritingsCount = track.getFavoritingsCount();
 		final double interestingness = calculateInterestingness(track);
-		return new TrackView(label, id, commentCount, downloadCount, playbackCount, favoritingsCount, interestingness);
+		return new TrackView(id, label, commentCount, downloadCount, playbackCount, favoritingsCount, interestingness);
 	}
 
 	private static double calculateInterestingness(final Track track) {

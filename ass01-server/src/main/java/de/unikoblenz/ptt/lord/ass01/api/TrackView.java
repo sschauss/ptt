@@ -12,7 +12,7 @@ public class TrackView extends EntityView {
 
 	private double interestingness;
 
-	public TrackView(final String label, final int id, final int commentCount, final int downloadCount, final int playbackCount, final int favoritingsCount, final double interestingness) {
+	public TrackView(final int id, final String label, final int commentCount, final int downloadCount, final int playbackCount, final int favoritingsCount, final double interestingness) {
 		super(id, label);
 		this.commentCount = commentCount;
 		this.downloadCount = downloadCount;
