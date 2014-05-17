@@ -1,0 +1,4 @@
+clientId: cd82542be209c67dd5880195d3c3d328
+jerseyClientConfiguration:
+  connectionTimeout: 2000ms
+  timeout: 2000ms
