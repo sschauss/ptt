@@ -15,5 +15,5 @@ echo
 echo
 echo
 echo "copy webapp to servers assets folder"
-cp -r ./dist/* ../ass01-server/src/main/resources/assets
+cp -r --parents ./dist/* ../ass01-server/src/main/resources/assets
 
