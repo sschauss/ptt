@@ -1,4 +1,4 @@
-##Programming Techniques and Theories
+##Programming Techniques and Technologies
 ###Team lord
 ####Felix Engelmann(fengelmann), Jonas Münch(jonasm), Simon Schauß(sschauss)
 
