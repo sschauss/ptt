@@ -22,7 +22,9 @@ class Parser extends PositionedParserUtilities {
 
   lazy val nodes: Parser[List[Node]] = rep(node)
 
-  lazy val node: Parser[Node] = variable | selector
+  lazy val node: Parser[Node] = variable | selector | comment
+
+  lazy val comment: Parser[Comment] = "//" ~>  "[a-zA-Z0-9\\s]*".r ^^ Comment
 
   lazy val selector: Parser[Selector] = selectorName ~ ("{" ~> rep(rule) <~ "}") ^^ Selector
 

@@ -20,6 +20,8 @@ object Main extends App {
       |  outline: none;
       |}
       |
+      |//Dies ist ein Kommentar
+      |
       |.hide-overflow {
       |  overflow: hidden;
       |  white-space: nowrap;
