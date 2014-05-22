@@ -9,11 +9,27 @@ object Main extends App {
 
   val result = parser.parse(
     """
-      |.content {
-      | height: 100px;
-      | div {
-      |   border: 1px solid black;
-      | }
+      |$icon-font-path: 123;
+      |
+      |
+      |body {
+      |  padding-top: 70px;
+      |}
+      |
+      |.btn {
+      |  outline: none;
+      |}
+      |
+      |.hide-overflow {
+      |  overflow: hidden;
+      |  white-space: nowrap;
+      |  text-overflow: ellipsis;
+      |}
+      |
+      |.navbar-brand {
+      |  border: solid 1px black;
+      |  background-size: 60px;
+      |  width: 90px;
       |}
       |""".stripMargin)
 
