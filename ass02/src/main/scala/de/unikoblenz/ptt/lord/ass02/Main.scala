@@ -22,7 +22,7 @@ object Main extends App {
       |
       |//Dies ist ein Kommentar *#"§%&"%$%/"$
       |
-      |@mixin border-radius($radius) {
+      |@mixin border-radius($radius1, $radius2) {
       |  -webkit-border-radius: $radius;
       |     -moz-border-radius: $radius;
       |      -ms-border-radius: $radius;

@@ -30,7 +30,9 @@ class Parser extends PositionedParserUtilities {
 
   lazy val mixinBody: Parser[List[Node]] = "{" ~> rep(rule) <~ "}"
 
-  lazy val mixinParameters: Parser[List[String]] = "(" ~> rep(variableName) <~ ")"
+  lazy val mixinParameters: Parser[List[String]] = "(" ~> repsep(mixinParameterName, ",") <~ ")"
+
+  lazy val mixinParameterName: Parser[String] = "$" ~> "[-_a-zA-Z1-9]+".r
 
   lazy val mixinName: Parser[String] = "[-_a-zA-Z0-9]+".r
 
