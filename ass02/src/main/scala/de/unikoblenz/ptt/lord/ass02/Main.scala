@@ -20,7 +20,7 @@ object Main extends App {
       |  outline: none;
       |}
       |
-      |//Dies ist ein Kommentar
+      |//Dies ist ein Kommentar *#"§%&"%$%/"$
       |
       |.hide-overflow {
       |  overflow: hidden;
