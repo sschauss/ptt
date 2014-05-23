@@ -22,6 +22,13 @@ object Main extends App {
       |
       |//Dies ist ein Kommentar *#"§%&"%$%/"$
       |
+      |@mixin border-radius($radius) {
+      |  -webkit-border-radius: $radius;
+      |     -moz-border-radius: $radius;
+      |      -ms-border-radius: $radius;
+      |          border-radius: $radius;
+      |}
+      |
       |.hide-overflow {
       |  overflow: hidden;
       |  white-space: nowrap;
