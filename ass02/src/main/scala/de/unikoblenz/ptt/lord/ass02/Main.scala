@@ -11,7 +11,11 @@ object Main extends App {
     """
       |$icon-font-path: 123;
       |
-      |
+      |html{
+      |   div{
+      |     padding-top: 70px;
+      |   }
+      |}
       |body {
       |  padding-top: 70px;
       |}

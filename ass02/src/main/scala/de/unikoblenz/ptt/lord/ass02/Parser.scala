@@ -40,7 +40,7 @@ class Parser extends PositionedParserUtilities {
 
   lazy val variable: Parser[Variable] = variableName ~ (":" ~> value <~ ";") ^^ Variable
 
-  lazy val rule: Parser[Node] = ruleName ~ (":" ~> value <~ ";") ^^ Rule
+  lazy val rule: Parser[Node] = ruleName ~ (":" ~> value <~ ";") ^^ Rule | selector
 
   lazy val selectorName: Parser[String] = "(#|.)?[-_a-zA-Z]+".r
 
