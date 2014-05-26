@@ -1,12 +1,13 @@
 package de.unikoblenz.ptt.lord.ass02
 
 import org.kiama.util.PositionedParserUtilities
+import de.unikoblenz.ptt.lord.ass02.Ast._
 
-class Parser extends PositionedParserUtilities {
+object Parser extends PositionedParserUtilities {
 
   def parse(input: String): Any = parse(input, parser)
 
-  def parse(input: String, parser: Parser[Any]): Any = parseAll(parser, input) match {
+  def parse[T](input: String, parser: Parser[T]): T = parseAll(parser, input) match {
     case Success(sass, _) => sass
     case Failure(message, _) => throw new Exception(message)
     case Error(message, _) => throw new Exception(message)
@@ -21,6 +22,7 @@ class Parser extends PositionedParserUtilities {
 
   lazy val ruleSets: PackratParser[Any] = rep(selector <~ "{}")
 
+  lazy val rule: Parser[Any] = "" //TODO
 
 
   lazy val selector: PackratParser[Any] =

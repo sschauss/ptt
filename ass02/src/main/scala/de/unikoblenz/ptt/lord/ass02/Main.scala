@@ -1,11 +1,13 @@
 package de.unikoblenz.ptt.lord.ass02
 
+import de.unikoblenz.ptt.lord.ass02.Ast.Sass
+
 /**
  * Created by simon on 19/05/14.
  */
 object Main extends App {
 
-  val parser = new Parser
+  val parser = Parser
 
 
   val test = """
@@ -52,14 +54,14 @@ object Main extends App {
     |test ~ test{}
   """.stripMargin
 
-  var result = parser.parse(
+  val partialResult: Any = parser.parse(
     """
       |test test
     """.stripMargin, parser.combinator)
 
-  println(result)
+  println(partialResult)
 
-  result = parser.parse(test)
+  val result: Sass = parser.parse(test)
 
   println(result)
 
