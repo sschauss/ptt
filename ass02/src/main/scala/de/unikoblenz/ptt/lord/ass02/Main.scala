@@ -11,11 +11,19 @@ object Main extends App {
     """
       |$icon-font-path: 123;
       |
+      |.blubb {margin:none;}
+      |
       |html{
       |   div{
       |     padding-top: 70px;
       |   }
+      |
+      |   .test{
+      |     padding-left: 70px;
+      |     padding-right: 70px;
+      |   }
       |}
+      |
       |body {
       |  padding-top: 70px;
       |}
@@ -25,6 +33,7 @@ object Main extends App {
       |}
       |
       |//Dies ist ein Kommentar *#"§%&"%$%/"$
+      |//Zweite Zeile
       |
       |@mixin border-radius($radius1, $radius2) {
       |  -webkit-border-radius: $radius;

@@ -24,7 +24,7 @@ class Parser extends PositionedParserUtilities {
 
   lazy val node: Parser[Node] = variable | selector | comment | mixin
 
-  lazy val comment: Parser[Comment] = "//" ~>  "[\\S \t]*".r <~ "[\\s]*".r  ^^ Comment
+  lazy val comment: Parser[Comment] = "//" ~>  "[\\S \t]*".r <~ "[\\s]*".r ^^ Comment
 
   lazy val mixin: Parser[Mixin] = "@mixin" ~> mixinName ~ mixinParameters ~ mixinBody  ^^ Mixin
 
@@ -46,7 +46,7 @@ class Parser extends PositionedParserUtilities {
 
   lazy val variableName: Parser[String] = "$" ~> "[-_a-zA-Z]+".r
 
-  lazy val ruleName: Parser[String] = "[-_a-zA-Z0-9]+".r
+  lazy val ruleName: Parser[String] = "-?[_a-zA-Z]+[_a-zA-Z0-9-]*".r
 
   lazy val value: Parser[String] = "[$a-zA-Z0-9\\s]+".r
 
