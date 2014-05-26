@@ -2,11 +2,6 @@ package de.unikoblenz.ptt.lord.ass02
 
 import org.kiama.util.PositionedParserUtilities
 
-import de.unikoblenz.ptt.lord.ass02.Ast._
-import scala.util.parsing.combinator.JavaTokenParsers
-import com.sun.tools.javac.parser.JavadocTokenizer
-import java.io.Serializable
-
 class Parser extends PositionedParserUtilities {
 
   def parse(input: String): Any = parse(input, parser)
