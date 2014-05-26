@@ -7,54 +7,60 @@ object Main extends App {
 
   val parser = new Parser
 
-  val result = parser.parse(
-    """
-      |$icon-font-path: 123;
-      |
-      |.blubb {margin:none;}
-      |
-      |html{
-      |   div{
-      |     padding-top: 70px;
-      |   }
-      |
-      |   .test{
-      |     padding-left: 70px;
-      |     padding-right: 70px;
-      |   }
-      |}
-      |
-      |body {
-      |  padding-top: 70px;
-      |}
-      |
-      |.btn {
-      |  outline: none;
-      |}
-      |
-      |//Dies ist ein Kommentar *#"§%&"%$%/"$
-      |//Zweite Zeile
-      |
-      |@mixin border-radius($radius1, $radius2) {
-      |  -webkit-border-radius: $radius;
-      |     -moz-border-radius: $radius;
-      |      -ms-border-radius: $radius;
-      |          border-radius: $radius;
-      |}
-      |
-      |.hide-overflow {
-      |  overflow: hidden;
-      |  white-space: nowrap;
-      |  text-overflow: ellipsis;
-      |}
-      |
-      |.navbar-brand {
-      |  border: solid 1px black;
-      |  background-size: 60px;
-      |  width: 90px;
-      |}
-      |""".stripMargin)
 
-  print(result)
+  val test = """
+    |*{}
+    |test{}
+    |test[foo="bar"]{}
+    |test[foo~="bar"]{}
+    |test[foo="bar"]{}
+    |test[foo$="bar"]{}
+    |test[foo*="bar"]{}
+    |test[foo|="bar"]{}
+    |test:root{}
+    |test:nth-child(1){}
+    |test:nth-last-child(1){}
+    |test:nth-of-type(1){}
+    |test:nth-last-of-type(1){}
+    |test:first-child{}
+    |test:last-child{}
+    |test:first-of-type{}
+    |test:last-of-type{}
+    |test:only-child{}
+    |test:only-of-type{}
+    |test:empty{}
+    |test:link{}
+    |test:visited{}
+    |test:active{}
+    |test:hover{}
+    |test:focus{}
+    |test:target{}
+    |test:lang(de){}
+    |test:enabled{}
+    |test:disabled{}
+    |test:checked{}
+    |test::first-line{}
+    |test::first-letter{}
+    |test::before{}
+    |test::after{}
+    |.test{}
+    |#test{}
+    |:not(test){}
+    |test test{}
+    |test > test{}
+    |test + test{}
+    |test ~ test{}
+  """.stripMargin
+
+  var result = parser.parse(
+    """
+      |test test
+    """.stripMargin, parser.combinator)
+
+  println(result)
+
+  result = parser.parse(test)
+
+  println(result)
 
 }
