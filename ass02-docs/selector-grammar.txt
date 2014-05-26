@@ -1,12 +1,17 @@
 selector: //TODO
 
-simpleSelector: //TODO
+simpleSelector: 
+    element | 
+    universal |
+    attribute |
 
-type: type //TODO
+element: name
 
 universalSelector: '*'
 
-attributeSelector: '[' attribute {'~' | '^' | '$' | '*' | '|'}? '=' '"' value '"' ']' //TODO
+attribute: '[' attribute {'~' | '^' | '$' | '*' | '|'}? '=' '"' value '"' ']' //TODO
+    
+pseudoClass: structuralPseudoClass | linkPseudoClass | userActionPseudoClass | targetPseudoClass | langPseudoClass | uiElementStatePseudoClass
 
 structuralPseudoClass: ':' {
     'root' |
