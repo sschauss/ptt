@@ -1,5 +1,7 @@
 package de.unikoblenz.ptt.lord.ass02
 
+import de.unikoblenz.ptt.lord.ass02.Ast.Sass
+
 
 /**
  * Created by simon on 19/05/14.
@@ -59,15 +61,34 @@ object Main extends App {
     |test ~ test{}
   """.stripMargin
 
-  val partialResult: Any = parser.parse(
+  val result: Sass = parser.parse(
     """
-    |test {test{} test: test;}
+      |nav {
+      |  ul {
+      |    margin: 0;
+      |    padding: 0;
+      |    list-style: none;
+      |  }
+      |
+      |  li { display: inline-block; }
+      |
+      |  a {
+      |    display: block;
+      |    padding: 6px 12px;
+      |    text-decoration: none;
+      |  }
+      |}
     """.stripMargin)
 
-  println(partialResult)
+  printList(result.ruleSets)
 
-  val result = parser.parse(test)
+  def printList(list: List[Any]): Unit  = list match {
+    case (x::xs) => x match {
+      case x: List[Any] => printList(x)
+      case x: Any => println(x)
+    }
+  }
 
-  println(result)
+
 
 }

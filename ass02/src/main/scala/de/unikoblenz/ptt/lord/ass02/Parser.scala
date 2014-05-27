@@ -5,7 +5,7 @@ import de.unikoblenz.ptt.lord.ass02.Ast._
 
 object Parser extends PositionedParserUtilities {
 
-  def parse(input: String): Any = parse(input, parser)
+  def parse(input: String): Sass = parse(input, parser)
 
   def parse[T](input: String, parser: Parser[T]): T = parseAll(parser, input) match {
     case Success(sass, _) => sass
@@ -27,7 +27,7 @@ object Parser extends PositionedParserUtilities {
 
 
 
-  lazy val value: PackratParser[Value] =   color | dimension | stringValue
+  lazy val value: PackratParser[Value] =   color | dimension | stringValue | zeroValue
 
 
 
@@ -158,9 +158,11 @@ object Parser extends PositionedParserUtilities {
 
   lazy val name: Parser[String] = string
 
-  lazy val stringValue: Parser[StringValue] = "[a-zA-Z]+".r ^^ StringValue
+  lazy val stringValue: Parser[StringValue] = "[-a-zA-Z]+".r ^^ StringValue
 
-  lazy val string = "[a-zA-Z]+".r
+  lazy val string: Parser[String] = "[-a-zA-Z]+".r
+
+  lazy val zeroValue: Parser[ZeroValue] = "0" ^^ ZeroValue
 
   lazy val integer: Parser[String] = "[0]|[1-9][0-9]*".r
 

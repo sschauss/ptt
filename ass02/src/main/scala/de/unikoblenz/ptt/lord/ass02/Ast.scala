@@ -58,6 +58,8 @@ package object Ast {
 
   case class StringValue(value: String) extends Value
 
+  case class ZeroValue(value: String) extends Value
+
   case class PseudoElementSelector(elementSelector: SimpleSelector, pseudoElement: PseudoElement) extends Selector
 
   case class PseudoElement(name: String)
