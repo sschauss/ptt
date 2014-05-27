@@ -57,12 +57,11 @@ object Main extends App {
     |test > test{}
     |test + test{}
     |test ~ test{}
-    |test ~ test test::before, test{}
   """.stripMargin
 
   val partialResult: Any = parser.parse(
     """
-      |test {test: test, #000000 #aaa, 100px;}
+    |test {test{} test: test;}
     """.stripMargin)
 
   println(partialResult)

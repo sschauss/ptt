@@ -17,7 +17,7 @@ object Parser extends PositionedParserUtilities {
 
   lazy val sass:  PackratParser[Sass] = rep(ruleSet) ^^ Sass
 
-  lazy val ruleSet: PackratParser[RuleSet] = repsep(selector, ",") ~ ("{" ~> rep(rule) <~ "}") ^^ RuleSet
+  lazy val ruleSet: PackratParser[RuleSet] = repsep(selector, ",") ~ ("{" ~> rep(ruleSet | rule) <~ "}") ^^ RuleSet
 
   lazy val rule: PackratParser[Rule] = property ~ (":" ~> rep1(value <~ (","?)) <~ ";") ^^ Rule
 

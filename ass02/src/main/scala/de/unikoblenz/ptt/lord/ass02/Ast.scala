@@ -4,7 +4,7 @@ package object Ast {
 
   case class Sass(ruleSets: List[RuleSet])
 
-  case class RuleSet(selector: List[Selector], rules: List[Rule])
+  case class RuleSet(selector: List[Selector], rules: List[Any])
 
   case class Rule(property: String, value: List[Value])
 
