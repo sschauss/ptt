@@ -20,13 +20,22 @@ object Parser extends PositionedParserUtilities {
 
 
 
-  lazy val ruleSets: PackratParser[Any] = rep(selector <~ "{}")
+  lazy val ruleSets: PackratParser[Any] = rep(selector ~ rep("," ~ selector) ~ ("{" ~> rep(rule) <~ "}"))
 
-  lazy val rule: Parser[Any] = "" //TODO
+  lazy val rule: PackratParser[Any] = property ~ (":" ~> rep1(value <~ (","?)) <~ ";")
+
+
+
+  lazy val property: Parser[Any] = name
+
+
+
+  lazy val value: PackratParser[Any] =   color | unit | time | name
+
 
 
   lazy val selector: PackratParser[Any] =
-    combinator |
+    selectorCombinator |
     pseudoElementSelector |
     simpleSelector
 
@@ -70,10 +79,10 @@ object Parser extends PositionedParserUtilities {
 
   lazy val structuralPseudoClass: PackratParser[Any] =
     "root" |
-    "nth-child(" ~ integer ~ ")" |
-    "nth-last-child(" ~ integer ~ ")" |
-    "nth-of-type(" ~ integer ~ ")" |
-    "nth-last-of-type(" ~ integer ~ ")" |
+    "nth-child" ~ ("(" ~> nth <~ ")") |
+    "nth-last-child" ~ ("(" ~> nth <~ ")") |
+    "nth-of-type" ~ ("(" ~> nth <~ ")") |
+    "nth-last-of-type" ~ ("(" ~> nth <~ ")") |
     "first-child" |
     "last-child" |
     "first-of-type" |
@@ -81,6 +90,8 @@ object Parser extends PositionedParserUtilities {
     "only-child" |
     "only-of-type" |
     "empty"
+
+  lazy val nth: PackratParser[Any] = "odd" | "even" | signedInteger | signedInteger ~ "n" ~ signedInteger
 
   lazy val linkPseudoClass: Parser[Any] = "link"
 
@@ -127,7 +138,7 @@ object Parser extends PositionedParserUtilities {
 
 
 
-  lazy val combinator: PackratParser[Any] =
+  lazy val selectorCombinator: PackratParser[Any] =
     descendantCombinator |
     childCombinator |
     adjacentCombinator |
@@ -143,8 +154,20 @@ object Parser extends PositionedParserUtilities {
 
 
 
+  lazy val unit: Parser[Any] = (decimal ~ ("in" | "cm" | "mm" | "em" | "ex" | "pt" | "pc" | "px")) | percent
+
   lazy val name: Parser[Any] = "[a-zA-Z]+".r
 
   lazy val integer: Parser[Any] = "[0]|[1-9][0-9]*".r
+
+  lazy val signedInteger: PackratParser[Any] = (("+" | "-") ?) ~ integer
+
+  lazy val decimal: Parser[Any] = "0|-?[1-9][0-9]*(.[0-9])?".r
+
+  lazy val time: Parser[Any] = decimal ~ "s|ms"
+
+  lazy val color: Parser[Any] = name | "#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})".r
+
+  lazy val percent: Parser[Any] = "(100|[1-9][0-9]?)%".r
 
 }

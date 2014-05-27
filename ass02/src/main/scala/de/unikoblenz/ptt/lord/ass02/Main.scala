@@ -1,6 +1,5 @@
 package de.unikoblenz.ptt.lord.ass02
 
-import de.unikoblenz.ptt.lord.ass02.Ast.Sass
 
 /**
  * Created by simon on 19/05/14.
@@ -52,16 +51,17 @@ object Main extends App {
     |test > test{}
     |test + test{}
     |test ~ test{}
+    |test ~ test test::before, test{}
   """.stripMargin
 
   val partialResult: Any = parser.parse(
     """
-      |test test
-    """.stripMargin, parser.combinator)
+      |test {test: test, #000000 #aaa, 100px;}
+    """.stripMargin)
 
   println(partialResult)
 
-  val result: Sass = parser.parse(test)
+  val result = parser.parse(test)
 
   println(result)
 
