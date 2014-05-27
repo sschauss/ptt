@@ -30,10 +30,22 @@ object PrettyPrinter extends PrettyPrinter {
     case UiElementStatePseudoClass(state) => state
     case Attribute(name, None, value) => name <> "=" <> value
     case Attribute(name, Some(operator), value) => name <> operator <> value
-    case Dimension(value, unit) => value <> unit
-    case Color(value) => value
-    case StringValue(value) => value
-    case ZeroValue(value) => value
+    case dimension @ Dimension(value, unit) => value <> unit <>  (dimension.delimiter match {
+      case None => ""
+      case Some(delimiter: String) => "" <> delimiter
+    })
+    case color @ Color(value) => value <> (color.delimiter match {
+      case None => ""
+      case Some(delimiter: String) => "" <> delimiter
+    })
+    case stringValue @ StringValue(value) => value <>  (stringValue.delimiter match {
+      case None => ""
+      case Some(delimiter: String) => "" <> delimiter
+    })
+    case zeroValue @ ZeroValue(value) => value <>  (zeroValue.delimiter match {
+      case None => ""
+      case Some(delimiter: String) => "" <> delimiter
+    })
     case PseudoElementSelector(elementSelector, pseudoElement) => show(elementSelector) <> "::" <> show(pseudoElement)
     case PseudoElement(name) => name
     case DescendantCombinator(selectorLeft, selectorRight) => show(selectorLeft) <> " " <> show(selectorRight)

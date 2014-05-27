@@ -10,60 +10,13 @@ object Main extends App {
 
   val parser = Parser
 
-
-  val test = """
-    |*{}
-    |test{}
-    |test[foo="bar"]{}
-    |test[foo~="bar"]{}
-    |test[foo="bar"]{}
-    |test[foo$="bar"]{}
-    |test[foo*="bar"]{}
-    |test[foo|="bar"]{}
-    |test:root{}
-    |test:nth-child(even){}
-    |test:nth-child(odd){}
-    |test:nth-child(2){}
-    |test:nth-child(2n+3){}
-    |test:nth-child(2n-3){}
-    |test:nth-child(-2n+3){}
-    |test:nth-child(-2n-3){}
-    |test:nth-last-child(1){}
-    |test:nth-of-type(1){}
-    |test:nth-last-of-type(1){}
-    |test:first-child{}
-    |test:last-child{}
-    |test:first-of-type{}
-    |test:last-of-type{}
-    |test:only-child{}
-    |test:only-of-type{}
-    |test:empty{}
-    |test:link{}
-    |test:visited{}
-    |test:active{}
-    |test:hover{}
-    |test:focus{}
-    |test:target{}
-    |test:lang(de){}
-    |test:enabled{}
-    |test:disabled{}
-    |test:checked{}
-    |test::first-line{}
-    |test::first-letter{}
-    |test::before{}
-    |test::after{}
-    |.test{}
-    |#test{}
-    |:not(test){}
-    |test test{}
-    |test > test{}
-    |test + test{}
-    |test ~ test{}
-  """.stripMargin
-
   val sass: Sass = parser.parse(
     """
-      |nav, div {
+      |nav,              div {
+      |  box-shadow: 8px 8px 8px red,
+      |               -8px 8px 8px green,
+      |                8px -8px 8px blue,
+      |               -8px -8px 8px yellow;
       |  ul, ol {
       |    margin: 0;
       |           padding: 0;

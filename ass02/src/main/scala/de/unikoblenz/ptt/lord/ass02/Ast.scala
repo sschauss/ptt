@@ -16,7 +16,9 @@ package object Ast {
 
   trait PseudoClass extends Node
 
-  trait Value extends Node
+  abstract class Value extends Node {
+    var delimiter: Option[String] = None
+  }
 
   case class Sass(ruleSets: List[RuleSet]) extends Node
 
