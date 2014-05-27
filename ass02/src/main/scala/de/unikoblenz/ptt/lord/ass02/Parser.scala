@@ -13,35 +13,32 @@ object Parser extends PositionedParserUtilities {
     case Error(message, _) => throw new Exception(message)
   }
 
-  lazy val parser: PackratParser[Any] = phrase(sass)
+  lazy val parser: PackratParser[Sass] = phrase(sass)
 
+  lazy val sass:  PackratParser[Sass] = rep(ruleSet) ^^ Sass
 
-  lazy val sass: PackratParser[Any] = ruleSets
+  lazy val ruleSet: PackratParser[RuleSet] = repsep(selector, ",") ~ ("{" ~> rep(rule) <~ "}") ^^ RuleSet
 
-
-
-  lazy val ruleSets: PackratParser[Any] = rep(selector ~ rep("," ~ selector) ~ ("{" ~> rep(rule) <~ "}"))
-
-  lazy val rule: PackratParser[Any] = property ~ (":" ~> rep1(value <~ (","?)) <~ ";")
+  lazy val rule: PackratParser[Rule] = property ~ (":" ~> rep1(value <~ (","?)) <~ ";") ^^ Rule
 
 
 
-  lazy val property: Parser[Any] = name
+  lazy val property: PackratParser[String] = name
 
 
 
-  lazy val value: PackratParser[Any] =   color | unit | time | name
+  lazy val value: PackratParser[Value] =   color | dimension | stringValue
 
 
 
-  lazy val selector: PackratParser[Any] =
+  lazy val selector: PackratParser[Selector] =
     selectorCombinator |
     pseudoElementSelector |
     simpleSelector
 
 
 
-  lazy val simpleSelector: PackratParser[Any] =
+  lazy val simpleSelector: PackratParser[SimpleSelector] =
     pseudoClassSelector |
     attributeSelector |
     universalSelector |
@@ -51,25 +48,25 @@ object Parser extends PositionedParserUtilities {
 
 
 
-  lazy val universalSelector: Parser[Any] = "*"
+  lazy val universalSelector: Parser[UniversalSelector] = "*" ^^ UniversalSelector
 
 
 
-  lazy val elementSelector: PackratParser[Any] = name
+  lazy val elementSelector: PackratParser[ElementSelector] = name ^^ ElementSelector
 
 
 
-  lazy val attributeSelector: PackratParser[Any] = elementSelector ~ ("[" ~> attribute <~ "]")
+  lazy val attributeSelector: PackratParser[AttributeSelector] = elementSelector ~ ("[" ~> attribute <~ "]") ^^ AttributeSelector
 
-  lazy val attribute: PackratParser[Any] = name ~ ((("~" | "^" | "$" | "*" | "|")?) <~ "=") ~ ("\"" ~> name <~ "\"")
+  lazy val attribute: PackratParser[Attribute] = name ~ ((("~" | "^" | "$" | "*" | "|")?) <~ "=") ~ ("\"" ~> name <~ "\"") ^^ Attribute
 
 
 
-  lazy val pseudoClassSelector: PackratParser[Any] =
-    elementSelector ~ (":" ~> pseudoClass) |
+  lazy val pseudoClassSelector: PackratParser[PseudoClassSelector] =
+    elementSelector ~ (":" ~> pseudoClass) ^^ ElementPseudoClassSelector |
     negationPseudoClassSelector
 
-  lazy val pseudoClass: PackratParser[Any] =
+  lazy val pseudoClass: PackratParser[PseudoClass] =
     structuralPseudoClass |
     linkPseudoClass |
     userActionPseudoClass |
@@ -77,97 +74,100 @@ object Parser extends PositionedParserUtilities {
     langPseudoClass |
     uiElementStatePseudoClass
 
-  lazy val structuralPseudoClass: PackratParser[Any] =
-    "root" |
-    "nth-child" ~ ("(" ~> nth <~ ")") |
-    "nth-last-child" ~ ("(" ~> nth <~ ")") |
-    "nth-of-type" ~ ("(" ~> nth <~ ")") |
-    "nth-last-of-type" ~ ("(" ~> nth <~ ")") |
-    "first-child" |
-    "last-child" |
-    "first-of-type" |
-    "last-of-type" |
-    "only-child" |
-    "only-of-type" |
-    "empty"
+  lazy val structuralPseudoClass: PackratParser[StructuralPseudoClass] =
+    "root" ^^ SimpleStructuralPseudoClass |
+    "nth-child" ~ ("(" ~> nth <~ ")") ^^ ComplexStructuralPseudoClass |
+    "nth-last-child" ~ ("(" ~> nth <~ ")") ^^ ComplexStructuralPseudoClass |
+    "nth-of-type" ~ ("(" ~> nth <~ ")") ^^ ComplexStructuralPseudoClass |
+    "nth-last-of-type" ~ ("(" ~> nth <~ ")") ^^ ComplexStructuralPseudoClass |
+    "first-child" ^^ SimpleStructuralPseudoClass |
+    "last-child" ^^ SimpleStructuralPseudoClass |
+    "first-of-type" ^^ SimpleStructuralPseudoClass |
+    "last-of-type" ^^ SimpleStructuralPseudoClass |
+    "only-child" ^^ SimpleStructuralPseudoClass |
+    "only-of-type" ^^ SimpleStructuralPseudoClass |
+    "empty" ^^ SimpleStructuralPseudoClass
 
-  lazy val nth: PackratParser[Any] = "odd" | "even" | signedInteger | signedInteger ~ "n" ~ signedInteger
+  lazy val linkPseudoClass: Parser[LinkPseudoClass] = "link" ^^ LinkPseudoClass
 
-  lazy val linkPseudoClass: Parser[Any] = "link"
+  lazy val userActionPseudoClass: Parser[UserActionPseudoClass] =
+    "visited" ^^ UserActionPseudoClass |
+    "active" ^^ UserActionPseudoClass |
+    "hover" ^^ UserActionPseudoClass |
+    "focus" ^^ UserActionPseudoClass
 
-  lazy val userActionPseudoClass: PackratParser[Any] =
-    "visited" |
-    "active" |
-    "hover" |
-    "focus"
+  lazy val targetPseudoClass: Parser[TargetPseudoClass] = "target" ^^ TargetPseudoClass
 
-  lazy val targetPseudoClass: Parser[Any] = "target"
+  lazy val langPseudoClass: PackratParser[LangPseudoClass] = "lang(" ~> name <~ ")" ^^ LangPseudoClass
 
-  lazy val langPseudoClass: PackratParser[Any] = "lang(" ~> name <~ ")"
-
-  lazy val uiElementStatePseudoClass: PackratParser[Any] = "enabled" | "disabled" | "checked"
+  lazy val uiElementStatePseudoClass: Parser[UiElementStatePseudoClass] =
+    "enabled" ^^ UiElementStatePseudoClass |
+    "disabled" ^^ UiElementStatePseudoClass |
+    "checked" ^^ UiElementStatePseudoClass
 
 
-  lazy val pseudoElementSelector: PackratParser[Any] = elementSelector ~ ("::" ~> pseudoElement)
+  lazy val pseudoElementSelector: PackratParser[PseudoElementSelector] = elementSelector ~ ("::" ~> pseudoElement) ^^ PseudoElementSelector
 
-  lazy val pseudoElement: PackratParser[Any] =
+  lazy val pseudoElement: PackratParser[PseudoElement] =
     firstLinePseudoElement |
     firstLetterPseudoElement |
     beforePseudoElement |
     afterPseudoElement
 
-  lazy val firstLinePseudoElement: Parser[Any] = "first-line"
+  lazy val firstLinePseudoElement: Parser[PseudoElement] = "first-line" ^^ PseudoElement
 
-  lazy val firstLetterPseudoElement: Parser[Any] = "first-letter"
+  lazy val firstLetterPseudoElement: Parser[PseudoElement] = "first-letter" ^^ PseudoElement
 
-  lazy val beforePseudoElement: Parser[Any] = "before"
+  lazy val beforePseudoElement: Parser[PseudoElement] = "before" ^^ PseudoElement
 
-  lazy val afterPseudoElement:Parser[Any] = "after"
-
-
-
-  lazy val classSelector: PackratParser[Any] = "." ~> name
+  lazy val afterPseudoElement:Parser[PseudoElement] = "after" ^^ PseudoElement
 
 
 
-  lazy val idSelector: PackratParser[Any] = "#" ~> name
+  lazy val classSelector: PackratParser[ClassSelector] = "." ~> name ^^ ClassSelector
 
 
 
-  lazy val negationPseudoClassSelector: PackratParser[Any] = ":not(" ~> simpleSelector <~ ")"
+  lazy val idSelector: PackratParser[IdSelector] = "#" ~> name ^^ IdSelector
 
 
 
-  lazy val selectorCombinator: PackratParser[Any] =
+  lazy val negationPseudoClassSelector: PackratParser[NegationPseudoClassSelector] = ":not(" ~> simpleSelector <~ ")" ^^ NegationPseudoClassSelector
+
+
+
+  lazy val selectorCombinator: PackratParser[SelectorCombinator] =
     descendantCombinator |
     childCombinator |
     adjacentCombinator |
     generalSiblingCombinator
 
-  lazy val descendantCombinator: PackratParser[Any] = selector ~ selector
+  lazy val descendantCombinator: PackratParser[DescendantCombinator] = selector ~ selector ^^ DescendantCombinator
 
-  lazy val childCombinator: PackratParser[Any] = selector ~ (">" ~> selector)
+  lazy val childCombinator: PackratParser[ChildCombinator] = selector ~ (">" ~> selector) ^^ ChildCombinator
 
-  lazy val adjacentCombinator: PackratParser[Any] = selector ~ ("+" ~> selector)
+  lazy val adjacentCombinator: PackratParser[AdjacentCombinator] = selector ~ ("+" ~> selector) ^^ AdjacentCombinator
 
-  lazy val generalSiblingCombinator: PackratParser[Any] = selector ~ ("~" ~> selector)
+  lazy val generalSiblingCombinator: PackratParser[GeneralSiblingCombinator] = selector ~ ("~" ~> selector) ^^ GeneralSiblingCombinator
 
 
 
-  lazy val unit: Parser[Any] = (decimal ~ ("in" | "cm" | "mm" | "em" | "ex" | "pt" | "pc" | "px")) | percent
+  lazy val dimension: Parser[Dimension] = (decimal ~ ("in" | "cm" | "mm" | "em" | "ex" | "pt" | "pc" | "px")) ^^ Dimension | percent
 
-  lazy val name: Parser[Any] = "[a-zA-Z]+".r
+  lazy val percent: Parser[Dimension] = "(100|[1-9][0-9]?)".r ~ "%" ^^ Dimension
 
-  lazy val integer: Parser[Any] = "[0]|[1-9][0-9]*".r
+  lazy val name: Parser[String] = string
 
-  lazy val signedInteger: PackratParser[Any] = (("+" | "-") ?) ~ integer
+  lazy val stringValue: Parser[StringValue] = "[a-zA-Z]+".r ^^ StringValue
 
-  lazy val decimal: Parser[Any] = "0|-?[1-9][0-9]*(.[0-9])?".r
+  lazy val string = "[a-zA-Z]+".r
 
-  lazy val time: Parser[Any] = decimal ~ "s|ms"
+  lazy val integer: Parser[String] = "[0]|[1-9][0-9]*".r
 
-  lazy val color: Parser[Any] = name | "#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})".r
+  lazy val decimal: Parser[String] = "0|-?[1-9][0-9]*(.[0-9])?".r
 
-  lazy val percent: Parser[Any] = "(100|[1-9][0-9]?)%".r
+  lazy val color: Parser[Color] = "#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})".r ^^ Color
+
+  lazy val nth: Parser[String] = "even" | "odd" | "(\\+|-)?([0]|[1-9][0-9]*)(n(\\+|-)([0]|[1-9][0-9]*))?".r
 
 }

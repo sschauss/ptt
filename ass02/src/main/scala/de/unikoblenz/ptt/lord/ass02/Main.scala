@@ -19,7 +19,13 @@ object Main extends App {
     |test[foo*="bar"]{}
     |test[foo|="bar"]{}
     |test:root{}
-    |test:nth-child(1){}
+    |test:nth-child(even){}
+    |test:nth-child(odd){}
+    |test:nth-child(2){}
+    |test:nth-child(2n+3){}
+    |test:nth-child(2n-3){}
+    |test:nth-child(-2n+3){}
+    |test:nth-child(-2n-3){}
     |test:nth-last-child(1){}
     |test:nth-of-type(1){}
     |test:nth-last-of-type(1){}
