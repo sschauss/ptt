@@ -1,6 +1,6 @@
 package de.unikoblenz.ptt.lord.ass02
 
-import de.unikoblenz.ptt.lord.ass02.Ast.Sass
+import de.unikoblenz.ptt.lord.ass02.Ast._
 
 
 /**
@@ -61,12 +61,12 @@ object Main extends App {
     |test ~ test{}
   """.stripMargin
 
-  val result: Sass = parser.parse(
+  val sass: Sass = parser.parse(
     """
-      |nav {
-      |  ul {
+      |nav, div {
+      |  ul, ol {
       |    margin: 0;
-      |    padding: 0;
+      |           padding: 0;
       |    list-style: none;
       |  }
       |
@@ -80,15 +80,7 @@ object Main extends App {
       |}
     """.stripMargin)
 
-  printList(result.ruleSets)
-
-  def printList(list: List[Any]): Unit  = list match {
-    case (x::xs) => x match {
-      case x: List[Any] => printList(x)
-      case x: Any => println(x)
-    }
-  }
-
+  println(PrettyPrinter.pretty(sass))
 
 
 }

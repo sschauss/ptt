@@ -2,13 +2,11 @@ package de.unikoblenz.ptt.lord.ass02
 
 package object Ast {
 
-  case class Sass(ruleSets: List[RuleSet])
+  trait Node
 
-  case class RuleSet(selector: List[Selector], rules: List[Any])
+  trait RuleNode extends Node
 
-  case class Rule(property: String, value: List[Value])
-
-  trait Selector extends Serializable
+  trait Selector extends Node
 
   trait SelectorCombinator extends Selector
 
@@ -16,9 +14,15 @@ package object Ast {
 
   trait PseudoClassSelector extends SimpleSelector
 
-  trait PseudoClass
+  trait PseudoClass extends Node
 
-  trait Value
+  trait Value extends Node
+
+  case class Sass(ruleSets: List[RuleSet]) extends Node
+
+  case class RuleSet(selector: List[Selector], rules: List[RuleNode]) extends RuleNode
+
+  case class Rule(property: String, value: List[Value]) extends RuleNode
 
   trait StructuralPseudoClass extends PseudoClass
 
@@ -50,7 +54,7 @@ package object Ast {
 
   case class UiElementStatePseudoClass(state: String) extends PseudoClass
 
-  case class Attribute(name: String, operator: Option[String], value: String)
+  case class Attribute(name: String, operator: Option[String], value: String) extends Node
 
   case class Dimension(value: String, unit: String) extends Value
 
@@ -62,7 +66,7 @@ package object Ast {
 
   case class PseudoElementSelector(elementSelector: SimpleSelector, pseudoElement: PseudoElement) extends Selector
 
-  case class PseudoElement(name: String)
+  case class PseudoElement(name: String) extends Node
 
   case class DescendantCombinator(selectorLeft: Selector, selectorRight: Selector) extends SelectorCombinator
 
