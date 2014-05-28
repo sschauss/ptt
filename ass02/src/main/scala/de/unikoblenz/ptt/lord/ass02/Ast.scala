@@ -16,6 +16,8 @@ package object Ast {
 
   trait PseudoClass extends Node
 
+  trait Color extends Value
+
   abstract class Value extends Node {
     var delimiter: Option[String] = None
   }
@@ -60,7 +62,17 @@ package object Ast {
 
   case class Dimension(value: String, unit: String) extends Value
 
-  case class Color(value: String) extends Value
+  case class NamedColor(value: String) extends Color
+
+  case class HexColor(value: String) extends Color
+
+  case class RgbColor(r: String, g:String, b:String) extends Color
+
+  case class RgbaColor(r: String, g:String, b:String, a:String) extends Color
+
+  case class HslColor(h: String, s:String, l:String) extends Color
+
+  case class HslaColor(h: String, s:String, l:String, a:String) extends Color
 
   case class StringValue(value: String) extends Value
 

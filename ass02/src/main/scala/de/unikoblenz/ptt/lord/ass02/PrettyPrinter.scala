@@ -34,7 +34,27 @@ object PrettyPrinter extends PrettyPrinter {
       case None => ""
       case Some(delimiter: String) => "" <> delimiter
     })
-    case color @ Color(value) => value <> (color.delimiter match {
+    case color @ RgbColor(r, g, b) => "rgb(" <> r <> "," <> g <> "," <> b <> ")"  <> (color.delimiter match {
+      case None => ""
+      case Some(delimiter: String) => "" <> delimiter
+    })
+    case color @ RgbaColor(r, g, b, a) => "rgba(" <> r <> "," <> g <> "," <> b <> "," <> a <> ")"  <> (color.delimiter match {
+      case None => ""
+      case Some(delimiter: String) => "" <> delimiter
+    })
+    case color @ HslColor(h, s, l) => "hsl(" <> h <> "," <> s <> "%," <> l <> "%)"  <> (color.delimiter match {
+      case None => ""
+      case Some(delimiter: String) => "" <> delimiter
+    })
+    case color @ HslaColor(h, s, l, a) => "hsla(" <> h <> "," <> s <> "%," <> l <> "%)" <> "," <> a <> (color.delimiter match {
+      case None => ""
+      case Some(delimiter: String) => "" <> delimiter
+    })
+    case color @ HexColor(value) => value  <> (color.delimiter match {
+      case None => ""
+      case Some(delimiter: String) => "" <> delimiter
+    })
+    case color @ NamedColor(value) => value  <> (color.delimiter match {
       case None => ""
       case Some(delimiter: String) => "" <> delimiter
     })
