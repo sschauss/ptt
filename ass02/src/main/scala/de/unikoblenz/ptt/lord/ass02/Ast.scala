@@ -16,15 +16,15 @@ package object Ast {
 
   trait PseudoClass extends Node
 
-  abstract class Value extends Node {
-    var delimiter: Option[String] = None
-  }
+  trait Value extends Node
+
+  case class ValueGroup(values: List[Value]) extends Value
 
   case class Sass(ruleSets: List[RuleSet]) extends Node
 
   case class RuleSet(selector: List[Selector], rules: List[RuleNode]) extends RuleNode
 
-  case class Rule(property: String, value: List[Value]) extends RuleNode
+  case class Rule(property: String, value: List[ValueGroup]) extends RuleNode
 
   trait StructuralPseudoClass extends PseudoClass
 

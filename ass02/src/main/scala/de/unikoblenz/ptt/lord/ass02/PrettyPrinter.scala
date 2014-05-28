@@ -13,7 +13,7 @@ object PrettyPrinter extends PrettyPrinter {
   def show(node: Node): Doc = node match {
     case Sass(ruleSets) => ssep(ruleSets map show, line)
     case RuleSet(selector, rules) => ssep(selector map show, ", ") <+> "{" <> nest(line <> vsep(rules map show)) <> line <> "}"
-    case Rule(property, value) => property <> ": " <> ssep(value map show, " ") <> ";"
+    case Rule(property, valueGroup) => property <> ": " <> ssep(valueGroup map show, ", ") <> ";"
     case UniversalSelector(value) => value
     case AttributeSelector(elementSelector, attribute) => show(elementSelector) <> "[" <> show(attribute) <> "]"
     case ElementSelector(name) => name
@@ -30,22 +30,11 @@ object PrettyPrinter extends PrettyPrinter {
     case UiElementStatePseudoClass(state) => state
     case Attribute(name, None, value) => name <> "=" <> value
     case Attribute(name, Some(operator), value) => name <> operator <> value
-    case dimension @ Dimension(value, unit) => value <> unit <>  (dimension.delimiter match {
-      case None => ""
-      case Some(delimiter: String) => "" <> delimiter
-    })
-    case color @ Color(value) => value <> (color.delimiter match {
-      case None => ""
-      case Some(delimiter: String) => "" <> delimiter
-    })
-    case stringValue @ StringValue(value) => value <>  (stringValue.delimiter match {
-      case None => ""
-      case Some(delimiter: String) => "" <> delimiter
-    })
-    case zeroValue @ ZeroValue(value) => value <>  (zeroValue.delimiter match {
-      case None => ""
-      case Some(delimiter: String) => "" <> delimiter
-    })
+    case ValueGroup(values) => ssep(values map show, " ")
+    case Dimension(value, unit) => value <> unit
+    case Color(value) => value
+    case StringValue(value) => value
+    case ZeroValue(value) => value
     case PseudoElementSelector(elementSelector, pseudoElement) => show(elementSelector) <> "::" <> show(pseudoElement)
     case PseudoElement(name) => name
     case DescendantCombinator(selectorLeft, selectorRight) => show(selectorLeft) <> " " <> show(selectorRight)

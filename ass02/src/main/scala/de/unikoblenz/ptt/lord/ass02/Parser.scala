@@ -19,15 +19,9 @@ object Parser extends PositionedParserUtilities {
 
   lazy val ruleSet: PackratParser[RuleSet] = repsep(selector, ",") ~ ("{" ~> rep(ruleSet | rule) <~ "}") ^^ RuleSet
 
-  lazy val rule: PackratParser[Rule] = property ~ (":" ~> values <~ ";") ^^ Rule
+  lazy val rule: PackratParser[Rule] = property ~ (":" ~> repsep(valueGroup, ",") <~ ";") ^^ Rule
 
-  lazy val values: PackratParser[List[Value]] = value ~ rep(("," ?) ~ value) ^^ {
-    case x => x._1 :: x._2.map(x => {
-      x._2.delimiter = x._1
-      x._2
-    })
-  }
-
+  lazy val valueGroup: PackratParser[ValueGroup] = rep1(value) ^^ ValueGroup
 
   lazy val property: PackratParser[String] = name
 
