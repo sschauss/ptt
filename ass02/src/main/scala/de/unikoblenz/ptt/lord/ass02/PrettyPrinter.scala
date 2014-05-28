@@ -34,8 +34,8 @@ object PrettyPrinter extends PrettyPrinter {
     case Dimension(value, unit) => value <> unit
     case RgbColor(r, g, b) => "rgb(" <> r <> "," <> g <> "," <> b <> ")"
     case RgbaColor(r, g, b, a) => "rgba(" <> r <> "," <> g <> "," <> b <> "," <> a <> ")"
-    case HslColor(h, s, l) => "hsl(" <> h <> "," <> s <> "%," <> l <> "%)"
-    case HslaColor(h, s, l, a) => "hsla(" <> h <> "," <> s <> "%," <> l <> "%" <> "," <> a <> ")"
+    case HslColor(h, s, l) => "hsl(" <> h <> "," <> s <> "," <> l <> ")"
+    case HslaColor(h, s, l, a) => "hsla(" <> h <> "," <> s <> "," <> l <> "," <> a <> ")"
     case HexColor(value) => value
     case NamedColor(value) => value
     case StringValue(value) => value
