@@ -1,7 +1,11 @@
 package de.unikoblenz.ptt.lord.ass02
 
 import org.kiama.util.PositionedParserUtilities
-import de.unikoblenz.ptt.lord.ass02.Ast._
+import de.unikoblenz.ptt.lord.ass02.ast._
+import de.unikoblenz.ptt.lord.ass02.ast.pseudoclass._
+import de.unikoblenz.ptt.lord.ass02.ast.selector._
+import de.unikoblenz.ptt.lord.ass02.ast.value._
+
 
 object Parser extends PositionedParserUtilities {
 
@@ -131,13 +135,13 @@ object Parser extends PositionedParserUtilities {
       adjacentCombinator |
       generalSiblingCombinator
 
-  lazy val descendantCombinator: PackratParser[DescendantCombinator] = selector ~ selector ^^ DescendantCombinator
+  lazy val descendantCombinator: PackratParser[DescendantCombinator] = simpleSelector ~ simpleSelector ^^ DescendantCombinator
 
-  lazy val childCombinator: PackratParser[ChildCombinator] = selector ~ (">" ~> selector) ^^ ChildCombinator
+  lazy val childCombinator: PackratParser[ChildCombinator] = simpleSelector ~ (">" ~> simpleSelector) ^^ ChildCombinator
 
-  lazy val adjacentCombinator: PackratParser[AdjacentCombinator] = selector ~ ("+" ~> selector) ^^ AdjacentCombinator
+  lazy val adjacentCombinator: PackratParser[AdjacentCombinator] = simpleSelector ~ ("+" ~> simpleSelector) ^^ AdjacentCombinator
 
-  lazy val generalSiblingCombinator: PackratParser[GeneralSiblingCombinator] = selector ~ ("~" ~> selector) ^^ GeneralSiblingCombinator
+  lazy val generalSiblingCombinator: PackratParser[GeneralSiblingCombinator] = simpleSelector ~ ("~" ~> simpleSelector) ^^ GeneralSiblingCombinator
 
 
   lazy val dimension: Parser[Dimension] = (decimal ~ ("in" | "cm" | "mm" | "em" | "ex" | "pt" | "pc" | "px")) ^^ Dimension | percent

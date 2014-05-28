@@ -1,6 +1,6 @@
 package de.unikoblenz.ptt.lord.ass02
 
-import de.unikoblenz.ptt.lord.ass02.Ast._
+import de.unikoblenz.ptt.lord.ass02.ast.Sass
 
 
 /**
@@ -34,6 +34,8 @@ object Main extends App {
       |  }
       |}
     """.stripMargin)
+
+  println(sass)
 
   println(PrettyPrinter.pretty(sass))
 

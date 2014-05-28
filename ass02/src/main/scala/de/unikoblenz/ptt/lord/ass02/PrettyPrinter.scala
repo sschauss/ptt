@@ -1,11 +1,11 @@
 package de.unikoblenz.ptt.lord.ass02
 
 import org.kiama.output.PrettyPrinter
-import de.unikoblenz.ptt.lord.ass02.Ast._
+import de.unikoblenz.ptt.lord.ass02.ast._
+import de.unikoblenz.ptt.lord.ass02.ast.pseudoclass._
+import de.unikoblenz.ptt.lord.ass02.ast.selector._
+import de.unikoblenz.ptt.lord.ass02.ast.value._
 
-/**
- * Created by simon on 27/05/14.
- */
 object PrettyPrinter extends PrettyPrinter {
 
   def pretty(node: Node): String = super.pretty(show(node))
@@ -32,10 +32,10 @@ object PrettyPrinter extends PrettyPrinter {
     case Attribute(name, Some(operator), value) => name <> operator <> value
     case ValueGroup(values) => ssep(values map show, " ")
     case Dimension(value, unit) => value <> unit
-    case RgbColor(r, g, b) => "rgb(" <> r <> "," <> g <> "," <> b <> ")"
-    case RgbaColor(r, g, b, a) => "rgba(" <> r <> "," <> g <> "," <> b <> "," <> a <> ")"
-    case HslColor(h, s, l) => "hsl(" <> h <> "," <> s <> "," <> l <> ")"
-    case HslaColor(h, s, l, a) => "hsla(" <> h <> "," <> s <> "," <> l <> "," <> a <> ")"
+    case RgbColor(r, g, b) => "rgb(" <> r <> ", " <> g <> ", " <> b <> ")"
+    case RgbaColor(r, g, b, a) => "rgba(" <> r <> ", " <> g <> "," <> b <> ", " <> a <> ")"
+    case HslColor(h, s, l) => "hsl(" <> h <> ", " <> s <> ", " <> l <> ")"
+    case HslaColor(h, s, l, a) => "hsla(" <> h <> ", " <> s <> ", " <> l <> ", " <> a <> ")"
     case HexColor(value) => value
     case NamedColor(value) => value
     case StringValue(value) => value
