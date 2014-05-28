@@ -35,6 +35,10 @@ object Main extends App {
       |}
     """.stripMargin)
 
+  val partial = parser.parse("YelLow",Parser.namedColor)
+
+  println(partial)
+
   println(sass)
 
   println(PrettyPrinter.pretty(sass))
