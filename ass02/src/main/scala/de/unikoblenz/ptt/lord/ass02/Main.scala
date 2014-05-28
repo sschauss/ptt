@@ -27,7 +27,7 @@ object Main extends App {
       |
       |  a {
       |    color: rgba(0,128,255,0.3);
-      |    background-color: yellow;
+      |    background-color: yelLxow;
       |    display: block;
       |    padding: 6px 12px;
       |    text-decoration: none;
