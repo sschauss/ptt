@@ -26,8 +26,8 @@ object Main extends App {
       |  li { display: inline-block; }
       |
       |  a {
-      |    color: rgba(0,128,255,0.3);
-      |    background-color: yelLxow;
+      |    color: rgba(0,128,255,0.3) !important;
+      |    background-color: yelLxow !important;
       |    display: block;
       |    padding: 6px 12px;
       |    text-decoration: none;
@@ -35,9 +35,9 @@ object Main extends App {
       |}
     """.stripMargin)
 
-  val partial = parser.parse("YelLow",Parser.namedColor)
+  //val partial = parser.parse("YelLow",Parser.namedColor)
 
-  println(partial)
+  //println(partial)
 
   println(sass)
 

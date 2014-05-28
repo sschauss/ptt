@@ -7,4 +7,4 @@ trait RuleNode extends Node
 
 case class RuleSet(selector: List[Selector], rules: List[RuleNode]) extends RuleNode
 
-case class Rule(property: String, value: List[ValueGroup]) extends RuleNode
+case class Rule(property: String, value: List[ValueGroup], important: Option[String]) extends RuleNode
