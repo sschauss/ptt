@@ -13,7 +13,7 @@ object PrettyPrinter extends PrettyPrinter {
   def show(node: Node): Doc = node match {
     case Sass(ruleSets) => ssep(ruleSets map show, line)
     case RuleSet(selector, rules) => ssep(selector map show, ", ") <+> "{" <> nest(line <> vsep(rules map show)) <> line <> "}"
-    case Rule(property, valueGroup, important) => property <> ": " <> ssep(valueGroup map show, ", ") <> (important match {case None => ""; case Some(value) => value}) <> ";"
+    case Rule(property, valueGroup, important) => property <> ": " <> ssep(valueGroup map show, ", ") <> " " <> (important match {case None => ""; case Some(value) => value}) <> ";"
     case UniversalSelector(value) => value
     case AttributeSelector(elementSelector, attribute) => show(elementSelector) <> "[" <> show(attribute) <> "]"
     case ElementSelector(name) => name

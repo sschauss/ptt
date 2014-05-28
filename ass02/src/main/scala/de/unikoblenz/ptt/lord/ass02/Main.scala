@@ -27,9 +27,9 @@ object Main extends App {
       |  li { display: inline-block; }
       |
       |  a {
-      |    color: rgba(0,128,255,0.3) !important;
+      |    color: rgba(0,128,255,0.3)!important;
       |    background-color: yelLxow !important;
-      |    display: block;
+      |    display: block !important  ;
       |    padding: 6px 12px;
       |    text-decoration: none;
       |  }
