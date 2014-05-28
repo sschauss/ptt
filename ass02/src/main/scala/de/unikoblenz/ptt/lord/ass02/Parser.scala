@@ -156,8 +156,34 @@ object Parser extends PositionedParserUtilities {
 
   lazy val decimal: Parser[String] = "0|-?[1-9][0-9]*(.[0-9])?".r
 
-  lazy val color: Parser[Color] = "#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})".r ^^ Color
-
   lazy val nth: Parser[String] = "even" | "odd" | "(\\+|-)?([0]|[1-9][0-9]*)(n(\\+|-)([0]|[1-9][0-9]*))?".r
+
+  lazy val color: Parser[Color] =
+    rgbaColor |
+      hslaColor |
+      rgbColor |
+      hslColor |
+      hexColor |
+      namedColor
+
+  lazy val namedColor: Parser[NamedColor] = name ^^ NamedColor
+
+  lazy val hexColor: Parser[HexColor] = "#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})".r ^^ HexColor
+
+  lazy val rgbColor: Parser[RgbColor] = ("rgb(" ~> rgbColorValue <~ ",") ~ rgbColorValue ~ ("," ~> rgbColorValue <~ ")") ^^ RgbColor
+
+  lazy val rgbaColor: Parser[RgbaColor] = ("rgba(" ~> rgbColorValue <~ ",") ~ rgbColorValue ~ ("," ~> rgbColorValue <~ ",") ~ opacity <~ ")" ^^ RgbaColor
+
+  lazy val hslColor: Parser[HslColor] = ("hsl(" ~> degree <~ ",") ~ colorPercent ~ ("," ~> colorPercent <~ ")") ^^ HslColor
+
+  lazy val hslaColor: Parser[HslaColor] = ("hsla(" ~> degree <~ ",") ~ colorPercent ~ ("," ~> colorPercent <~ ",") ~ opacity <~ ")" ^^ HslaColor
+
+  lazy val rgbColorValue: Parser[String] = "25[0-5]|2[0-4][0-9]|1?[0-9]?[0-9]".r
+
+  lazy val opacity: Parser[String] = "1|0\\.[0-9]+".r
+
+  lazy val degree: Parser[String] = "360|3[0-5][0-9]|[1-2]?[0-9]?[0-9]".r
+
+  lazy val colorPercent: Parser[String] = "100%|[0-9]?[0-9]%".r
 
 }
