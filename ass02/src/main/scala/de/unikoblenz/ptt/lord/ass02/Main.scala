@@ -28,13 +28,17 @@ object Main extends App {
       |
       |  a {
       |    color: rgba(0,128,255,0.3);
-      |    background-color: yellow;
+      |    background-color: yelLxow;
       |    display: block;
       |    padding: 6px 12px;
       |    text-decoration: none;
       |  }
       |}
     """.stripMargin)
+
+  val partial = parser.parse("YelLow",Parser.namedColor)
+
+  println(partial)
 
   println(sass)
 
