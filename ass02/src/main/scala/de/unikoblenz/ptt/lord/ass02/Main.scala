@@ -17,6 +17,7 @@ object Main extends App {
       |               -8px 8px 8px hsla(12,100%,4%,0.4),
       |                8px -8px 8px blue,
       |               -8px -8px 8px #23FF00;
+      |  *{}
       |  ul, ol {
       |    margin: 0;
       |           padding: 0;

@@ -17,31 +17,30 @@ object Parser extends PositionedParserUtilities {
     case Error(message, _) => throw new Exception(message)
   }
 
-  lazy val parser: PackratParser[Sass] = phrase(sass)
+  def parser: PackratParser[Sass] = phrase(sass)
 
-  lazy val sass: PackratParser[Sass] = rep(ruleSet) ^^ Sass
+  def sass: PackratParser[Sass] = rep(ruleSet) ^^ Sass
 
-  lazy val ruleSet: PackratParser[RuleSet] = repsep(selector, ",") ~ ("{" ~> rep(ruleSet | rule) <~ "}") ^^ RuleSet
+  def ruleSet: PackratParser[RuleSet] = rep1sep(selector, ",") ~ ("{" ~> rep(ruleSet | rule) <~ "}") ^^ RuleSet
 
-  lazy val rule: PackratParser[Rule] = property ~ (":" ~> repsep(valueGroup, ",")) ~ (opt(important) <~ ";") ^^ Rule
+  def rule: PackratParser[Rule] = property ~ (":" ~> repsep(valueGroup, ",")) ~ (opt(important) <~ ";") ^^ Rule
 
-  lazy val important: Parser[String] = "!important"
+  def important: Parser[String] = "!important"
 
-  lazy val valueGroup: PackratParser[ValueGroup] = rep1(value) ^^ ValueGroup
+  def valueGroup: PackratParser[ValueGroup] = rep1(value) ^^ ValueGroup
 
-  lazy val property: PackratParser[String] = name
+  def property: PackratParser[String] = name
+
+  def value: PackratParser[Value] = color | dimension | stringValue | zeroValue
 
 
-  lazy val value: PackratParser[Value] = color | dimension | stringValue | zeroValue
-
-
-  lazy val selector: PackratParser[Selector] =
+  def selector: PackratParser[Selector] =
     selectorCombinator |
       pseudoElementSelector |
       simpleSelector
 
 
-  lazy val simpleSelector: PackratParser[SimpleSelector] =
+  def simpleSelector: PackratParser[SimpleSelector] =
     pseudoClassSelector |
       attributeSelector |
       universalSelector |
@@ -50,22 +49,22 @@ object Parser extends PositionedParserUtilities {
       idSelector
 
 
-  lazy val universalSelector: Parser[UniversalSelector] = "*" ^^ UniversalSelector
+  def universalSelector: Parser[UniversalSelector] = "*" ^^ UniversalSelector
 
 
-  lazy val elementSelector: PackratParser[ElementSelector] = name ^^ ElementSelector
+  def elementSelector: PackratParser[ElementSelector] = name ^^ ElementSelector
 
 
-  lazy val attributeSelector: PackratParser[AttributeSelector] = elementSelector ~ ("[" ~> attribute <~ "]") ^^ AttributeSelector
+  def attributeSelector: PackratParser[AttributeSelector] = elementSelector ~ ("[" ~> attribute <~ "]") ^^ AttributeSelector
 
-  lazy val attribute: PackratParser[Attribute] = name ~ ((("~" | "^" | "$" | "*" | "|") ?) <~ "=") ~ ("\"" ~> name <~ "\"") ^^ Attribute
+  def attribute: PackratParser[Attribute] = name ~ ((("~" | "^" | "$" | "*" | "|") ?) <~ "=") ~ ("\"" ~> name <~ "\"") ^^ Attribute
 
 
-  lazy val pseudoClassSelector: PackratParser[PseudoClassSelector] =
+  def pseudoClassSelector: PackratParser[PseudoClassSelector] =
     elementSelector ~ (":" ~> pseudoClass) ^^ ElementPseudoClassSelector |
       negationPseudoClassSelector
 
-  lazy val pseudoClass: PackratParser[PseudoClass] =
+  def pseudoClass: PackratParser[PseudoClass] =
     structuralPseudoClass |
       linkPseudoClass |
       userActionPseudoClass |
@@ -73,7 +72,7 @@ object Parser extends PositionedParserUtilities {
       langPseudoClass |
       uiElementStatePseudoClass
 
-  lazy val structuralPseudoClass: PackratParser[StructuralPseudoClass] =
+  def structuralPseudoClass: PackratParser[StructuralPseudoClass] =
     "root" ^^ SimpleStructuralPseudoClass |
       "nth-child" ~ ("(" ~> nth <~ ")") ^^ ComplexStructuralPseudoClass |
       "nth-last-child" ~ ("(" ~> nth <~ ")") ^^ ComplexStructuralPseudoClass |
@@ -87,109 +86,124 @@ object Parser extends PositionedParserUtilities {
       "only-of-type" ^^ SimpleStructuralPseudoClass |
       "empty" ^^ SimpleStructuralPseudoClass
 
-  lazy val linkPseudoClass: Parser[LinkPseudoClass] = "link" ^^ LinkPseudoClass
+  def linkPseudoClass: Parser[LinkPseudoClass] = "link" ^^ LinkPseudoClass
 
-  lazy val userActionPseudoClass: Parser[UserActionPseudoClass] =
+  def userActionPseudoClass: Parser[UserActionPseudoClass] =
     "visited" ^^ UserActionPseudoClass |
       "active" ^^ UserActionPseudoClass |
       "hover" ^^ UserActionPseudoClass |
       "focus" ^^ UserActionPseudoClass
 
-  lazy val targetPseudoClass: Parser[TargetPseudoClass] = "target" ^^ TargetPseudoClass
+  def targetPseudoClass: Parser[TargetPseudoClass] = "target" ^^ TargetPseudoClass
 
-  lazy val langPseudoClass: PackratParser[LangPseudoClass] = "lang(" ~> name <~ ")" ^^ LangPseudoClass
+  def langPseudoClass: PackratParser[LangPseudoClass] = "lang(" ~> name <~ ")" ^^ LangPseudoClass
 
-  lazy val uiElementStatePseudoClass: Parser[UiElementStatePseudoClass] =
+  def uiElementStatePseudoClass: Parser[UiElementStatePseudoClass] =
     "enabled" ^^ UiElementStatePseudoClass |
       "disabled" ^^ UiElementStatePseudoClass |
       "checked" ^^ UiElementStatePseudoClass
 
 
-  lazy val pseudoElementSelector: PackratParser[PseudoElementSelector] = elementSelector ~ ("::" ~> pseudoElement) ^^ PseudoElementSelector
+  def pseudoElementSelector: PackratParser[PseudoElementSelector] = elementSelector ~ ("::" ~> pseudoElement) ^^ PseudoElementSelector
 
-  lazy val pseudoElement: PackratParser[PseudoElement] =
+  def pseudoElement: PackratParser[PseudoElement] =
     firstLinePseudoElement |
       firstLetterPseudoElement |
       beforePseudoElement |
       afterPseudoElement
 
-  lazy val firstLinePseudoElement: Parser[PseudoElement] = "first-line" ^^ PseudoElement
+  def firstLinePseudoElement: Parser[PseudoElement] = "first-line" ^^ PseudoElement
 
-  lazy val firstLetterPseudoElement: Parser[PseudoElement] = "first-letter" ^^ PseudoElement
+  def firstLetterPseudoElement: Parser[PseudoElement] = "first-letter" ^^ PseudoElement
 
-  lazy val beforePseudoElement: Parser[PseudoElement] = "before" ^^ PseudoElement
+  def beforePseudoElement: Parser[PseudoElement] = "before" ^^ PseudoElement
 
-  lazy val afterPseudoElement: Parser[PseudoElement] = "after" ^^ PseudoElement
-
-
-  lazy val classSelector: PackratParser[ClassSelector] = "." ~> name ^^ ClassSelector
+  def afterPseudoElement: Parser[PseudoElement] = "after" ^^ PseudoElement
 
 
-  lazy val idSelector: PackratParser[IdSelector] = "#" ~> name ^^ IdSelector
+  def classSelector: PackratParser[ClassSelector] = "." ~> name ^^ ClassSelector
 
 
-  lazy val negationPseudoClassSelector: PackratParser[NegationPseudoClassSelector] = ":not(" ~> simpleSelector <~ ")" ^^ NegationPseudoClassSelector
+  def idSelector: PackratParser[IdSelector] = "#" ~> name ^^ IdSelector
 
 
-  lazy val selectorCombinator: PackratParser[SelectorCombinator] =
+  def negationPseudoClassSelector: PackratParser[NegationPseudoClassSelector] = ":not(" ~> simpleSelector <~ ")" ^^ NegationPseudoClassSelector
+
+
+  def selectorCombinator: PackratParser[SelectorCombinator] =
     descendantCombinator |
       childCombinator |
       adjacentCombinator |
       generalSiblingCombinator
 
-  lazy val descendantCombinator: PackratParser[DescendantCombinator] = simpleSelector ~ simpleSelector ^^ DescendantCombinator
+  def descendantCombinator: PackratParser[DescendantCombinator] = simpleSelector ~ simpleSelector ^^ DescendantCombinator
 
-  lazy val childCombinator: PackratParser[ChildCombinator] = simpleSelector ~ (">" ~> simpleSelector) ^^ ChildCombinator
+  def childCombinator: PackratParser[ChildCombinator] = simpleSelector ~ (">" ~> simpleSelector) ^^ ChildCombinator
 
-  lazy val adjacentCombinator: PackratParser[AdjacentCombinator] = simpleSelector ~ ("+" ~> simpleSelector) ^^ AdjacentCombinator
+  def adjacentCombinator: PackratParser[AdjacentCombinator] = simpleSelector ~ ("+" ~> simpleSelector) ^^ AdjacentCombinator
 
-  lazy val generalSiblingCombinator: PackratParser[GeneralSiblingCombinator] = simpleSelector ~ ("~" ~> simpleSelector) ^^ GeneralSiblingCombinator
+  def generalSiblingCombinator: PackratParser[GeneralSiblingCombinator] = simpleSelector ~ ("~" ~> simpleSelector) ^^ GeneralSiblingCombinator
 
 
-  lazy val dimension: Parser[Dimension] = (decimal ~ ("in" | "cm" | "mm" | "em" | "ex" | "pt" | "pc" | "px")) ^^ Dimension | percent
+  def dimension: Parser[Dimension] = (decimal ~ ("in" | "cm" | "mm" | "em" | "ex" | "pt" | "pc" | "px")) ^^ Dimension | percent
 
-  lazy val percent: Parser[Dimension] = "(100|[1-9][0-9]?)".r ~ "%" ^^ Dimension
+  def percent: Parser[Dimension] = "(100|[1-9][0-9]?)".r ~ "%" ^^ Dimension
 
-  lazy val name: Parser[String] = string
+  def name: Parser[String] = string
 
-  lazy val stringValue: Parser[StringValue] = "[-a-zA-Z]+".r ^^ StringValue
+  def stringValue: Parser[StringValue] = "[-a-zA-Z]+".r ^^ StringValue
 
-  lazy val string: Parser[String] = "[-a-zA-Z]+".r
+  def string: Parser[String] = "[-a-zA-Z]+".r
 
-  lazy val zeroValue: Parser[ZeroValue] = "0" ^^ ZeroValue
+  def zeroValue: Parser[ZeroValue] = "0" ^^ ZeroValue
 
-  lazy val integer: Parser[String] = "[0]|[1-9][0-9]*".r
+  def integer: Parser[String] = "[0]|[1-9][0-9]*".r
 
-  lazy val decimal: Parser[String] = "0|-?[1-9][0-9]*(.[0-9])?".r
+  def decimal: Parser[String] = "0|-?[1-9][0-9]*(.[0-9])?".r
 
-  lazy val nth: Parser[String] = "even" | "odd" | "(\\+|-)?([0]|[1-9][0-9]*)(n(\\+|-)([0]|[1-9][0-9]*))?".r
+  def nth: Parser[String] = "even" | "odd" | "(\\+|-)?([0]|[1-9][0-9]*)(n(\\+|-)([0]|[1-9][0-9]*))?".r
 
-  lazy val color: Parser[Color] =
+  def color: Parser[Color] =
     rgbaColor |
       hslaColor |
       rgbColor |
       hslColor |
       hexColor |
-      namedColor
+      namedColor |
+      initial |
+      inherit
 
-  lazy val namedColor: Parser[NamedColor] = "(?i)aliceblue|antiquewhite|aqua|aquamarine|azure|beige|bisque|black|blanchedalmond|blue|blueviolet|brown|burlywood|cadetblue|chartreuse|chocolate|coral|cornflowerblue|cornsilk|crimson|cyan|darkblue|darkcyan|darkgoldenrod|darkgray|darkgreen|darkgrey|darkkhaki|darkmagenta|darkolivegreen|darkorange|darkorchid|darkred|darksalmon|darkseagreen|darkslateblue|darkslategray|darkslategrey|darkturquoise|darkviolet|deeppink|deepskyblue|dimgray|dimgrey|dodgerblue|firebrick|floralwhite|forestgreen|fuchsia|gainsboro|ghostwhite|gold|goldenrod|gray|green|greenyellow|grey|honeydew|hotpink|indianred|indigo|ivory|khaki|lavender|lavenderblush|lawngreen|lemonchiffon|lightblue|lightcoral|lightcyan|lightgoldenrodyellow|lightgray|lightgreen|lightgrey|lightpink|lightsalmon|lightseagreen|lightskyblue|lightslategray|lightslategrey|lightsteelblue|lightyellow|lime|limegreen|linen|magenta|maroon|mediumaquamarine|mediumblue|mediumorchid|mediumpurple|mediumseagreen|mediumslateblue|mediumspringgreen|mediumturquoise|mediumvioletred|midnightblue|mintcream|mistyrose|moccasin|navajowhite|navy|oldlace|olive|olivedrab|orange|orangered|orchid|palegoldenrod|palegreen|paleturquoise|palevioletred|papayawhip|peachpuff|peru|pink|plum|powderblue|purple|red|rosybrown|royalblue|saddlebrown|salmon|sandybrown|seagreen|seashell|sienna|silver|skyblue|slateblue|slategray|slategrey|snow|springgreen|steelblue|tan|teal|thistle|tomato|turquoise|violet|wheat|white|whitesmoke|yellow|yellowgreen".r ^^ NamedColor
+  def namedColor: Parser[NamedColor] = "(?i)aliceblue|antiquewhite|aqua|aquamarine|azure|beige|bisque|black|blanchedalmond|blue|blueviolet|brown|burlywood|cadetblue|chartreuse|chocolate|coral|cornflowerblue|cornsilk|crimson|cyan|darkblue|darkcyan|darkgoldenrod|darkgray|darkgreen|darkgrey|darkkhaki|darkmagenta|darkolivegreen|darkorange|darkorchid|darkred|darksalmon|darkseagreen|darkslateblue|darkslategray|darkslategrey|darkturquoise|darkviolet|deeppink|deepskyblue|dimgray|dimgrey|dodgerblue|firebrick|floralwhite|forestgreen|fuchsia|gainsboro|ghostwhite|gold|goldenrod|gray|green|greenyellow|grey|honeydew|hotpink|indianred|indigo|ivory|khaki|lavender|lavenderblush|lawngreen|lemonchiffon|lightblue|lightcoral|lightcyan|lightgoldenrodyellow|lightgray|lightgreen|lightgrey|lightpink|lightsalmon|lightseagreen|lightskyblue|lightslategray|lightslategrey|lightsteelblue|lightyellow|lime|limegreen|linen|magenta|maroon|mediumaquamarine|mediumblue|mediumorchid|mediumpurple|mediumseagreen|mediumslateblue|mediumspringgreen|mediumturquoise|mediumvioletred|midnightblue|mintcream|mistyrose|moccasin|navajowhite|navy|oldlace|olive|olivedrab|orange|orangered|orchid|palegoldenrod|palegreen|paleturquoise|palevioletred|papayawhip|peachpuff|peru|pink|plum|powderblue|purple|red|rosybrown|royalblue|saddlebrown|salmon|sandybrown|seagreen|seashell|sienna|silver|skyblue|slateblue|slategray|slategrey|snow|springgreen|steelblue|tan|teal|thistle|tomato|turquoise|violet|wheat|white|whitesmoke|yellow|yellowgreen".r ^^ NamedColor
 
-  lazy val hexColor: Parser[HexColor] = "#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})".r ^^ HexColor
+  def hexColor: Parser[HexColor] = "#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})".r ^^ HexColor
 
-  lazy val rgbColor: Parser[RgbColor] = ("rgb(" ~> rgbColorValue <~ ",") ~ rgbColorValue ~ ("," ~> rgbColorValue <~ ")") ^^ RgbColor
+  def rgbColor: Parser[RgbColor] = ("rgb(" ~> rgbColorValue <~ ",") ~ rgbColorValue ~ ("," ~> rgbColorValue <~ ")") ^^ RgbColor
 
-  lazy val rgbaColor: Parser[RgbaColor] = ("rgba(" ~> rgbColorValue <~ ",") ~ rgbColorValue ~ ("," ~> rgbColorValue <~ ",") ~ opacity <~ ")" ^^ RgbaColor
+  def rgbaColor: Parser[RgbaColor] = ("rgba(" ~> rgbColorValue <~ ",") ~ rgbColorValue ~ ("," ~> rgbColorValue <~ ",") ~ opacity <~ ")" ^^ RgbaColor
 
-  lazy val hslColor: Parser[HslColor] = ("hsl(" ~> degree <~ ",") ~ colorPercent ~ ("," ~> colorPercent <~ ")") ^^ HslColor
+  def hslColor: Parser[HslColor] = ("hsl(" ~> degree <~ ",") ~ colorPercent ~ ("," ~> colorPercent <~ ")") ^^ HslColor
 
-  lazy val hslaColor: Parser[HslaColor] = ("hsla(" ~> degree <~ ",") ~ colorPercent ~ ("," ~> colorPercent <~ ",") ~ opacity <~ ")" ^^ HslaColor
+  def hslaColor: Parser[HslaColor] = ("hsla(" ~> degree <~ ",") ~ colorPercent ~ ("," ~> colorPercent <~ ",") ~ opacity <~ ")" ^^ HslaColor
 
-  lazy val rgbColorValue: Parser[String] = "25[0-5]|2[0-4][0-9]|1?[0-9]?[0-9]".r
+  def rgbColorValue: Parser[String] = "25[0-5]|2[0-4][0-9]|1?[0-9]?[0-9]".r
 
-  lazy val opacity: Parser[String] = "1|0\\.[0-9]+".r
+  def opacity: Parser[String] = "1|0\\.[0-9]+".r
 
-  lazy val degree: Parser[String] = "360|3[0-5][0-9]|[1-2]?[0-9]?[0-9]".r
+  def degree: Parser[String] = "360|3[0-5][0-9]|[1-2]?[0-9]?[0-9]".r
 
-  lazy val colorPercent: Parser[String] = "100%|[0-9]?[0-9]%".r
+  def colorPercent: Parser[String] = "100%|[0-9]?[0-9]%".r
+
+  def initial = "initial" ^^^ Initial()
+
+  def inherit = "inherit" ^^^ Inherit()
+
+  case class Initial() extends Color
+
+  case class Inherit() extends Color
+
+  case class ColorRule(value: Color) extends RuleNode
+
+  def colorRule = "color:" ~ color ~ ";"
+
 
 }
