@@ -1,15 +1,16 @@
 package de.unikoblenz.ptt.lord.ass02
 
-import org.kiama.util.PositionedParserUtilities
+import org.kiama.util.{WhitespacePositionedParserUtilities, PositionedParserUtilities}
 import de.unikoblenz.ptt.lord.ass02.ast._
 import de.unikoblenz.ptt.lord.ass02.ast.pseudoclass._
 import de.unikoblenz.ptt.lord.ass02.ast.selector._
 import de.unikoblenz.ptt.lord.ass02.ast.value._
+import scala.util.matching.Regex
 
 
 object Parser extends PositionedParserUtilities {
 
-  def parse(input: String): Sass = parse(input, parser)
+  def parse(input: String): Any = parse(input, parser)
 
   def parse[T](input: String, parser: Parser[T]): T = parseAll(parser, input) match {
     case Success(sass, _) => sass
@@ -17,9 +18,9 @@ object Parser extends PositionedParserUtilities {
     case Error(message, _) => throw new Exception(message)
   }
 
-  def parser: PackratParser[Sass] = phrase(sass)
+  def parser: PackratParser[Any] = phrase(sass)
 
-  def sass: PackratParser[Sass] = rep(ruleSet) ^^ Sass
+  def sass: PackratParser[Any] = rep(selectorsGroup ~ "{}")
 
   def ruleSet: PackratParser[RuleSet] = rep1sep(selector, ",") ~ ("{" ~> rep(ruleSet | rule) <~ "}") ^^ RuleSet
 
@@ -31,86 +32,90 @@ object Parser extends PositionedParserUtilities {
 
   def property: PackratParser[String] = name
 
-  def value: PackratParser[Value] = color | dimension | stringValue | zeroValue
+  def value: PackratParser[Value] = color | quantity | stringValue
 
 
-  def selector: PackratParser[Selector] =
-    selectorCombinator |
-      pseudoElementSelector |
-      simpleSelector
+
+  //Selector Group
+  def selectorsGroup: PackratParser[SelectorGroup] = rep1sep(selector, ",") ^^ SelectorGroup
 
 
-  def simpleSelector: PackratParser[SimpleSelector] =
-    pseudoClassSelector |
-      attributeSelector |
-      universalSelector |
-      elementSelector |
-      classSelector |
-      idSelector
+  //Selector
+  def selector: PackratParser[Selector] = simpleSelectorSequence ~ rep((combinator ~ simpleSelectorSequence) ^^ { tuple => (tuple._1, tuple._2)}) ^^ Selector
 
 
-  def universalSelector: Parser[UniversalSelector] = "*" ^^ UniversalSelector
+  //Combinator
+  def combinator: PackratParser[Combinator] =
+    descendantCombinator |
+      childCombinator |
+      adjacentCombinator |
+      generalSiblingCombinator
+
+  def descendantCombinator: PackratParser[DescendantCombinator] = rep(" ") ^^^ DescendantCombinator()
+
+  def childCombinator: PackratParser[ChildCombinator] = ">" ^^^ ChildCombinator()
+
+  def adjacentCombinator: PackratParser[AdjacentCombinator] = "+" ^^^ AdjacentCombinator()
+
+  def generalSiblingCombinator: PackratParser[GeneralSiblingCombinator] = "~" ^^^ GeneralSiblingCombinator()
 
 
-  def elementSelector: PackratParser[ElementSelector] = name ^^ ElementSelector
+  //Simple Selector Sequence
+  def simpleSelectorSequence: PackratParser[SimpleSelectorSequence] =
+    (typeSelector | universalSelector) ~ rep(idSelector | classSelector | attributeSelector | pseudoSelector | negationSelector) ^^ {tuple => SimpleSelectorSequence(Some(tuple._1), tuple._2)} |
+    rep1(idSelector | classSelector | attributeSelector | pseudoSelector | negationSelector) ^^ {SimpleSelectorSequence(None, _)}
 
 
-  def attributeSelector: PackratParser[AttributeSelector] = elementSelector ~ ("[" ~> attribute <~ "]") ^^ AttributeSelector
+  //Type Selector
+  def typeSelector: PackratParser[TypeSelector] = (nameSpacePrefix ? ) ~ name ^^ TypeSelector
 
-  def attribute: PackratParser[Attribute] = name ~ ((("~" | "^" | "$" | "*" | "|") ?) <~ "=") ~ ("\"" ~> name <~ "\"") ^^ Attribute
+
+  //Namespace Prefix
+  def nameSpacePrefix: PackratParser[NameSpacePrefix] = ((ident | "*") ?) <~ "|" ^^ NameSpacePrefix
 
 
-  def pseudoClassSelector: PackratParser[PseudoClassSelector] =
-    elementSelector ~ (":" ~> pseudoClass) ^^ ElementPseudoClassSelector |
-      negationPseudoClassSelector
+  //Element Name
+  def elementName: PackratParser[String] = ident
 
-  def pseudoClass: PackratParser[PseudoClass] =
-    structuralPseudoClass |
-      linkPseudoClass |
-      userActionPseudoClass |
-      targetPseudoClass |
-      langPseudoClass |
-      uiElementStatePseudoClass
+
+  //Universal Selector
+  def universalSelector: PackratParser[UniversalSelector] = "*" ^^ UniversalSelector
+
+
+  //Class Selector
+  def classSelector: PackratParser[ClassSelector] = ("." ~> ident) ^^ ClassSelector
+
+
+  //Attribute Selector
+  def attributeSelector: PackratParser[AttributeSelector] = "[" ~> (nameSpacePrefix ?) ~ ident  ~ ((("~" | "^" | "$" | "*" | "|") ?) <~ "=") ~ (ident | string)  <~ "]" ^^ AttributeSelector
+
+
+  //Pseudo Selector
+  def pseudoSelector: PackratParser[PseudoSelector] = pseudoClassSelector | pseudoElementSelector
+
+
+  //Pseudo Class Selector
+  def pseudoClassSelector: PackratParser[PseudoClassSelector] = ":" ~> (structuralPseudoClass | linkPseudoClass | userActionPseudoClass | targetPseudoClass | langPseudoClass | uiElementStatePseudoClass) ^^ PseudoClassSelector
 
   def structuralPseudoClass: PackratParser[StructuralPseudoClass] =
-    "root" ^^ SimpleStructuralPseudoClass |
-      "nth-child" ~ ("(" ~> nth <~ ")") ^^ ComplexStructuralPseudoClass |
-      "nth-last-child" ~ ("(" ~> nth <~ ")") ^^ ComplexStructuralPseudoClass |
-      "nth-of-type" ~ ("(" ~> nth <~ ")") ^^ ComplexStructuralPseudoClass |
-      "nth-last-of-type" ~ ("(" ~> nth <~ ")") ^^ ComplexStructuralPseudoClass |
-      "first-child" ^^ SimpleStructuralPseudoClass |
-      "last-child" ^^ SimpleStructuralPseudoClass |
-      "first-of-type" ^^ SimpleStructuralPseudoClass |
-      "last-of-type" ^^ SimpleStructuralPseudoClass |
-      "only-child" ^^ SimpleStructuralPseudoClass |
-      "only-of-type" ^^ SimpleStructuralPseudoClass |
-      "empty" ^^ SimpleStructuralPseudoClass
+    ("nth-child" ~ ("(" ~> nth <~ ")") | "nth-last-child" ~ ("(" ~> nth <~ ")") | "nth-of-type" ~ ("(" ~> nth <~ ")") | "nth-last-of-type" ~ ("(" ~> nth <~ ")")) ^^ ComplexStructuralPseudoClass |
+      ("root" | "first-child" | "last-child" | "first-of-type" | "last-of-type" | "only-child" | "only-of-type" | "empty") ^^ SimpleStructuralPseudoClass
 
   def linkPseudoClass: Parser[LinkPseudoClass] = "link" ^^ LinkPseudoClass
 
-  def userActionPseudoClass: Parser[UserActionPseudoClass] =
-    "visited" ^^ UserActionPseudoClass |
-      "active" ^^ UserActionPseudoClass |
-      "hover" ^^ UserActionPseudoClass |
-      "focus" ^^ UserActionPseudoClass
+  def userActionPseudoClass: Parser[UserActionPseudoClass] = ("visited" | "active" | "hover" | "focus") ^^ UserActionPseudoClass
 
   def targetPseudoClass: Parser[TargetPseudoClass] = "target" ^^ TargetPseudoClass
 
   def langPseudoClass: PackratParser[LangPseudoClass] = "lang(" ~> name <~ ")" ^^ LangPseudoClass
 
-  def uiElementStatePseudoClass: Parser[UiElementStatePseudoClass] =
-    "enabled" ^^ UiElementStatePseudoClass |
-      "disabled" ^^ UiElementStatePseudoClass |
-      "checked" ^^ UiElementStatePseudoClass
+  def uiElementStatePseudoClass: Parser[UiElementStatePseudoClass] = ("enabled" | "disabled" | "checked") ^^ UiElementStatePseudoClass
 
 
-  def pseudoElementSelector: PackratParser[PseudoElementSelector] = elementSelector ~ ("::" ~> pseudoElement) ^^ PseudoElementSelector
+  //Pseudo Element Selector
+  def pseudoElementSelector: PackratParser[PseudoElementSelector] = "::" ~> pseudoElement ^^ PseudoElementSelector
 
-  def pseudoElement: PackratParser[PseudoElement] =
-    firstLinePseudoElement |
-      firstLetterPseudoElement |
-      beforePseudoElement |
-      afterPseudoElement
+  def pseudoElement: PackratParser[PseudoElement] = firstLinePseudoElement | firstLetterPseudoElement | beforePseudoElement | afterPseudoElement
 
   def firstLinePseudoElement: Parser[PseudoElement] = "first-line" ^^ PseudoElement
 
@@ -121,45 +126,90 @@ object Parser extends PositionedParserUtilities {
   def afterPseudoElement: Parser[PseudoElement] = "after" ^^ PseudoElement
 
 
-  def classSelector: PackratParser[ClassSelector] = "." ~> name ^^ ClassSelector
+  //Id Selector
+  def idSelector: PackratParser[IdSelector] = ("#" ~> ident) ^^ IdSelector
 
 
-  def idSelector: PackratParser[IdSelector] = "#" ~> name ^^ IdSelector
+  //Negation Selector
+  def negationSelector: PackratParser[NegationSelector] = ":not(" ~> (typeSelector | universalSelector | idSelector | classSelector | attributeSelector | pseudoSelector) <~  ")" ^^ NegationSelector
 
 
-  def negationPseudoClassSelector: PackratParser[NegationPseudoClassSelector] = ":not(" ~> simpleSelector <~ ")" ^^ NegationPseudoClassSelector
+  def ident = ("-" ?) ~ (nmstart ~ rep(nmchar) ^^ { x => x._1 + x._2.mkString}) ^^ { x => x._1.getOrElse("") + x._2}
+
+  def name: Parser[String] = rep1(nmchar) ^^ {
+    _.mkString
+  }
+
+  def nmstart: Parser[String] = "[_a-z]".r | nonascii | escape
+
+  def nonascii: Parser[String] = "[^\0-\177]".r
+
+  def unicode: Parser[String] = "\\[0-9a-f]{1,6}(\r\n|[\n\r\t\f])?".r
+
+  def escape: PackratParser[String] = unicode | "\\[^\n\r\f0-9a-f]"
+
+  def nmchar: Parser[String] = "[_a-z0-9-]".r | nonascii | escape
+
+  def num: Parser[String] = "[0-9]+|[0-9]*\\.[0-9]+".r
+
+  def string: Parser[String] = ("\"" | "'") ~ (rep(not("[^\n\r\f\"]".r) ~> (nonascii | escape))) ~ ("\"" | "'") ^^ { x => x._1._1 + x._1._2.mkString + x._2}
+
+  def nl: Parser[String] = "\n|\r\n|\r|\f".r
+
+  def s: Parser[String] = "[\t\r\n\f]+".r
+
+  def ss: Parser[List[String]] = rep(s)
 
 
-  def selectorCombinator: PackratParser[SelectorCombinator] =
-    descendantCombinator |
-      childCombinator |
-      adjacentCombinator |
-      generalSiblingCombinator
-
-  def descendantCombinator: PackratParser[DescendantCombinator] = simpleSelector ~ simpleSelector ^^ DescendantCombinator
-
-  def childCombinator: PackratParser[ChildCombinator] = simpleSelector ~ (">" ~> simpleSelector) ^^ ChildCombinator
-
-  def adjacentCombinator: PackratParser[AdjacentCombinator] = simpleSelector ~ ("+" ~> simpleSelector) ^^ AdjacentCombinator
-
-  def generalSiblingCombinator: PackratParser[GeneralSiblingCombinator] = simpleSelector ~ ("~" ~> simpleSelector) ^^ GeneralSiblingCombinator
 
 
-  def dimension: Parser[Dimension] = (decimal ~ ("in" | "cm" | "mm" | "em" | "ex" | "pt" | "pc" | "px")) ^^ Dimension | percent
 
-  def percent: Parser[Dimension] = "(100|[1-9][0-9]?)".r ~ "%" ^^ Dimension
 
-  def name: Parser[String] = string
+
+
+
+
+
+
+
+
+  def quantity: PackratParser[Quantity] =
+    percent |
+      in |
+      cm |
+      mm |
+      em |
+      ex |
+      pt |
+      pc |
+      px |
+      zero
+
+  def percent: PackratParser[Percent] = num <~ "%" ^^ { r => Percent(r.toFloat)}
+
+  def in: PackratParser[In] = num <~ "in" ^^ { r => In(r.toFloat)}
+
+  def cm: PackratParser[Cm] = num <~ "cm" ^^ { r => Cm(r.toFloat)}
+
+  def mm: PackratParser[Mm] = num <~ "mm" ^^ { r => Mm(r.toFloat)}
+
+  def em: PackratParser[Em] = num <~ "em" ^^ { r => Em(r.toFloat)}
+
+  def ex: PackratParser[Ex] = num <~ "ex" ^^ { r => Ex(r.toFloat)}
+
+  def pt: PackratParser[Pt] = num <~ "pt" ^^ { r => Pt(r.toFloat)}
+
+  def pc: PackratParser[Pc] = num <~ "pc" ^^ { r => Pc(r.toFloat)}
+
+  def px: PackratParser[Px] = num <~ "px" ^^ { r => Px(r.toFloat)}
+
+  def zero: PackratParser[Zero] = "0" ^^ { _ => Zero()}
+
 
   def stringValue: Parser[StringValue] = "[-a-zA-Z]+".r ^^ StringValue
 
-  def string: Parser[String] = "[-a-zA-Z]+".r
-
-  def zeroValue: Parser[ZeroValue] = "0" ^^ ZeroValue
 
   def integer: Parser[String] = "[0]|[1-9][0-9]*".r
-
-  def decimal: Parser[String] = "0|-?[1-9][0-9]*(.[0-9])?".r
 
   def nth: Parser[String] = "even" | "odd" | "(\\+|-)?([0]|[1-9][0-9]*)(n(\\+|-)([0]|[1-9][0-9]*))?".r
 
@@ -191,7 +241,7 @@ object Parser extends PositionedParserUtilities {
 
   def degree: Parser[String] = "360|3[0-5][0-9]|[1-2]?[0-9]?[0-9]".r
 
-  def colorPercent: Parser[String] = "100%|[0-9]?[0-9]%".r
+  def colorPercent: Parser[String] = "100%|[1-9][0-9]?%".r
 
   def initial = "initial" ^^^ Initial()
 
@@ -204,6 +254,5 @@ object Parser extends PositionedParserUtilities {
   case class ColorRule(value: Color) extends RuleNode
 
   def colorRule = "color:" ~ color ~ ";"
-
 
 }
