@@ -8,7 +8,7 @@ object Parser extends PositionedParserUtilities {
 
   override def skipWhitespace = false
 
-  val s = whiteSpace
+  val s = "[ \t\r\n\f]+".r
 
   def parse[T](input: String, parser: Parser[T]): T = parseAll(parser, input) match {
     case Success(result, _) => result
@@ -16,8 +16,21 @@ object Parser extends PositionedParserUtilities {
     case Error(msg, _) => throw new Exception(msg)
   }
 
-  lazy val parser = selectorGroup <~ "{}"
-  lazy val selectorGroup = rep1sep(selectorSequence, rep(s) ~ "," ~ rep(s)) ^^ SelectorGroup
+  def is[T](parser: Parser[T]) = (rep(s) ~> parser <~ rep(s))
+
+  lazy val parser = rep(ruleSet) ^^ CSS
+
+  lazy val ruleSet = is(selectorGroup) ~ (is("{") ~> rep(rule) <~ is("}")) ^^ RuleSet
+
+  lazy val rule = property ~ (is(":") ~> rep1sep(valueGroup, ",") <~ is(";")) ^^ Rule
+
+  lazy val valueGroup = rep1sep(value, s) ^^ ValueGroup
+
+  lazy val property = "[-a-zA-Z_]+".r
+  lazy val value = "[a-zA-Z0-9]+".r
+
+
+  lazy val selectorGroup = rep1sep(selectorSequence, is(",")) ^^ SelectorGroup
   lazy val selectorSequence: PackratParser[SelectorSequence] = selector ~ rep(selectorCombination) ^^ SelectorSequence
   lazy val selectorCombination: PackratParser[SelectorCombination] = (">" | "+" | "~" | rep1(s) ^^^ " " | "") ~ selectorSequence ^^ SelectorCombination
   lazy val selector = classSelector | idSelector | typeSelector | universalSelector | notSelector | attributeSelector | pseudoClassSelector | pseudoElementSelector

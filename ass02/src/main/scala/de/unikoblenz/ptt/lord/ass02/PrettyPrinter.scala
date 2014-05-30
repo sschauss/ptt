@@ -30,6 +30,10 @@ object PrettyPrinter extends PrettyPrinter {
     case PseudoClassSelector(pseudoClassName, Some(pseudoClassExpression)) => ":" <> pseudoClassName <> "(" <> pseudoClassExpression <> ")"
     case PseudoElementSelector(pseudoElementName) => "::" <> pseudoElementName
     case NotSelector(selector: Selector) => ":not(" <> show(selector) <> ")"
+    case RuleSet(selectorGroup, rules: List[Rule]) => show(selectorGroup) <+> "{" <> nest(line <> vsep(rules map show)) <> line <> "}"
+    case Rule(property, valueGroups) => property <> ":" <+> ssep(valueGroups map show, ",") <> ";"
+    case ValueGroup(values: List[String]) => ssep(values map value, " ")
+    case CSS(ruleSets: List[RuleSet]) => ssep(ruleSets map show, line)
   }
 
 }
