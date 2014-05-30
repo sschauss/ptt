@@ -3,15 +3,11 @@ package de.unikoblenz.ptt.lord.ass02
 
 object Main extends App {
 
-  val parser = Parser
 
-  val parse = """  div[a|foo=asd] div{}""".stripMargin
+  val result = Parser.parse("""div#container span, div:not([*|href="test"]) span{}""", Parser.parser)
 
-  println(parse)
 
-  val sass = parser.parse(parse, parser.parser)
-
-  println(sass)
-
+  println(result)
+  println(PrettyPrinter.pretty(result))
 
 }
