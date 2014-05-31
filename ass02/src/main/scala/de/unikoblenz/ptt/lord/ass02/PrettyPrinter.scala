@@ -12,7 +12,8 @@ object PrettyPrinter extends PrettyPrinter {
   def show(node: Node): Doc = node match {
     case SelectorGroup(selectorSequences) => ssep(selectorSequences map show, ", ")
     case SelectorSequence(selector, selectorCombinations) => show(selector) <> sep(selectorCombinations map show)
-    case SelectorCombination(operator, selectorSequence) => operator <> show(selectorSequence)
+    case SelectorCombination(" ", selectorSequence) => " " <> show(selectorSequence)
+    case SelectorCombination(operator, selectorSequence) => " " <> operator <+> show(selectorSequence)
     case ClassSelector(className) => "." <> className
     case IdSelector(idName) => "#" <> idName
     case TypeSelector(Some(nameSpacePrefix), typeName) => show(nameSpacePrefix) <> typeName

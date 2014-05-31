@@ -16,7 +16,7 @@ object Parser extends PositionedParserUtilities {
     case Error(msg, next) => throw new Exception(msg + next)
   }
 
-  def iw[T](parser: Parser[T]) = (rep(s) ~> parser <~ rep(s)) //ignore whitespaces
+  def iw[T](parser: Parser[T]) = rep(s) ~> parser <~ rep(s) //ignore whitespaces
 
   lazy val parser = iw(rep(ruleSet | mixin | variable)) ^^ SCSS
 
@@ -32,7 +32,7 @@ object Parser extends PositionedParserUtilities {
 
 
   lazy val ruleSet: PackratParser[RuleSet] = iw(selectorGroup) ~ declarationBlock ^^ RuleSet
-  lazy val declarationBlock = (iw("{") ~> rep(rule | extend | include) <~ iw("}"))
+  lazy val declarationBlock = iw("{") ~> rep(rule | extend | include) <~ iw("}")
   lazy val rule: PackratParser[Rule] = declaration | ruleSet
   lazy val declaration = property ~ (iw(":") ~> rep1sep(valueGroup, iw(",")) <~ iw(";")) ^^ Declaration
 
@@ -50,7 +50,7 @@ object Parser extends PositionedParserUtilities {
 
   lazy val selectorGroup = rep1sep(selectorSequence, iw(",")) ^^ SelectorGroup
   lazy val selectorSequence: PackratParser[SelectorSequence] = selector ~ rep(selectorCombination) ^^ SelectorSequence
-  lazy val selectorCombination: PackratParser[SelectorCombination] = (">" | "+" | "~" | rep1(s) ^^^ " " | "") ~ selectorSequence ^^ SelectorCombination
+  lazy val selectorCombination: PackratParser[SelectorCombination] = (iw(">" | "+" | "~") | rep1(s) ^^^ " " | "") ~ selectorSequence ^^ SelectorCombination
   lazy val selector = classSelector | idSelector | typeSelector | universalSelector | notSelector | attributeSelector | pseudoClassSelector | pseudoElementSelector
   lazy val classSelector = "." ~> className ^^ ClassSelector
   lazy val className = ident

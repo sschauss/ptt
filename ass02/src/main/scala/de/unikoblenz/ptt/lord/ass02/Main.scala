@@ -15,7 +15,7 @@ object Main extends App {
       |  width: 15em;
       |  padding: 10px 0;
       |}
-      |.menu-item[href='test'] {
+      |.menu-item p > p + .class ~ div {
       |  color: black;
       |  display: block;
       |  padding: 8px 20px;
