@@ -3,24 +3,29 @@ package de.unikoblenz.ptt.lord.ass02
 
 object Main extends App {
 
-  val css =
+  val scss =
     """
-      |div#container, div:not([*|href='test']) {
-      |  color: red;
-      |  span {
-      |    color: green;
-      |  }
+      |$test: 10px;
+      |.menu {
+      |  display: none;
+      |  position: absolute;
+      |  top: 100%;
+      |  background: white;
+      |  list-style: none;
+      |  width: 15em;
+      |  padding: 10px 0;
       |}
+      |.menu-item[href='test'] {
+      |  color: black;
+      |  display: block;
+      |  padding: 8px 20px;
+      |  text-decoration: none;
       |
-      |div p:nth-child(-2a+bas+3) {background: red green, 20px;}
-      |
-      |:nth-child(2), a[href="test"] {background: grey;}
+      |  div { background: #29a7f5; color: $test; }
+      |}
     """.stripMargin
 
-
-
-  println(css)
-  val ast = Parser.parse(css, Parser.parser)
+  val ast = Parser.parse(scss, Parser.parser)
   println(ast)
   println(PrettyPrinter.pretty(ast))
 

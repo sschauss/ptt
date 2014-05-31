@@ -31,10 +31,20 @@ object PrettyPrinter extends PrettyPrinter {
     case PseudoElementSelector(pseudoElementName) => "::" <> pseudoElementName
     case NotSelector(selector: Selector) => ":not(" <> show(selector) <> ")"
     case RuleSet(selectorGroup, rules: List[Rule]) => show(selectorGroup) <+> "{" <> nest(line <> vsep(rules map show)) <> line <> "}"
-    case Property(property, valueGroups) => property <> ":" <+> ssep(valueGroups map show, ", ") <> ";"
+    case Declaration(property, valueGroups) => property <> ":" <+> ssep(valueGroups map show, ", ") <> ";"
     case ValueGroup(values) => ssep(values map show, " ")
-    case Value(value) => value
-    case CSS(ruleSets: List[RuleSet]) => ssep(ruleSets map show, line)
+    case StringValue(value) => value
+    case VariableName(name) => "$" <> name
+    case SCSS(ruleSets) => ssep(ruleSets map show, line)
+    case Extend(selector) => show(selector)
+    case Import(name) => "@import" <+> name
+    case Include(name, None) => "@include" <+> name <> ";"
+    case Include(name, Some(parameters)) => "@include" <+> name <> "(" <> ssep(parameters map show, ", ") <> ");"
+    case Mixin(name, None, rules) => "@mixin" <+> name <+> "{" <> nest(line <> vsep(rules map show)) <> line <> "}"
+    case Mixin(name, Some(parameters), rules) => "@mixin" <+> name <> "(" <> ssep(parameters map show, ", ") <> ")" <+> "{" <> nest(line <> vsep(rules map show)) <> line <> "}"
+    case Parameter(name) => "$" <> name
+    case Variable(variableName, valueGroups) => show(variableName) <> ":" <+> ssep(valueGroups map show, ", ")
+    case VariableValue(value) => "$" <> value
   }
 
 }
