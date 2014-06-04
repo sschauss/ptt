@@ -41,7 +41,7 @@ object Parser extends PositionedParserUtilities {
 
 
   lazy val property = "[-a-zA-Z_]+".r
-  lazy val stringValue = "(#|\\.|%|[-a-zA-Z0-9])+".r ^^ StringValue
+  lazy val stringValue = "(#|\\.|%|[-a-zA-Z0-9])+".r ^^ Value
 
 
   lazy val include = iw("@include") ~> mixinName ~ ((iw("(") ~> rep1(value) <~ iw(")")) ?) <~ iw(";") ^^ Include

@@ -32,11 +32,11 @@ object PrettyPrinter extends PrettyPrinter {
     case PseudoClassSelector(pseudoClassName, None) => ":" <> pseudoClassName
     case PseudoClassSelector(pseudoClassName, Some(pseudoClassExpression)) => ":" <> pseudoClassName <> "(" <> pseudoClassExpression <> ")"
     case PseudoElementSelector(pseudoElementName) => "::" <> pseudoElementName
-    case NotSelector(selector: Selector) => ":not(" <> show(selector) <> ")"
+    case NotSelector(selector: Node) => ":not(" <> show(selector) <> ")"
     case RuleSet(selectorGroup, rules) => show(selectorGroup) <+> "{" <> nest(line <> vsep(rules map show)) <> line <> "}"
     case Declaration(property, valueGroups) => property <> ":" <+> ssep(valueGroups map show, ", ") <> ";"
     case ValueGroup(values) => ssep(values map show, " ")
-    case StringValue(value) => value
+    case Value(value) => value
     case SCSS(nodes) => ssep(nodes map show, line)
     case Extend(selector) => show(selector)
     case Import(name) => "@import" <+> name

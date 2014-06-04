@@ -5,25 +5,25 @@ object Main extends App {
 
   val scss =
     """
-      |$test: 10px;
       |div {
-      | width: 10px;
-      | a:visited, a:focus, a:hover {
-      |   color: black;
-      |   i {
-      |     display: block;
-      |   }
-      | }
+      |    width: 10px;
+      |    a:visited, a:focus, a:hover {
+      |        color: black;
+      |        i {
+      |            color: red;
+      |            i, a {
+      |                color: black;
+      |            }
+      |        }
+      |    }
       |}
     """.stripMargin
 
   val scssAst = Parser.parse(scss, Parser.parser)
-  //println("AST", ast
-  val cssAst = SCSSConverter.convert(scssAst)
+  val cssAst = Transformer.transform(scssAst)
+  println(scssAst)
   println("Pretty SCSS")
   println(PrettyPrinter.pretty(scssAst))
-  println()
   println("Pretty CSS")
   println(PrettyPrinter.pretty(cssAst))
-
 }
