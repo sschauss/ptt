@@ -3,7 +3,7 @@ package de.unikoblenz.ptt.lord.ass02.ast
 trait Selector extends Node
 
 case class SelectorGroup(selectorSequences: List[SelectorSequence]) extends Node
-case class SelectorSequence(selector: Selector, selectorsCombinations: List[SelectorCombination]) extends Node
+case class SelectorSequence(selector: Selector, selectorsCombination: Option[SelectorCombination]) extends Node
 case class SelectorCombination(operator: String, selectorSequence: SelectorSequence) extends Node
 case class ClassSelector(className: String) extends Selector
 case class IdSelector(idName: String) extends Selector

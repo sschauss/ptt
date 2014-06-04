@@ -27,13 +27,12 @@ object Parser extends PositionedParserUtilities {
   lazy val parameter = "$" ~> parameterName ^^ Parameter
   lazy val parameterName = "[-a-zA-Z]+".r
 
-  lazy val variable = variableName ~ (iw(":") ~> rep1sep(valueGroup, iw(",")) <~ iw(";")) ^^ Variable
-  lazy val variableName = "$" ~> "[-a-zA-Z]+".r ^^ VariableName
+  lazy val variable = "$" ~> "[-a-zA-Z]+".r ~ (iw(":") ~> rep1sep(valueGroup, iw(",")) <~ iw(";")) ^^ Variable
 
 
   lazy val ruleSet: PackratParser[RuleSet] = iw(selectorGroup) ~ declarationBlock ^^ RuleSet
   lazy val declarationBlock = iw("{") ~> rep(rule | extend | include) <~ iw("}")
-  lazy val rule: PackratParser[Rule] = declaration | ruleSet
+  lazy val rule: PackratParser[Node] = declaration | ruleSet | variable
   lazy val declaration = property ~ (iw(":") ~> rep1sep(valueGroup, iw(",")) <~ iw(";")) ^^ Declaration
 
   lazy val valueGroup = rep1sep(value, s) ^^ ValueGroup
@@ -49,7 +48,7 @@ object Parser extends PositionedParserUtilities {
 
 
   lazy val selectorGroup = rep1sep(selectorSequence, iw(",")) ^^ SelectorGroup
-  lazy val selectorSequence: PackratParser[SelectorSequence] = selector ~ rep(selectorCombination) ^^ SelectorSequence
+  lazy val selectorSequence: PackratParser[SelectorSequence] = selector ~ (selectorCombination ?) ^^ SelectorSequence
   lazy val selectorCombination: PackratParser[SelectorCombination] = (iw(">" | "+" | "~") | rep1(s) ^^^ " " | "") ~ selectorSequence ^^ SelectorCombination
   lazy val selector = classSelector | idSelector | typeSelector | universalSelector | notSelector | attributeSelector | pseudoClassSelector | pseudoElementSelector
   lazy val classSelector = "." ~> className ^^ ClassSelector

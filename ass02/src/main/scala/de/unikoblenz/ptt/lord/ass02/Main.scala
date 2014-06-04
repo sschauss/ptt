@@ -6,27 +6,24 @@ object Main extends App {
   val scss =
     """
       |$test: 10px;
-      |.menu {
-      |  display: none;
-      |  position: absolute;
-      |  top: 100%;
-      |  background: white;
-      |  list-style: none;
-      |  width: 15em;
-      |  padding: 10px 0;
-      |}
-      |.menu-item p > p + .class ~ div {
-      |  color: black;
-      |  display: block;
-      |  padding: 8px 20px;
-      |  text-decoration: none;
-      |
-      |  div { background: #29a7f5; color: $test; }
+      |div {
+      | width: 10px;
+      | a:visited, a:focus, a:hover {
+      |   color: black;
+      |   i {
+      |     display: block;
+      |   }
+      | }
       |}
     """.stripMargin
 
-  val ast = Parser.parse(scss, Parser.parser)
-  println(ast)
-  println(PrettyPrinter.pretty(ast))
+  val scssAst = Parser.parse(scss, Parser.parser)
+  //println("AST", ast
+  val cssAst = SCSSConverter.convert(scssAst)
+  println("Pretty SCSS")
+  println(PrettyPrinter.pretty(scssAst))
+  println()
+  println("Pretty CSS")
+  println(PrettyPrinter.pretty(cssAst))
 
 }

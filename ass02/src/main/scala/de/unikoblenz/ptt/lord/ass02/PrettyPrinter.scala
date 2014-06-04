@@ -11,7 +11,9 @@ object PrettyPrinter extends PrettyPrinter {
 
   def show(node: Node): Doc = node match {
     case SelectorGroup(selectorSequences) => ssep(selectorSequences map show, ", ")
-    case SelectorSequence(selector, selectorCombinations) => show(selector) <> sep(selectorCombinations map show)
+    case SelectorSequence(selector, None) => show(selector)
+    case SelectorSequence(selector, Some(selectorCombination)) => show(selector) <> show(selectorCombination)
+    case SelectorCombination("", selectorSequence) => "" <> show(selectorSequence)
     case SelectorCombination(" ", selectorSequence) => " " <> show(selectorSequence)
     case SelectorCombination(operator, selectorSequence) => " " <> operator <+> show(selectorSequence)
     case ClassSelector(className) => "." <> className
@@ -31,12 +33,11 @@ object PrettyPrinter extends PrettyPrinter {
     case PseudoClassSelector(pseudoClassName, Some(pseudoClassExpression)) => ":" <> pseudoClassName <> "(" <> pseudoClassExpression <> ")"
     case PseudoElementSelector(pseudoElementName) => "::" <> pseudoElementName
     case NotSelector(selector: Selector) => ":not(" <> show(selector) <> ")"
-    case RuleSet(selectorGroup, rules: List[Rule]) => show(selectorGroup) <+> "{" <> nest(line <> vsep(rules map show)) <> line <> "}"
+    case RuleSet(selectorGroup, rules) => show(selectorGroup) <+> "{" <> nest(line <> vsep(rules map show)) <> line <> "}"
     case Declaration(property, valueGroups) => property <> ":" <+> ssep(valueGroups map show, ", ") <> ";"
     case ValueGroup(values) => ssep(values map show, " ")
     case StringValue(value) => value
-    case VariableName(name) => "$" <> name
-    case SCSS(ruleSets) => ssep(ruleSets map show, line)
+    case SCSS(nodes) => ssep(nodes map show, line)
     case Extend(selector) => show(selector)
     case Import(name) => "@import" <+> name
     case Include(name, None) => "@include" <+> name <> ";"
@@ -44,7 +45,7 @@ object PrettyPrinter extends PrettyPrinter {
     case Mixin(name, None, rules) => "@mixin" <+> name <+> "{" <> nest(line <> vsep(rules map show)) <> line <> "}"
     case Mixin(name, Some(parameters), rules) => "@mixin" <+> name <> "(" <> ssep(parameters map show, ", ") <> ")" <+> "{" <> nest(line <> vsep(rules map show)) <> line <> "}"
     case Parameter(name) => "$" <> name
-    case Variable(variableName, valueGroups) => show(variableName) <> ":" <+> ssep(valueGroups map show, ", ")
+    case Variable(name, valueGroups) => "$" <> name <> ":" <+> ssep(valueGroups map show, ", ") <> ";"
     case VariableValue(value) => "$" <> value
   }
 
