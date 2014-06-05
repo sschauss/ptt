@@ -5,10 +5,14 @@ object Main extends App {
 
   val scss =
     """
+      |$a: 60px;
+      |$test: 12px, $a;
       |div {
+      |    $test: 13px;
       |    width: 10px;
       |    a:visited, a:focus, a:hover {
-      |        color: black;
+      |        $test: 100px, $a;
+      |        color: 1px $test 12px $test, 10px $test $test;
       |        i {
       |            color: red;
       |            i, a {
