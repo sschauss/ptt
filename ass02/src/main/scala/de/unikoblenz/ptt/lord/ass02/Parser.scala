@@ -36,16 +36,25 @@ object Parser extends PositionedParserUtilities {
   lazy val declaration = property ~ (iw(":") ~> rep1sep(valueGroup, iw(",")) <~ iw(";")) ^^ Declaration
 
   lazy val valueGroup = rep1sep(value, s) ^^ ValueGroup
-  lazy val value = stringValue | variableValue
+  lazy val value = expression | stringValue | variableValue
   lazy val variableValue = "$" ~> "[-a-zA-Z]+".r ^^ VariableValue
-
-
   lazy val property = "[-a-zA-Z_]+".r
   lazy val stringValue = "(#|\\.|%|[-a-zA-Z0-9])+".r ^^ Value
 
+  lazy val expression: Parser[Expression] = term ~ rep(addition | subtraction) ^^ Expression
+  lazy val addition: Parser[Addition] = iw("+") ~> term ^^ Addition
+  lazy val subtraction: Parser[Subtraction] = iw("-") ~> term ^^ Subtraction
+  lazy val term: Parser[Term] = factor ~ rep(multiplication | division) ^^ Term
+  lazy val multiplication: Parser[Multiplication] = iw("*") ~> factor ^^ Multiplication
+  lazy val division: Parser[Division] = iw("/") ~> factor ^^ Division
+  lazy val factor = iw("(") ~> expression <~ iw(")") | negativeExpression | dimensionedValue
+  lazy val negativeExpression = iw("-") ~> (iw("(") ~> expression <~ iw(")")) ^^ NegativeExpression
+
+  lazy val dimensionedValue = number ~ opt(dimension) ^^ DimensionedValue
+  lazy val dimension = "in" | "cm" | "mm" | "em" | "ex" | "pt" | "pc" | "px"
+  lazy val number = "0|(-)?[1-9][0-9]*(\\.[0-9])?".r ^^ {_.toDouble}
 
   lazy val include = iw("@include") ~> mixinName ~ ((iw("(") ~> rep1(value) <~ iw(")")) ?) <~ iw(";") ^^ Include
-
 
   lazy val selectorGroup = rep1sep(selectorSequence, iw(",")) ^^ SelectorGroup
   lazy val selectorSequence: PackratParser[SelectorSequence] = selector ~ (selectorCombination ?) ^^ SelectorSequence
@@ -66,7 +75,7 @@ object Parser extends PositionedParserUtilities {
   lazy val attributeOperator = "=" | "|=" | "$=" | "^=" | "~=" | "*="
   lazy val pseudoClassSelector: PackratParser[PseudoClassSelector] = ":" ~> pseudoClassName ~ (("(" ~> pseudoClassExpression <~ ")") ?) ^^ PseudoClassSelector
   lazy val pseudoClassName = ident
-  lazy val pseudoClassExpression = rep1("+" | "-" | dimension | num | string | ident) ^^ {
+  lazy val pseudoClassExpression = rep1("+" | "-" | pseudoclassDimension | num | string | ident) ^^ {
     _.mkString
   } // concat list to avoid regex :D
   lazy val pseudoElementSelector: PackratParser[PseudoElementSelector] = "::" ~> pseudoElementName ^^ PseudoElementSelector
@@ -88,7 +97,7 @@ object Parser extends PositionedParserUtilities {
     ("\"" + value + "\"").r | ("\'" + value + "\'").r
   }
   lazy val num = "[0-9]+|[0-9]*\\.[0-9]+".r
-  lazy val dimension = num ~ ident
+  lazy val pseudoclassDimension = num ~ ident
 
 
 }

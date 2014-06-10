@@ -65,4 +65,61 @@ object Transformer {
         SelectorSequence(selector, Some(SelectorCombination(selectorCombination.operator, appendSelectorSequence(selectorCombination.selectorSequence, r))))
     }
 
+
+
+
+  def calculateExpression(expression: Expression): DimensionedValue = {
+    var result = calculateTerm(expression.term)
+    result = expression.operations.foldLeft(result){
+      case (r, c:Addition) => addWithDimension(r, calculateTerm(c.summand))
+      case (r, c:Subtraction) => subtractWithDimension(r, calculateTerm(c.subtrahend))
+    }
+    result
+  }
+
+  def calculateTerm(term: Term): DimensionedValue = {
+    var result = calculateFactor(term.factor)
+    result = term.operations.foldLeft(result){
+      case (r, c: Multiplication) => multiplyWithDimension(r, calculateFactor(c.factor))
+      case (r, c: Division) => divideWithDimension(r, calculateFactor(c.divisor))
+    }
+    result
+  }
+
+  def calculateFactor(factor: Node): DimensionedValue = {
+    factor match {
+      case f: DimensionedValue => f
+      case f: Expression => calculateExpression(f)
+      case f: NegativeExpression => multiplyWithDimension(DimensionedValue(-1, None), calculateExpression(f.expression))
+    }
+  }
+
+  def addWithDimension(a: DimensionedValue, b: DimensionedValue): DimensionedValue = {
+    if (a.dimension != b.dimension) throw new Exception("Dimension mismatch: " + a.dimension + "+" + b.dimension)
+    DimensionedValue(a.value + b.value, a.dimension)
+  }
+
+  def subtractWithDimension(a: DimensionedValue, b: DimensionedValue): DimensionedValue = {
+    if (a.dimension != b.dimension) throw new Exception("Dimension mismatch: " + a.dimension + "-" + b.dimension)
+    DimensionedValue(a.value - b.value, a.dimension)
+  }
+
+  def multiplyWithDimension(a: DimensionedValue, b: DimensionedValue): DimensionedValue = {
+    (a.dimension, b.dimension) match {
+      case (Some(_), Some(_)) => throw new Exception("Dimension mismatch: " + a.dimension + "*" + b.dimension)
+      case (Some(_), None) => DimensionedValue(a.value * b.value, a.dimension)
+      case (None, Some(_)) => DimensionedValue(a.value * b.value, b.dimension)
+      case (None, None) => DimensionedValue(a.value * b.value, None)
+    }
+  }
+
+  def divideWithDimension(a: DimensionedValue, b: DimensionedValue): DimensionedValue = {
+    (a.dimension, b.dimension) match {
+      case (Some(_), Some(_)) if a.dimension != b.dimension => throw new Exception("Dimension mismatch: " + a.dimension + "/" + b.dimension)
+      case (Some(_), Some(_)) if a.dimension == b.dimension => DimensionedValue(a.value / b.value, None)
+      case (Some(_), None) => DimensionedValue(a.value / b.value, a.dimension)
+      case (None, Some(_)) => DimensionedValue(a.value / b.value, b.dimension)
+      case (None, None) => DimensionedValue(a.value / b.value, None)
+    }
+  }
 }
