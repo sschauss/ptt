@@ -22,7 +22,7 @@ object Parser extends PositionedParserUtilities {
 
   lazy val extend = "@extend" ~> selector ^^ Extend
 
-  lazy val mixin = iw("@mixin") ~> mixinName ~ ((iw("(") ~> rep1(parameter) <~ iw(")")) ?) ~ declarationBlock ^^ Mixin
+  lazy val mixin: PackratParser[Mixin] = iw("@mixin") ~> mixinName ~ ((iw("(") ~> rep1(parameter) <~ iw(")")) ?) ~ declarationBlock ^^ Mixin
   lazy val mixinName = "[-a-zA-Z]+".r
   lazy val parameter = "$" ~> parameterName ^^ Parameter
   lazy val parameterName = "[-a-zA-Z]+".r
@@ -31,23 +31,23 @@ object Parser extends PositionedParserUtilities {
 
 
   lazy val ruleSet: PackratParser[RuleSet] = iw(selectorGroup) ~ declarationBlock ^^ RuleSet
-  lazy val declarationBlock = iw("{") ~> rep(rule | extend | include) <~ iw("}")
+  lazy val declarationBlock = iw("{") ~> rep(rule | extend | include | mixin) <~ iw("}")
   lazy val rule: PackratParser[Node] = declaration | ruleSet | variable
   lazy val declaration = property ~ (iw(":") ~> rep1sep(valueGroup, iw(",")) <~ iw(";")) ^^ Declaration
 
   lazy val valueGroup = rep1sep(value, s) ^^ ValueGroup
-  lazy val value = expression | stringValue | variableValue
+  lazy val value = variableValue | expression | stringValue
   lazy val variableValue = "$" ~> "[-a-zA-Z]+".r ^^ VariableValue
   lazy val property = "[-a-zA-Z_]+".r
-  lazy val stringValue = "(#|\\.|%|[-a-zA-Z0-9])+".r ^^ Value
+  lazy val stringValue = "[a-zA-Z][-a-zA-Z]*".r ^^ Value
 
   lazy val expression: Parser[Expression] = term ~ rep(addition | subtraction) ^^ Expression
   lazy val addition: Parser[Addition] = iw("+") ~> term ^^ Addition
-  lazy val subtraction: Parser[Subtraction] = iw("-") ~> term ^^ Subtraction
+  lazy val subtraction: Parser[Subtraction] = rep(s) ~> "-" ~> s ~> term ^^ Subtraction
   lazy val term: Parser[Term] = factor ~ rep(multiplication | division) ^^ Term
   lazy val multiplication: Parser[Multiplication] = iw("*") ~> factor ^^ Multiplication
   lazy val division: Parser[Division] = iw("/") ~> factor ^^ Division
-  lazy val factor = iw("(") ~> expression <~ iw(")") | negativeExpression | dimensionedValue
+  lazy val factor = iw("(") ~> expression <~ iw(")") | dimensionedValue | negativeExpression | variableValue
   lazy val negativeExpression = iw("-") ~> (iw("(") ~> expression <~ iw(")")) ^^ NegativeExpression
 
   lazy val dimensionedValue = number ~ opt(dimension) ^^ DimensionedValue
