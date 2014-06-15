@@ -19,7 +19,7 @@ Out build tool of choice for Scala is SBT, you can get it [here](http://www.scal
 
 To build the project you can run `sbt assembly` from the root directory of the project. You can find the JAR in `target/scala-2.11/`.
 
-###2.2 Parse SCSS and transform it to CSS
+###2.2 Parse SCSS and transform it to prettyprinted SCSS/CSS
 
 `java -jar ass02.jar scssFile [scssOutputFilename] [cssOutputFilename]`
 
@@ -37,4 +37,18 @@ To build the project you can run `sbt assembly` from the root directory of the p
 You can also use sbt to run the transformation: 
 
 `sbt run scssFile [scssOutputFilename] [cssOutputFilename]`
+
+##3 Current Status
+
+We only covered the following scss [basics](http://sass-lang.com/guide):
+
+- Variables
+- Nesting
+- Import
+- Mixins
+- Operators
+
+[@rules](https://developer.mozilla.org/de/docs/Web/CSS/At-rule) (such as @charset, @font-face...) are not covered yet.
+
+
 
