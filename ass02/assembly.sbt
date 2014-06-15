@@ -2,4 +2,4 @@ import AssemblyKeys._
 
 assemblySettings
 
-jarName in assembly := "ass02.jar"
+jarName in assembly := "SCalaSS.jar"

@@ -3,16 +3,27 @@ package de.unikoblenz.ptt.lord.ass02
 import de.unikoblenz.ptt.lord.ass02.ast._
 import de.unikoblenz.ptt.lord.ass02.exceptions.{UndefinedMixinException, DimensionMismatchException, UndefinedVariableException}
 
+import scala.io.Source
+import scala.reflect.io.File
+
 object Transformer {
 
-	def transform(scss: SCSS): SCSS = transform(scss, List(transformIncludes, transformVariables, transformRuleSet, transformExpressions))
+	def transform(scss: SCSS): SCSS = transform(scss, List(transformImports, transformIncludes, transformVariables, transformRuleSet, transformExpressions))
 
 	def transform(scss: SCSS, functions: List[SCSS => SCSS]): SCSS = functions match {
 		case Nil     => scss
 		case f :: fs => transform(f(scss), fs)
 	}
 
-	def transformIncludes(scss: SCSS): SCSS = SCSS(transformIncludes(scss.nodes, Set[Mixin]()))
+	def transformImports(scss: SCSS): SCSS = scss.nodes.zipWithIndex collectFirst {
+		case (n: Import, i) => (n, i)
+	} match {
+		case None         => scss
+		case Some((n, i)) => SCSS(scss.nodes.take(i) ::: transformImports(Parser.parse(Source.fromFile(scss.path + "/" + n.name).mkString, Parser.parser(File.apply(scss.path + "/" + n.name).toAbsolute.parent.path))).nodes ::: scss.nodes.drop(i + 1), scss.path)
+
+	}
+
+	def transformIncludes(scss: SCSS): SCSS = SCSS(transformIncludes(scss.nodes, Set[Mixin]()), scss.path)
 
 	def transformIncludes(nodes: List[Node], mixins: Set[Mixin]): List[Node] = nodes.zipWithIndex collect {
 		case (node, i) if !node.isInstanceOf[Mixin] => transformIncludes(node, buildMixinSet(nodes.take(i), mixins))
@@ -50,7 +61,7 @@ object Transformer {
 	}
 
 	def transformVariables(node: Node, variables: Set[Variable]): Node = node match {
-		case SCSS(nodes)                      => SCSS(transformVariables(nodes, variables))
+		case SCSS(nodes, filename)            => SCSS(transformVariables(nodes, variables), filename)
 		case RuleSet(selectorGroup, rules)    => RuleSet(selectorGroup, transformVariables(rules, variables))
 		case Declaration(string, valueGroups) => Declaration(string, valueGroups map { case v: ValueGroup => replaceVariable(v, variables)} reduce (_ ::: _))
 		case Expression(term, operations)     => Expression(transformVariables(term, variables).asInstanceOf[Term], operations map { node => transformVariables(node, variables)})
@@ -92,7 +103,7 @@ object Transformer {
 	def transformRuleSet(scss: SCSS): SCSS = SCSS(scss.nodes map {
 		case ruleSet: RuleSet => transformRuleSet(ruleSet)
 		case node             => List(node)
-	} reduce (_ ::: _))
+	} reduce (_ ::: _), scss.path)
 
 
 	def transformRuleSet(ruleSet: RuleSet): List[RuleSet] =
@@ -112,7 +123,7 @@ object Transformer {
 		case SelectorSequence(selector, Some(selectorCombination)) => SelectorSequence(selector, Some(SelectorCombination(selectorCombination.operator, appendSelectorSequence(selectorCombination.selectorSequence, r))))
 	}
 
-	def transformExpressions(scss: SCSS): SCSS = SCSS(scss.nodes map transformExpressions)
+	def transformExpressions(scss: SCSS): SCSS = SCSS(scss.nodes map transformExpressions, scss.path)
 
 	def transformExpressions(node: Node): Node = node match {
 		case RuleSet(selectorGroup, rules)      => RuleSet(selectorGroup, rules map transformExpressions)

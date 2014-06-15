@@ -16,4 +16,10 @@ echo
 echo
 echo "copy webapp to servers assets folder"
 cp -R ./dist ../ass01-server/src/main/resources/assets
+echo
+echo
+echo
+cd ../ass02
+echo "build SCalaSS..."
+sbt assembly
 

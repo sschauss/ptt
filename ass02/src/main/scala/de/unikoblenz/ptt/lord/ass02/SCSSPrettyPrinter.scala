@@ -5,14 +5,14 @@ import de.unikoblenz.ptt.lord.ass02.ast._
 
 import org.kiama.output.PrettyPrinter
 
-object PrettyPrinter extends PrettyPrinter {
+object SCSSPrettyPrinter extends PrettyPrinter {
 
 	implicit def doubleToString(value: Double): Doc = text(value.toString.replaceAll("\\.0*$|(?<=\\.[0-9]{0,2147483646})0*$", ""))
 
 	def pretty(node: Node): String = super.pretty(show(node))
 
 	def show(node: Node): Doc = node match {
-		case SCSS(nodes)                                                              => ssep(nodes map show, line <> line)
+		case SCSS(nodes, _)                                                           => ssep(nodes map show, line <> line)
 		case Import(name)                                                             => "@import" <+> name
 		case Include(name, None)                                                      => "@include" <+> name <> ";"
 		case Include(name, Some(parameters))                                          => "@include" <+> name <> "(" <> ssep(parameters map show, ", ") <> ");"

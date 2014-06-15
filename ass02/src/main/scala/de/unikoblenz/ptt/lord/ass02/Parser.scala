@@ -18,7 +18,10 @@ object Parser extends PositionedParserUtilities {
 
 	def iw[T](parser: Parser[T]) = rep(s) ~> parser <~ rep(s) //ignore whitespaces
 
-	lazy val parser = iw(rep(ruleSet | mixin | variable)) ^^ SCSS
+	def parser(filename: String) = iw(rep(ruleSet | mixin | variable | i)) ^^ {SCSS(_, filename)}
+
+	lazy val i = iw("@import") ~> "\"" ~> filename <~ "\"" <~ iw(";") ^^ Import
+	lazy val filename = "[_a-zA-Z\\.]+".r//"^(.*/)?(?:$|(.+?)(?:(\\.[^.]*$)|$))".r
 
 	lazy val mixin: PackratParser[Mixin] = iw("@mixin") ~> mixinName ~ ((iw("(") ~> rep1(parameter) <~ iw(")")) ?) ~ declarationBlock ^^ Mixin
 	lazy val mixinName = "[-a-zA-Z]+".r
@@ -34,7 +37,7 @@ object Parser extends PositionedParserUtilities {
 	lazy val declaration = property ~ (iw(":") ~> rep1sep(valueGroup, iw(",")) <~ iw(";")) ^^ Declaration
 
 	lazy val valueGroup = rep1sep(value, s) ^^ ValueGroup
-	lazy val value = variableValue | expression | stringValue
+	lazy val value = expression | variableValue | stringValue
 	lazy val variableValue = "$" ~> "[-a-zA-Z]+".r ^^ VariableValue
 	lazy val property = ident
 	lazy val stringValue = "(#|[a-zA-Z0-9])[-a-zA-Z0-9]*".r ^^ Value
