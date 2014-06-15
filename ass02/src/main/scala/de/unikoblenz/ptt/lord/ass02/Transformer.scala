@@ -20,7 +20,6 @@ object Transformer {
 	} match {
 		case None         => scss
 		case Some((n, i)) => SCSS(scss.nodes.take(i) ::: transformImports(Parser.parse(Source.fromFile(scss.path + "/" + n.name).mkString, Parser.parser(File.apply(scss.path + "/" + n.name).toAbsolute.parent.path))).nodes ::: scss.nodes.drop(i + 1), scss.path)
-
 	}
 
 	def transformIncludes(scss: SCSS): SCSS = SCSS(transformIncludes(scss.nodes, Set[Mixin]()), scss.path)
