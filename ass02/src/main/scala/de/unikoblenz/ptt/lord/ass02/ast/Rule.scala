@@ -6,4 +6,4 @@ case class Declaration(property: String, valueGroups: List[Node]) extends Node
 
 case class Include(name: String, parameters: Option[List[Node]]) extends Node
 
-case class Extend(selector: Node) extends Node
+

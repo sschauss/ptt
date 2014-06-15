@@ -1,27 +1,32 @@
 package de.unikoblenz.ptt.lord.ass02
 
+import scala.io.Source
+import scala.reflect.io.File
+
 object Application extends App {
 
-  val scss =
-    """
-			|@mixin mix($width) {
-			|    width: 10 * $width + 10px / 2px - 5px, 10 * $width + 10px / 2px -5px;
-			|}
-			|$width: 10px / 10px;
-			|div {
-			|    @include mix($width);
-			|    width: $width;
-			|    a {
-			|        @include mix(20px);
-			|    }
-			|}
-    """.stripMargin
+	if (args.length == 0) println(
+		"""
+			|Usage: scssFile [scssOutputFilename] [cssOutputFilename]
+			|
+			|	scssFile:
+			| 	relative or absolute path to scss file
+			|
+			| scssOutputFilename:
+			| 	relative or absolute path for prettyprinted scss file
+			|
+			| cssOutputFilename:
+			| 	relative or absolute path for prettyprinted css file
+		""".stripMargin)
 
-  val scssAst = Parser.parse(scss, Parser.parser)
-	println(scssAst)
-  println("\nPretty SCSS")
-  println(PrettyPrinter.pretty(scssAst))
-  println("\nPretty CSS")
+	val scssOutputFilename = if(args.length >= 2) args(1) else "pretty.scss"
+	val cssOutputFilename = if(args.length >= 3) args(2) else "pretty.css"
+
+	val scss = Source.fromFile(args(0)).mkString
+
+	val scssAst = Parser.parse(scss, Parser.parser)
+	File.apply(scssOutputFilename).writeAll(PrettyPrinter.pretty(scssAst))
 	val cssAst = Transformer.transform(scssAst)
-  println(PrettyPrinter.pretty(cssAst))
+	File.apply(cssOutputFilename).writeAll(PrettyPrinter.pretty(cssAst))
+
 }

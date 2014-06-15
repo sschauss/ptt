@@ -1,6 +1,7 @@
 package de.unikoblenz.ptt.lord.ass02
 
 import de.unikoblenz.ptt.lord.ass02.ast._
+import de.unikoblenz.ptt.lord.ass02.exceptions.{UndefinedMixinException, DimensionMismatchException, UndefinedVariableException}
 
 object Transformer {
 
@@ -22,12 +23,16 @@ object Transformer {
 		case Include(name, None)           => mixins find {
 			_.name == name
 		} match {
+			case None                        => throw new UndefinedMixinException(name)
 			case Some(Mixin(_, None, rules)) => rules
 		}
 		case Include(name, Some(nodes))    => mixins find {
 			_.name == name
 		} match {
-			case Some(Mixin(_, Some(parameters), rules)) => ((parameters, nodes).zipped map { (parameter, node) => Variable(parameter.name, List(ValueGroup(List(node))))}) ::: rules
+			case None                                    => throw new UndefinedMixinException(name)
+			case Some(Mixin(_, Some(parameters), rules)) => ((parameters, nodes).zipped map {
+				(parameter, node) => Variable(parameter.name, List(ValueGroup(List(node))))
+			}) ::: rules
 		}
 		case _                             => List(node)
 	}
@@ -54,8 +59,9 @@ object Transformer {
 		case Addition(summand)                => Addition(transformVariables(summand, variables).asInstanceOf[Term])
 		case Division(divisor)                => Division(transformVariables(divisor, variables))
 		case Subtraction(subtrahend)          => Subtraction(transformVariables(subtrahend, variables).asInstanceOf[Term])
-		case VariableValue(name) => variables.find(_.name == name) match {
-			case Some(variable) => variable.valueGroups.head.values.head //catch illegal expressions
+		case VariableValue(name)              => variables.find(_.name == name) match {
+			case Some(variable) => variable.valueGroups.head.values.head
+			case None           => throw new UndefinedVariableException(name)
 		}
 		case _                                => node
 	}
@@ -79,6 +85,7 @@ object Transformer {
 					v => replaceVariable(v, variables)
 				} reduce (_ ::: _))
 			}
+			case None                           => throw new UndefinedVariableException(variableValue.name)
 		}
 	}
 
@@ -100,13 +107,10 @@ object Transformer {
 	def appendSelector(l: SelectorGroup, r: SelectorGroup): SelectorGroup =
 		SelectorGroup(l.selectorSequences map { ls => r.selectorSequences map { rs => appendSelectorSequence(ls, rs)}} reduce (_ ::: _))
 
-	def appendSelectorSequence(l: SelectorSequence, r: SelectorSequence): SelectorSequence =
-		l match {
-			case SelectorSequence(selector, None)                      =>
-				SelectorSequence(selector, Some(SelectorCombination(" ", r)))
-			case SelectorSequence(selector, Some(selectorCombination)) =>
-				SelectorSequence(selector, Some(SelectorCombination(selectorCombination.operator, appendSelectorSequence(selectorCombination.selectorSequence, r))))
-		}
+	def appendSelectorSequence(l: SelectorSequence, r: SelectorSequence): SelectorSequence = l match {
+		case SelectorSequence(selector, None)                      => SelectorSequence(selector, Some(SelectorCombination(" ", r)))
+		case SelectorSequence(selector, Some(selectorCombination)) => SelectorSequence(selector, Some(SelectorCombination(selectorCombination.operator, appendSelectorSequence(selectorCombination.selectorSequence, r))))
+	}
 
 	def transformExpressions(scss: SCSS): SCSS = SCSS(scss.nodes map transformExpressions)
 
@@ -147,7 +151,7 @@ object Transformer {
 		case (Some(_), Some(_)) => if (a.dimension == b.dimension) {
 			DimensionedValue(a.value + b.value, b.dimension)
 		} else {
-			throw new Exception("Dimension mismatch: " + a.dimension + "+" + b.dimension)
+			throw new DimensionMismatchException(a.dimension, b.dimension, "+")
 		}
 	}
 
@@ -159,13 +163,13 @@ object Transformer {
 		case (Some(_), Some(_)) => if (a.dimension == b.dimension) {
 			DimensionedValue(a.value - b.value, b.dimension)
 		} else {
-			throw new Exception("Dimension mismatch: " + a.dimension + "-" + b.dimension)
+			throw new DimensionMismatchException(a.dimension, b.dimension, "-")
 		}
 	}
 
 
 	def multiplyWithDimension(a: DimensionedValue, b: DimensionedValue): DimensionedValue = (a.dimension, b.dimension) match {
-		case (Some(_), Some(_)) => throw new Exception("Dimension mismatch: " + a.dimension + "*" + b.dimension)
+		case (Some(_), Some(_)) => throw new DimensionMismatchException(a.dimension, b.dimension, "*")
 		case (Some(_), None)    => DimensionedValue(a.value * b.value, a.dimension)
 		case (None, Some(_))    => DimensionedValue(a.value * b.value, b.dimension)
 		case (None, None)       => DimensionedValue(a.value * b.value, None)
@@ -174,7 +178,7 @@ object Transformer {
 
 	def divideWithDimension(a: DimensionedValue, b: DimensionedValue): DimensionedValue =
 		(a.dimension, b.dimension) match {
-			case (Some(_), Some(_)) if a.dimension != b.dimension => throw new Exception("Dimension mismatch: " + a.dimension + "/" + b.dimension)
+			case (Some(_), Some(_)) if a.dimension != b.dimension => throw new DimensionMismatchException(a.dimension, b.dimension, "/")
 			case (Some(_), Some(_)) | (None, None)                => DimensionedValue(a.value / b.value, None)
 			case (Some(_), None)                                  => DimensionedValue(a.value / b.value, a.dimension)
 			case (None, Some(_))                                  => DimensionedValue(a.value / b.value, b.dimension)
