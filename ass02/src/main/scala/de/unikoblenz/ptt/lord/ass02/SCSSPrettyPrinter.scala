@@ -13,7 +13,7 @@ object SCSSPrettyPrinter extends PrettyPrinter {
 
 	def show(node: Node): Doc = node match {
 		case SCSS(nodes, _)                                                           => ssep(nodes map show, line <> line)
-		case Import(name)                                                             => "@import" <+> name
+		case Import(name)                                                             => "@import" <+> "\"" <> name <> "\";"
 		case Include(name, None)                                                      => "@include" <+> name <> ";"
 		case Include(name, Some(parameters))                                          => "@include" <+> name <> "(" <> ssep(parameters map show, ", ") <> ");"
 		case Mixin(name, None, rules)                                                 => "@mixin" <+> name <+> "{" <> nest(line <> vsep(rules map show)) <> line <> "}"

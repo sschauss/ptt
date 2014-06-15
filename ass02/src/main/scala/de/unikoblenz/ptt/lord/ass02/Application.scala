@@ -10,6 +10,7 @@ object Application extends App {
 	val scss = Source.fromFile(args(0)).mkString
 	val scssAst = Parser.parse(scss, Parser.parser(File.apply(args(0)).toAbsolute.parent.path))
 
+
 	args(1) match {
 		case "--pretty" =>
 			val scssOutputFilename = if (args.length > 2) args(2) else "pretty.scss"
@@ -21,7 +22,7 @@ object Application extends App {
 		case _          => printUsage
 	}
 
-	val printUsage = println(
+	def printUsage() = println(
 		"""
 			|Usage: scssFile [--pretty scssOutputFilename] [--css cssOutputFilename]
 			|
