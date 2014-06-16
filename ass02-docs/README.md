@@ -21,18 +21,19 @@ To build the project you can run `sbt assembly` from the root directory of the p
 
 ###2.2 Parse SCSS and transform it to prettyprinted SCSS/CSS
 
-`java -jar ass02.jar scssFile [scssOutputFilename] [cssOutputFilename]`
+`java -jar ass02.jar scssFile [--pretty scssOutputFilename] [--css cssOutputFilename]`
+
 
 	scssFile:
-		relative or absolute path to scss file	
+ 		relative or absolute path to scss file
 
-	scssOutputFilename:
-		relative or absolute path for prettyprinted scss file
-		default: ./pretty.scss
+ 	scssOutputFilename:
+ 		relative or absolute path for prettyprinted scss file
+  		default: ./pretty.scss
 
-	cssOutputFilename:
-		relative or absolute path for prettyprinted css file
-		default: ./pretty.css
+ 	cssOutputFilename:
+ 		relative or absolute path for prettyprinted css file
+  		default: ./pretty.css
  		
 You can also use sbt to run the transformation: 
 
