@@ -49,7 +49,7 @@ We only covered the following scss [basics](http://sass-lang.com/guide):
 - Mixins
 - Operators
 
-[@rules](https://developer.mozilla.org/de/docs/Web/CSS/At-rule) (such as @charset, @font-face...) are not covered yet.
+[@rules](https://developer.mozilla.org/de/docs/Web/CSS/At-rule) (such as @charset, @font-face...) and line/block comments are not covered yet.
 
 
 
