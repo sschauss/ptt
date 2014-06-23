@@ -22,9 +22,12 @@ public interface UserDao {
 	User get(@Bind("id") UUID id);
 
 	@SqlUpdate("UPDATE users SET firstName = :firstName, lastName = :lastname, flatShareId = :flatShareId WHERE id = :id")
-	void update(User user);
+	void update(@BindBean User user);
 
 	@SqlUpdate("DELETE FROM users WHERE id = :id")
-	void delete(UUID id);
+	void delete(@Bind("id") UUID id);
+
+	@SqlQuery("SELECT * FROM users WHERE flatShareId = :flatShareId")
+	List<User> getUsersInFlatShare(@Bind("flatShareId") UUID flatShareId);
 
 }

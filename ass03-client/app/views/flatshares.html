@@ -1,16 +1,29 @@
 <table class="table table-striped">
     <thead>
-        <tr>
-            <th>Street</th>
-            <th>House Number</th>
-            <th>City</th>
-        </tr>
+    <tr>
+        <th>Street</th>
+        <th>House Number</th>
+        <th>City</th>
+        <th></th>
+    </tr>
     </thead>
-    <tbody>
-        <tr ng-repeat="flatShare in flatShares">
-            <td>{{flatShare.street}}</td>
-            <td>{{flatShare.houseNumber}}</td>
-            <td>{{flatShare.city}}</td>
-        </tr>
+    <tbody ng-repeat="flatShare in flatShares">
+    <tr>
+        <td>{{flatShare.street}}</td>
+        <td>{{flatShare.houseNumber}}</td>
+        <td>{{flatShare.city}}</td>
+        <td>
+            <a ng-show="users[flatShare.id] == undefined" href ng-click="showUsers(flatShare.id)"><i class="glyphicon glyphicon-eye-open"></i></a>
+            <a ng-show="users[flatShare.id] != undefined" href ng-click="hideUsers(flatShare.id)"><i class="glyphicon glyphicon-eye-close"></i></a>
+        </td>
+    </tr>
+    <tr ng-show="users[flatShare.id] != undefined" class="info">
+        <td colspan="4">
+            <div ng-repeat="user in users[flatShare.id]">
+                {{user.firstName}} {{user.lastName}}
+            </div>
+        </td>
+    </tr>
     </tbody>
 </table>
+

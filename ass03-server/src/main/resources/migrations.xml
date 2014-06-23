@@ -76,4 +76,12 @@
     	 	referencedTableName="flatshares"
     	 />
     </changeSet>
+    <changeSet id="7" author="simon">
+    	<addColumn tableName="consumers">
+    		<column name="paid" defaultValue="false" type="boolean"></column>
+    	</addColumn>
+    </changeSet>
+    <changeSet id="8" author="simon">
+    	<addPrimaryKey tableName="consumers" columnNames="userid, articleid"/>
+    </changeSet>
 </databaseChangeLog>

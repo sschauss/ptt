@@ -20,6 +20,7 @@ public class User {
 	}
 
 	public User(UUID id, String firstName, String lastName, UUID flatShareId) {
+		super();
 		this.id = id;
 		this.firstName = firstName;
 		this.lastName = lastName;

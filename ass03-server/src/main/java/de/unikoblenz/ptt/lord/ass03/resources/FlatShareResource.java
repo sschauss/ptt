@@ -17,14 +17,19 @@ import org.skife.jdbi.v2.DBI;
 
 import de.unikoblenz.ptt.lord.ass03.jdbi.flatshare.FlatShare;
 import de.unikoblenz.ptt.lord.ass03.jdbi.flatshare.FlatShareDao;
+import de.unikoblenz.ptt.lord.ass03.jdbi.user.User;
+import de.unikoblenz.ptt.lord.ass03.jdbi.user.UserDao;
 
 @Path("/flatshares")
 public class FlatShareResource {
 
 	private final FlatShareDao flatShareDao;
+	
+	private final UserDao userDao;
 
 	public FlatShareResource(DBI jdbi) {
 		flatShareDao = jdbi.onDemand(FlatShareDao.class);
+		userDao = jdbi.onDemand(UserDao.class);
 	}
 
 	@GET
@@ -57,6 +62,13 @@ public class FlatShareResource {
 	@Path("/{id}")
 	public void delete(@PathParam("id") UUID id) {
 		flatShareDao.delete(id);
+	}
+	
+	@GET
+	@Path("/{id}/users")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<User> getUsers(@PathParam("id") UUID id) {
+		return userDao.getUsersInFlatShare(id);
 	}
 	
 }
