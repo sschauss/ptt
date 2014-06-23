@@ -2,6 +2,9 @@ package de.unikoblenz.ptt.lord.ass03.core.user;
 
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class User {
 
 	private UUID id;
@@ -11,6 +14,10 @@ public class User {
 	private String lastName;
 
 	private UUID flatShareId;
+
+	public User() {
+		this.id = UUID.randomUUID();
+	}
 
 	public User(UUID id, String firstName, String lastName, UUID flatShareId) {
 		this.id = id;

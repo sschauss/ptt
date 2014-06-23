@@ -1,8 +1,6 @@
 package de.unikoblenz.ptt.lord.ass03.resources;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -33,8 +31,9 @@ public class UserResource {
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
 	public void createUser(User user) {
-
+		userDao.createUser(user);
 	}
 
 }
