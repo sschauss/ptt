@@ -57,4 +57,14 @@
             </column>
         </createTable>
     </changeSet>
+    <changeSet id="5" author="simon">
+		<createTable tableName="consumers">
+			<column name="userid" type="varchar(64)">
+				<constraints foreignKeyName="user_id_fk" references="users(id)" nullable="false"/>
+			</column>
+			<column name="articleid" type="varchar(64)">
+				<constraints foreignKeyName="article_id_fk" references="articles(id)" nullable="false"/>
+			</column>
+		</createTable>
+    </changeSet>
 </databaseChangeLog>
