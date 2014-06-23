@@ -69,18 +69,31 @@ module.exports = function (grunt) {
         hostname: 'localhost',
         livereload: 35729
       },
+      proxies: [{
+        context: '/api', // the context of the data service
+        host: 'localhost', // wherever the data service is running
+        port: 8080 // the port that the data service is running on
+      }],
       livereload: {
         options: {
           open: true,
-          middleware: function (connect) {
-            return [
-              connect.static('.tmp'),
-              connect().use(
-                '/bower_components',
-                connect.static('./bower_components')
-              ),
-              connect.static(appConfig.app)
+          middleware: function (connect, options) {
+            var middlewares = [
+                connect.static('.tmp'),
+                connect().use(
+                    '/bower_components',
+                    connect.static('./bower_components')
+                ),
+                connect.static(appConfig.app)
             ];
+            if (!Array.isArray(options.base)) {
+              options.base = [options.base];
+            }
+            middlewares.push(require('grunt-connect-proxy/lib/utils').proxyRequest);
+            options.base.forEach(function(base) {
+                  middlewares.push(connect.static(base));
+            });
+            return middlewares;
           }
         }
       },
@@ -419,6 +432,7 @@ module.exports = function (grunt) {
       'wiredep',
       'concurrent:server',
       'autoprefixer',
+      'configureProxies:server',
       'connect:livereload',
       'watch'
     ]);
