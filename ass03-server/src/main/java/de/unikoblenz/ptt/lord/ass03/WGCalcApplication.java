@@ -2,6 +2,7 @@ package de.unikoblenz.ptt.lord.ass03;
 
 import org.skife.jdbi.v2.DBI;
 
+import de.unikoblenz.ptt.lord.ass03.resources.FlatShareResource;
 import de.unikoblenz.ptt.lord.ass03.resources.UserResource;
 import io.dropwizard.Application;
 import io.dropwizard.assets.AssetsBundle;
@@ -34,8 +35,10 @@ public class WGCalcApplication extends Application<WGCalcConfiguration> {
 		final DBIFactory factory = new DBIFactory();
 		final DBI jdbi = factory.build(environment, configuration.getDataSourceFactory(), "postgresql");
 		final UserResource userResource = new UserResource(jdbi);
-
+		final FlatShareResource flatShareResource = new FlatShareResource(jdbi);
+		
 		environment.jersey().register(userResource);
+		environment.jersey().register(flatShareResource);
 
 		environment.jersey().setUrlPattern("/api/*");
 	}

@@ -1,6 +1,5 @@
-package de.unikoblenz.ptt.lord.ass03.core.flatshare;
+package de.unikoblenz.ptt.lord.ass03.jdbi.flatshare;
 
-import java.util.List;
 import java.util.UUID;
 
 public class FlatShare {
@@ -13,14 +12,15 @@ public class FlatShare {
 
 	private String city;
 
-	private List<UUID> userIds;
+	public FlatShare() {
+		this.id = UUID.randomUUID();
+	}
 
-	public FlatShare(UUID id, String street, String houseNumber, String city, List<UUID> userIds) {
+	public FlatShare(UUID id, String street, String houseNumber, String city) {
 		this.id = id;
 		this.street = street;
 		this.houseNumber = houseNumber;
 		this.city = city;
-		this.userIds = userIds;
 	}
 
 	public UUID getId() {
@@ -37,10 +37,6 @@ public class FlatShare {
 
 	public String getCity() {
 		return city;
-	}
-
-	public List<UUID> getUserIds() {
-		return userIds;
 	}
 
 }

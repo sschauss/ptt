@@ -67,4 +67,13 @@
 			</column>
 		</createTable>
     </changeSet>
+    <changeSet id="6" author="simon">
+    	<addForeignKeyConstraint 
+    		baseColumnNames="flatshareid"
+    	 	baseTableName="users"
+    	 	constraintName="flat_share_id_fk"
+    	 	referencedColumnNames="id"
+    	 	referencedTableName="flatshares"
+    	 />
+    </changeSet>
 </databaseChangeLog>

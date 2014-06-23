@@ -1,4 +1,4 @@
-package de.unikoblenz.ptt.lord.ass03.core.user;
+package de.unikoblenz.ptt.lord.ass03.jdbi.user;
 
 import java.util.UUID;
 
