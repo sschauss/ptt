@@ -25,4 +25,36 @@
     <changeSet id="2" author="simon">
     	<renameTable newTableName="users" oldTableName="user"/>
     </changeSet>
+    <changeSet id="3" author="felix">
+        <createTable tableName="flatshares">
+            <column name="id" type="varchar(64)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="street" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="housenumber" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="city" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="4" author="felix">
+        <createTable tableName="articles">
+            <column name="id" type="varchar(64)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="value" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="purchaser" type="varchar(64)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
 </databaseChangeLog>
