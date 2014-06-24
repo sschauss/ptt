@@ -1,87 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<databaseChangeLog
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="1" author="simon">
-        <createTable tableName="user">
-            <column name="id" type="varchar(64)">
-                <constraints primaryKey="true" nullable="false"/>
-            </column>
-            <column name="firstname" type="varchar(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="lastname" type="varchar(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="flatshareid" type="varchar(64)">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-    </changeSet>
-    <changeSet id="2" author="simon">
-    	<renameTable newTableName="users" oldTableName="user"/>
-    </changeSet>
-    <changeSet id="3" author="felix">
-        <createTable tableName="flatshares">
-            <column name="id" type="varchar(64)">
-                <constraints primaryKey="true" nullable="false"/>
-            </column>
-            <column name="street" type="varchar(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="housenumber" type="varchar(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="city" type="varchar(255)">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-    </changeSet>
-    <changeSet id="4" author="felix">
-        <createTable tableName="articles">
-            <column name="id" type="varchar(64)">
-                <constraints primaryKey="true" nullable="false"/>
-            </column>
-            <column name="name" type="varchar(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="value" type="bigint">
-                <constraints nullable="false"/>
-            </column>
-            <column name="purchaser" type="varchar(64)">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-    </changeSet>
-    <changeSet id="5" author="simon">
-		<createTable tableName="consumers">
-			<column name="userid" type="varchar(64)">
-				<constraints foreignKeyName="user_id_fk" references="users(id)" nullable="false"/>
+	<changeSet id="1" author="simon">
+		<createTable tableName="user">
+			<column name="id" type="uuid">
+				<constraints primaryKey="true" nullable="false" />
 			</column>
-			<column name="articleid" type="varchar(64)">
-				<constraints foreignKeyName="article_id_fk" references="articles(id)" nullable="false"/>
+			<column name="email_address" type="varchar(255)">
+				<constraints nullable="false" unique="true" />
+			</column>
+			<column name="password" type="varchar(255)">
+				<constraints nullable="false" />
+			</column>
+			<column name="first_name" type="varchar(255)">
+				<constraints nullable="false" />
+			</column>
+			<column name="last_name" type="varchar(255)">
+				<constraints nullable="false" />
 			</column>
 		</createTable>
-    </changeSet>
-    <changeSet id="6" author="simon">
-    	<addForeignKeyConstraint 
-    		baseColumnNames="flatshareid"
-    	 	baseTableName="users"
-    	 	constraintName="flat_share_id_fk"
-    	 	referencedColumnNames="id"
-    	 	referencedTableName="flatshares"
-    	 />
-    </changeSet>
-    <changeSet id="7" author="simon">
-    	<addColumn tableName="consumers">
-    		<column name="paid" defaultValue="false" type="boolean"></column>
-    	</addColumn>
-    </changeSet>
-    <changeSet id="8" author="simon">
-    	<addPrimaryKey tableName="consumers" columnNames="userid, articleid"/>
-    </changeSet>
+		<createTable tableName="cost_share">
+			<column name="id" type="uuid">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="name" type="varchar(255)">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+		<createTable tableName="cost_share_user">
+			<column name="cost_share_id" type="uuid">
+				<constraints primaryKey="true" nullable="false"
+					foreignKeyName="fk_cost_share_id" references="cost_share(id)" />
+			</column>
+			<column name="user_id" type="uuid">
+				<constraints primaryKey="true" nullable="false"
+					foreignKeyName="fk_user_id" references="user(id)" />
+			</column>
+		</createTable>
+	</changeSet>
 </databaseChangeLog>

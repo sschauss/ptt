@@ -1,6 +1,5 @@
 package de.unikoblenz.ptt.lord.ass03.jdbi.user;
 
-import java.util.List;
 import java.util.UUID;
 
 import org.skife.jdbi.v2.sqlobject.Bind;
@@ -12,22 +11,13 @@ import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 @RegisterMapper(UserMapper.class)
 public interface UserDao {
 
-	@SqlQuery("SELECT * FROM users")
-	List<User> getAll();
-
-	@SqlUpdate("INSERT INTO users(id, firstName, lastName, flatShareId) VALUES(:id, :firstName, :lastName, :flatShareId)")
+	@SqlUpdate("INSERT INTO user(id, email_address, password, first_name, last_name) VALUES(:id, :emailAddress, :password, :firstName, :lastName)")
 	void create(@BindBean User user);
 
-	@SqlQuery("SELECT * FROM users WHERE id = :id")
+	@SqlQuery("SELECT * FROM user WHERE id = :id")
 	User get(@Bind("id") UUID id);
-
-	@SqlUpdate("UPDATE users SET firstName = :firstName, lastName = :lastname, flatShareId = :flatShareId WHERE id = :id")
-	void update(@BindBean User user);
-
-	@SqlUpdate("DELETE FROM users WHERE id = :id")
-	void delete(@Bind("id") UUID id);
-
-	@SqlQuery("SELECT * FROM users WHERE flatShareId = :flatShareId")
-	List<User> getUsersInFlatShare(@Bind("flatShareId") UUID flatShareId);
+	
+	@SqlQuery("SELECT * FROM user WHERE email_address = :emailAddress")
+	User get(@Bind("emailAddress") String emailAddress);
 
 }

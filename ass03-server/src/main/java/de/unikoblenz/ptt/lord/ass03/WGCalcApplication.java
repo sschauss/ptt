@@ -10,8 +10,13 @@ import io.dropwizard.setup.Environment;
 
 import org.skife.jdbi.v2.DBI;
 
-import de.unikoblenz.ptt.lord.ass03.resources.FlatShareResource;
+import de.unikoblenz.ptt.lord.ass03.jdbi.costshare.CostShareDao;
+import de.unikoblenz.ptt.lord.ass03.jdbi.user.UserDao;
+import de.unikoblenz.ptt.lord.ass03.resources.CostShareResource;
+import de.unikoblenz.ptt.lord.ass03.resources.LoginResource;
 import de.unikoblenz.ptt.lord.ass03.resources.UserResource;
+import de.unikoblenz.ptt.lord.ass03.security.AuthTokenCache;
+import de.unikoblenz.ptt.lord.ass03.security.AuthTokenProvider;
 
 public class WGCalcApplication extends Application<WGCalcConfiguration> {
 
@@ -34,12 +39,23 @@ public class WGCalcApplication extends Application<WGCalcConfiguration> {
 	@Override
 	public void run(WGCalcConfiguration configuration, Environment environment) throws Exception {
 		final DBIFactory factory = new DBIFactory();
-		final DBI jdbi = factory.build(environment, configuration.getDataSourceFactory(), "postgresql");
-		final UserResource userResource = new UserResource(jdbi);
-		final FlatShareResource flatShareResource = new FlatShareResource(jdbi);
+		final DBI jdbi = factory.build(environment, configuration.getDataSourceFactory(), "h2");
 
+		final UserDao userDao = jdbi.onDemand(UserDao.class);
+		final CostShareDao costShareDao = jdbi.onDemand(CostShareDao.class);
+		final AuthTokenCache authTokenCache = new AuthTokenCache();
+
+		final LoginResource loginResource = new LoginResource(userDao, authTokenCache);
+		final UserResource userResource = new UserResource(userDao);
+		final CostShareResource costShareResource = new CostShareResource(costShareDao);
+
+		environment.jersey().register(loginResource);
 		environment.jersey().register(userResource);
-		environment.jersey().register(flatShareResource);
+		environment.jersey().register(costShareResource);
+
+		final AuthTokenProvider authTokenProvider = new AuthTokenProvider(userDao, authTokenCache);
+
+		environment.jersey().register(authTokenProvider);
 
 		environment.jersey().setUrlPattern("/api/*");
 	}

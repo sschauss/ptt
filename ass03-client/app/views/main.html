@@ -1,15 +1,38 @@
 <div class="row">
-    <div class="col-lg-6 col-lg-offset-3">
+    <div class="col-lg-4">
+        <h2>Login</h2>
         <form role="form">
             <div class="form-group">
-                <label for="email">Email address</label>
-                <input type="email" class="form-control" id="email" placeholder="Enter email">
+                <label for="loginEmailAddress">Email Address</label>
+                <input type="email" class="form-control" id="loginEmailAddress" placeholder="Enter Email" ng-model="loginEmailAddress">
             </div>
             <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" class="form-control" id="password" placeholder="Password">
+                <label for="loginPassword">Password</label>
+                <input type="password" class="form-control" id="loginPassword" placeholder="Enter Password" ng-model="loginPassword">
             </div>
-            <button type="submit" class="btn btn-default">Submit</button>
+            <button type="submit" class="btn btn-default" ng-click="login()">Login</button>
+        </form>
+    </div>
+    <div class="col-lg-4 col-lg-offset-4">
+        <h2>Register</h2>
+        <form role="form">
+            <div class="form-group">
+                <label for="registerEmailAddress">Email Address</label>
+                <input type="email" class="form-control" id="registerEmailAddress" placeholder="Enter Email" ng-model="registerEmailAddress">
+            </div>
+            <div class="form-group">
+                <label for="registerPassword">Password</label>
+                <input type="password" class="form-control" id="registerPassword" placeholder="Enter Password" ng-model="registerPassword">
+            </div>
+            <div class="form-group">
+                <label for="firstName">First Name</label>
+                <input type="text" class="form-control" id="firstName" placeholder="Enter First Name" ng-model="firstName">
+            </div>
+            <div class="form-group">
+                <label for="lastName">Last Name</label>
+                <input type="text" class="form-control" id="lastName" placeholder="Enter Last Name" ng-model="lastName">
+            </div>
+            <button type="submit" class="btn btn-default pull-right" ng-click="register()">Register</button>
         </form>
     </div>
 </div>

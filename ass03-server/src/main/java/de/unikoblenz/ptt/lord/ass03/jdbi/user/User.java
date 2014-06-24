@@ -2,33 +2,40 @@ package de.unikoblenz.ptt.lord.ass03.jdbi.user;
 
 import java.util.UUID;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class User {
 
 	private UUID id;
+
+	private String emailAddress;
+
+	private String password;
 
 	private String firstName;
 
 	private String lastName;
 
-	private UUID flatShareId;
-
 	public User() {
 		this.id = UUID.randomUUID();
 	}
 
-	public User(UUID id, String firstName, String lastName, UUID flatShareId) {
-		super();
+	public User(UUID id, String emailAddress, String password, String firstName, String lastName) {
 		this.id = id;
+		this.emailAddress = emailAddress;
+		this.password = password;
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.flatShareId = flatShareId;
 	}
 
 	public UUID getId() {
 		return id;
+	}
+
+	public String getEmailAddress() {
+		return emailAddress;
+	}
+
+	public String getPassword() {
+		return password;
 	}
 
 	public String getFirstName() {
@@ -37,10 +44,6 @@ public class User {
 
 	public String getLastName() {
 		return lastName;
-	}
-
-	public UUID getFlatShareId() {
-		return flatShareId;
 	}
 
 }

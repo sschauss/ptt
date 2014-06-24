@@ -8,9 +8,27 @@
  # Controller of the ass03ClientApp
 ###
 angular.module('ass03ClientApp')
-  .controller 'MainCtrl', ($scope) ->
-    $scope.awesomeThings = [
-      'HTML5 Boilerplate'
-      'AngularJS'
-      'Karma'
-    ]
+  .controller 'MainCtrl', ($scope, $resource, $controller) ->
+
+    Token = $resource "/api/login"
+
+    User = $resource "/api/users/:id", {id: '@id'}
+
+    $scope.login = ->
+      console.log $scope
+      Token.save
+        emailAddress: $scope.loginEmailAddress
+        password: $scope.loginPassword
+      , (credentials, headers) ->
+          localStorage.setItem "x-auth-token", headers("x-auth-token")
+
+
+    $scope.register = ->
+      User.save
+        emailAddress: $scope.registerEmailAddress
+        password: $scope.registerPassword
+        firstName: $scope.firstName
+        lastName: $scope.lastName
+
+
+

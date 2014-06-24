@@ -1,19 +1,17 @@
 package de.unikoblenz.ptt.lord.ass03.resources;
 
-import java.util.List;
 import java.util.UUID;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-
-import org.skife.jdbi.v2.DBI;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import de.unikoblenz.ptt.lord.ass03.jdbi.user.User;
 import de.unikoblenz.ptt.lord.ass03.jdbi.user.UserDao;
@@ -22,42 +20,26 @@ import de.unikoblenz.ptt.lord.ass03.jdbi.user.UserDao;
 public class UserResource {
 
 	private final UserDao userDao;
-	
-	public UserResource(DBI jdbi) {
-		userDao = jdbi.onDemand(UserDao.class); 
-	}
 
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	public List<User> getAll() {
-		return userDao.getAll();
+	public UserResource(UserDao userDao) {
+		this.userDao = userDao;
 	}
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	public void create(User user) {
+	public Response create(User user) {
 		userDao.create(user);
+		return Response.status(Status.CREATED).build();
 	}
-	
+
 	@GET
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public User get(@PathParam("id") UUID id) {
-		return userDao.get(id);
+	public Response get(@Context User user, @PathParam("id") UUID id) {
+		if (user == null) {
+			return Response.status(Status.UNAUTHORIZED).build();
+		}
+		return Response.ok(userDao.get(id)).build();
 	}
-	
-	@PUT
-	@Path("/{id}")
-	@Consumes(MediaType.APPLICATION_JSON)
-	public void update(User user) {
-		userDao.update(user);
-	}
-	
-	@DELETE
-	@Path("/{id}")
-	public void delete(@PathParam("id") UUID id) {
-		userDao.delete(id);
-	}
-	
 
 }

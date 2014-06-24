@@ -21,9 +21,6 @@ angular
       .when '/',
         templateUrl: 'views/main.html'
         controller: 'MainCtrl'
-      .when '/flatshares',
-        templateUrl: 'views/flatshares.html'
-        controller: 'FlatsharesCtrl'
       .otherwise
         redirectTo: '/'
 

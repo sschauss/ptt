@@ -11,10 +11,11 @@ public class UserMapper implements ResultSetMapper<User> {
 
 	public User map(int index, ResultSet r, StatementContext ctx) throws SQLException {
 		UUID id = UUID.fromString(r.getString("id"));
-		String firstName = r.getString("firstName");
-		String lastName = r.getString("lastName");
-		UUID flatShareId = UUID.fromString(r.getString("flatShareId"));
-		return new User(id, firstName, lastName, flatShareId);
+		String userName = r.getString("email_address");
+		String password = r.getString("password");
+		String firstName = r.getString("first_name");
+		String lastName = r.getString("last_name");
+		return new User(id, userName, password, firstName, lastName);
 	}
 
 }
