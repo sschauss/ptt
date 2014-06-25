@@ -5,22 +5,23 @@ import java.util.UUID;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import de.unikoblenz.ptt.lord.ass03.api.UserCredentials;
+import de.unikoblenz.ptt.lord.ass03.core.security.AuthTokenCache;
 import de.unikoblenz.ptt.lord.ass03.jdbi.user.User;
 import de.unikoblenz.ptt.lord.ass03.jdbi.user.UserDao;
-import de.unikoblenz.ptt.lord.ass03.security.AuthTokenCache;
 
-@Path("/login")
-public class LoginResource {
+@Path("/token")
+public class TokenResource {
 
 	private UserDao userDao;
 	private AuthTokenCache authTokenCache;
 
-	public LoginResource(UserDao userDao, AuthTokenCache authTokenCache) {
+	public TokenResource(UserDao userDao, AuthTokenCache authTokenCache) {
 		this.userDao = userDao;
 		this.authTokenCache = authTokenCache;
 	}
@@ -30,7 +31,7 @@ public class LoginResource {
 	public Response login(UserCredentials userCredentials) {
 		User user = userDao.get(userCredentials.getEmailAddress());
 		if (!userCredentials.getPassword().equals(user.getPassword())) {
-			return Response.status(Status.BAD_REQUEST).build();
+			throw new WebApplicationException(Status.BAD_REQUEST);
 		}
 		UUID authToken = UUID.randomUUID();
 		authTokenCache.addAuthToken(user.getId(), authToken);

@@ -15,7 +15,6 @@ angular.module('ass03ClientApp')
     User = $resource "/api/users/:id", {id: '@id'}
 
     $scope.login = ->
-      console.log $scope
       Token.save
         emailAddress: $scope.loginEmailAddress
         password: $scope.loginPassword

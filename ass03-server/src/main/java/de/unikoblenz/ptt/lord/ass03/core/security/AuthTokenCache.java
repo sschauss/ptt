@@ -1,4 +1,4 @@
-package de.unikoblenz.ptt.lord.ass03.security;
+package de.unikoblenz.ptt.lord.ass03.core.security;
 
 import java.util.UUID;
 
@@ -10,12 +10,10 @@ public class AuthTokenCache {
 	private BiMap<UUID, UUID> authTokens = HashBiMap.create();
 
 	public void addAuthToken(UUID id, UUID authToken) {
-		synchronized (authTokens) {
-			if (authTokens.containsKey(id)) {
-				authTokens.inverse().remove(id);
-			}
-			authTokens.put(id, authToken);
+		if (authTokens.containsKey(id)) {
+			authTokens.inverse().remove(id);
 		}
+		authTokens.put(id, authToken);
 	}
 
 	public UUID authorized(UUID authToken) {

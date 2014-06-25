@@ -34,15 +34,13 @@
 		<createTable tableName="cost_share_user">
 			<column name="cost_share_id" type="uuid">
 				<constraints primaryKey="true" nullable="false"
-					foreignKeyName="fk_cost_share_id" references="cost_share(id)" />
+					foreignKeyName="cost_share_user_fk_cost_share_id" references="cost_share(id)" />
 			</column>
 			<column name="user_id" type="uuid">
 				<constraints primaryKey="true" nullable="false"
-					foreignKeyName="fk_user_id" references="user(id)" />
+					foreignKeyName="cost_share_user_fk_user_id" references="user(id)" />
 			</column>
 		</createTable>
-	</changeSet>
-	<changeSet id="2" author="simon">
 		<createTable tableName="article">
 			<column name="id" type="uuid">
 				<constraints primaryKey="true" nullable="false" />
@@ -53,19 +51,23 @@
 			<column name="price" type="decimal(12,6)">
 				<constraints nullable="false" />
 			</column>
-			<column name="buyer_id" type="uuid">
-				<constraints nullable="false" foreignKeyName="fk_buyer_id"
+			<column name="user_id" type="uuid">
+				<constraints nullable="false" foreignKeyName="article_fk_user_id"
 					references="user(id)" />
+			</column>
+			<column name="cost_share_id" type="uuid">
+				<constraints nullable="false" foreignKeyName="article_fk_cost_share_id"
+					references="cost_share(id)" />
 			</column>
 		</createTable>
 		<createTable tableName="article_user">
 			<column name="article_id" type="uuid">
 				<constraints primaryKey="true" nullable="false"
-					foreignKeyName="fk_article_id" references="article(id)" />
+					foreignKeyName="article_user_fk_article_id" references="article(id)" />
 			</column>
-			<column name="consumer_id" type="uuid">
+			<column name="user_id" type="uuid">
 				<constraints primaryKey="true" nullable="false"
-					foreignKeyName="fk_consumer_id" references="user(id)" />
+					foreignKeyName="article_user_fk_user_id" references="user(id)" />
 			</column>
 			<column name="defrayed" type="boolean">
 				<constraints nullable="false" />

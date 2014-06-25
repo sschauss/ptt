@@ -8,11 +8,11 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import de.unikoblenz.ptt.lord.ass03.core.security.Auth;
 import de.unikoblenz.ptt.lord.ass03.jdbi.user.User;
 import de.unikoblenz.ptt.lord.ass03.jdbi.user.UserDao;
 
@@ -35,11 +35,8 @@ public class UserResource {
 	@GET
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response get(@Context User user, @PathParam("id") UUID id) {
-		if (user == null) {
-			return Response.status(Status.UNAUTHORIZED).build();
-		}
-		return Response.ok(userDao.get(id)).build();
+	public User get(@Auth User user, @PathParam("id") UUID id) {
+		return userDao.get(id);
 	}
 
 }

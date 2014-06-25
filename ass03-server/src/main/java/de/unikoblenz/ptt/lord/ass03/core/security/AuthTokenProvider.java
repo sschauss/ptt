@@ -1,9 +1,10 @@
-package de.unikoblenz.ptt.lord.ass03.security;
+package de.unikoblenz.ptt.lord.ass03.core.security;
 
 import java.lang.reflect.Type;
 import java.util.UUID;
 
-import javax.ws.rs.core.Context;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.Provider;
 
 import com.sun.jersey.api.core.HttpContext;
@@ -17,7 +18,7 @@ import de.unikoblenz.ptt.lord.ass03.jdbi.user.User;
 import de.unikoblenz.ptt.lord.ass03.jdbi.user.UserDao;
 
 @Provider
-public class AuthTokenProvider implements InjectableProvider<Context, Type> {
+public class AuthTokenProvider implements InjectableProvider<Auth, Type> {
 
 	private UserDao userDao;
 	private AuthTokenCache authTokenCache;
@@ -31,7 +32,7 @@ public class AuthTokenProvider implements InjectableProvider<Context, Type> {
 		return ComponentScope.PerRequest;
 	}
 
-	public Injectable<User> getInjectable(ComponentContext componentContext, Context context, Type type) {
+	public Injectable<User> getInjectable(ComponentContext componentContext, Auth auth, Type type) {
 		return new AuthTokenInjectable(userDao, authTokenCache);
 	}
 
@@ -47,14 +48,18 @@ public class AuthTokenProvider implements InjectableProvider<Context, Type> {
 
 		@Override
 		public User getValue(HttpContext httpContext) {
+			User user = null;
 			try {
 				UUID authToken = UUID.fromString(httpContext.getRequest().getHeaderValue("x-auth-token"));
 				UUID id = authTokenCache.authorized(authToken);
-				return userDao.get(id);
+				user = userDao.get(id);
 			} catch (IllegalArgumentException e) {
 
 			}
-			return null;
+			if (user == null) {
+				throw new WebApplicationException(Status.UNAUTHORIZED);
+			}
+			return user;
 		}
 	}
 

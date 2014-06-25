@@ -10,13 +10,14 @@ import io.dropwizard.setup.Environment;
 
 import org.skife.jdbi.v2.DBI;
 
+import de.unikoblenz.ptt.lord.ass03.core.RuntimeExceptionMapper;
+import de.unikoblenz.ptt.lord.ass03.core.security.AuthTokenCache;
+import de.unikoblenz.ptt.lord.ass03.core.security.AuthTokenProvider;
 import de.unikoblenz.ptt.lord.ass03.jdbi.costshare.CostShareDao;
 import de.unikoblenz.ptt.lord.ass03.jdbi.user.UserDao;
 import de.unikoblenz.ptt.lord.ass03.resources.CostShareResource;
-import de.unikoblenz.ptt.lord.ass03.resources.LoginResource;
+import de.unikoblenz.ptt.lord.ass03.resources.TokenResource;
 import de.unikoblenz.ptt.lord.ass03.resources.UserResource;
-import de.unikoblenz.ptt.lord.ass03.security.AuthTokenCache;
-import de.unikoblenz.ptt.lord.ass03.security.AuthTokenProvider;
 
 public class WGCalcApplication extends Application<WGCalcConfiguration> {
 
@@ -45,7 +46,7 @@ public class WGCalcApplication extends Application<WGCalcConfiguration> {
 		final CostShareDao costShareDao = jdbi.onDemand(CostShareDao.class);
 		final AuthTokenCache authTokenCache = new AuthTokenCache();
 
-		final LoginResource loginResource = new LoginResource(userDao, authTokenCache);
+		final TokenResource loginResource = new TokenResource(userDao, authTokenCache);
 		final UserResource userResource = new UserResource(userDao);
 		final CostShareResource costShareResource = new CostShareResource(costShareDao);
 
@@ -54,8 +55,10 @@ public class WGCalcApplication extends Application<WGCalcConfiguration> {
 		environment.jersey().register(costShareResource);
 
 		final AuthTokenProvider authTokenProvider = new AuthTokenProvider(userDao, authTokenCache);
+		final RuntimeExceptionMapper runtimeExceptionMapper = new RuntimeExceptionMapper();
 
 		environment.jersey().register(authTokenProvider);
+		environment.jersey().register(runtimeExceptionMapper);
 
 		environment.jersey().setUrlPattern("/api/*");
 	}
