@@ -42,4 +42,34 @@
 			</column>
 		</createTable>
 	</changeSet>
+	<changeSet id="2" author="simon">
+		<createTable tableName="article">
+			<column name="id" type="uuid">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="name" type="varchar(255)">
+				<constraints nullable="false" />
+			</column>
+			<column name="price" type="decimal(12,6)">
+				<constraints nullable="false" />
+			</column>
+			<column name="buyer_id" type="uuid">
+				<constraints nullable="false" foreignKeyName="fk_buyer_id"
+					references="user(id)" />
+			</column>
+		</createTable>
+		<createTable tableName="article_user">
+			<column name="article_id" type="uuid">
+				<constraints primaryKey="true" nullable="false"
+					foreignKeyName="fk_article_id" references="article(id)" />
+			</column>
+			<column name="consumer_id" type="uuid">
+				<constraints primaryKey="true" nullable="false"
+					foreignKeyName="fk_consumer_id" references="user(id)" />
+			</column>
+			<column name="defrayed" type="boolean">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+	</changeSet>
 </databaseChangeLog>
