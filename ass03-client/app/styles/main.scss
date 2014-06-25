@@ -12,10 +12,10 @@ header {
   width: 100%;
   margin: 50px 0;
   background: url("../images/congruent_pentagon.png") repeat;
-  animation: background-animation 17s;
-  animation-iteration-count: infinite;
-  animation-timing-function: linear;
-  box-shadow: inset 0px -5px 5px #888, inset 0 5px 5px #888;
+  //animation: background-animation 17s;
+  //animation-iteration-count: infinite;
+  //animation-timing-function: linear;
+  box-shadow: inset 0px -8px 8px rgba(80,80,80,0.2), inset 0 8px 8px rgba(80,80,80,0.2);
 }
 
 @keyframes background-animation {
@@ -25,4 +25,24 @@ header {
   to {
     background-position: 600px 600px;
   }
+}
+
+.noBorderRow > th, td{
+  border:none !important;
+}
+
+.noBorderRow + tr > th, td{
+  border-top:none !important;
+}
+
+tr + .noBorderRow > th, td{
+  border-bottom:none !important;
+}
+
+.topBorderCell {
+  border-top: 2px solid #dddddd !important;
+}
+
+.deptee {
+  text-align: right;
 }

@@ -1,0 +1,15 @@
+{{articles.length}}
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th></th>
+            <th ng-repeat="purchaser in users">{{purchaser.firstName}} {{purchaser.lastName}}</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="debitor in users">
+            <td>schuldet: {{debitor.firstName}} {{debitor.lastName}}</td>
+            <td ng-repeat="debit in debitor.debits">{{debit}} €</td>
+        </tr>
+    </tbody>
+</table>

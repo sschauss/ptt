@@ -1,0 +1,44 @@
+<table class="table table-striped">
+    <thead>
+        <tr class="noBorderRow">
+            <th>Purchaser</th>
+            <th>Date</th>
+            <th>Article</th>
+            <th>Price</th>
+            <th colspan="{{articles.length}}">Who Pays?</th>
+        </tr>
+        <tr>
+            <th colspan="4"></th>
+            <th style="font-weight:normal" ng-repeat="consumer in users">{{consumer.firstName}}<br />{{consumer.lastName}}</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="article in articles">
+            <td>{{article.purchaser.firstName}} {{article.purchaser.lastName}}</td>
+            <td>{{article.date}}</td>
+            <td>{{article.name}}</td>
+            <td>{{article.value}} €</td>
+            <td ng-repeat="consumer in users">
+                <span ng-show="article.consumers[$index] == true" class="glyphicon glyphicon-ok"></span>
+            </td>
+        </tr>
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="4"></td>
+            <td colspan="{{users.length}}"></td>
+        </tr>
+        <tr>
+            <td colspan="4"></td>
+            <td ng-repeat="consumer in users" class="topBorderCell"><strong>10.00 €</strong></td>
+        </tr>
+        <tr>
+            <td colspan="4"></td>
+            <td colspan="{{users.length}}"  class="topBorderCell"></td>
+        </tr>
+        <tr ng-repeat="deptee in users">
+            <td colspan="4" class="deptee"><em>To {{deptee.firstName}} {{deptee.lastName}}:</em></td>
+            <td ng-repeat="debit in deptee.debits">{{debit}} €</td>
+        </tr>
+    </tfoot>
+</table>
