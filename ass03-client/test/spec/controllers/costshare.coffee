@@ -1,17 +1,17 @@
 'use strict'
 
-describe 'Controller: FlatsharesCtrl', ->
+describe 'Controller: CostshareCtrl', ->
 
   # load the controller's module
   beforeEach module 'ass03ClientApp'
 
-  FlatsharesCtrl = {}
+  CostshareCtrl = {}
   scope = {}
 
   # Initialize the controller and a mock scope
   beforeEach inject ($controller, $rootScope) ->
     scope = $rootScope.$new()
-    FlatsharesCtrl = $controller 'FlatsharesCtrl', {
+    CostshareCtrl = $controller 'CostshareCtrl', {
       $scope: scope
     }
 

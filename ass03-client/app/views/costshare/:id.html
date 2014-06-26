@@ -14,8 +14,8 @@
     </thead>
     <tbody>
         <tr ng-repeat="article in articles">
-            <td>{{article.purchaser.firstName}} {{article.purchaser.lastName}}</td>
-            <td>{{article.date}}</td>
+            <td>{{getPurchaser(article.purchaser)}}</td>
+            <td>{{article.purchaseDate}}</td>
             <td>{{article.name}}</td>
             <td>{{article.value}} €</td>
             <td ng-repeat="consumer in users">
