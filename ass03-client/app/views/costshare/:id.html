@@ -18,8 +18,8 @@
             <td>{{article.purchaseDate}}</td>
             <td>{{article.name}}</td>
             <td>{{article.value}} €</td>
-            <td ng-repeat="consumer in users">
-                <span ng-show="article.consumers[$index] == true" class="glyphicon glyphicon-ok"></span>
+            <td ng-repeat="user in users">
+                <span ng-show="isConsumer(article, user.id)" class="glyphicon glyphicon-ok"></span>
             </td>
         </tr>
     </tbody>
@@ -30,7 +30,9 @@
         </tr>
         <tr>
             <td colspan="4"></td>
-            <td ng-repeat="consumer in users" class="topBorderCell"><strong>10.00 €</strong></td>
+            <td ng-repeat="user in users" class="topBorderCell">
+                <strong>{{user.debts.overall}} €</strong>
+            </td>
         </tr>
         <tr>
             <td colspan="4"></td>
@@ -38,7 +40,7 @@
         </tr>
         <tr ng-repeat="deptee in users">
             <td colspan="4" class="deptee"><em>To {{deptee.firstName}} {{deptee.lastName}}:</em></td>
-            <td ng-repeat="debit in deptee.debits">{{debit}} €</td>
+            <td ng-repeat="debtor in users">{{debtor.debts[deptee.id]}} €</td>
         </tr>
     </tfoot>
 </table>
