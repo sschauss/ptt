@@ -41,7 +41,7 @@ angular.module('ass03ClientApp')
       purchaseDate: "24.06.2014"
       name: "Apfel"
       value: 1.99
-      consumers: ["1", "2"]
+      consumers: ["1", "2", "3"]
     article3 =
       purchaser: "1"
       purchaseDate: "24.06.2014"
@@ -124,8 +124,9 @@ angular.module('ass03ClientApp')
       for article in articles
         for consumerId in article.consumers
           consumer = getUser(consumerId)
-          consumer.debts.overall += round(article.value / article.consumers.length, 2)
-          consumer.debts[article.purchaser] += round(article.value / article.consumers.length, 2)
+          samePerson = consumerId == article.purchaser
+          consumer.debts.overall += round(article.value / article.consumers.length, 2) if !samePerson
+          consumer.debts[article.purchaser] += round(article.value / article.consumers.length, 2) if !samePerson
 
     initializeDebts = (users) ->
       for user in users
@@ -145,4 +146,9 @@ angular.module('ass03ClientApp')
     round = (number, decimals) ->
       return Math.round(number * Math.pow(10, decimals)) / Math.pow(10, decimals)
 
+    fixFloatingPointBug = (users) ->
+      for user in users
+        user.debts.overall = round(user.debts.overall, 2)
+
     calculateDebts($scope.users, $scope.articles)
+    fixFloatingPointBug($scope.users) #TODO ist das jetzt wirklich gelöst?

@@ -29,8 +29,20 @@
             <td colspan="{{users.length}}"></td>
         </tr>
         <tr>
-            <td colspan="4"></td>
-            <td ng-repeat="user in users" class="topBorderCell">
+            <td colspan="3"></td>
+            <td class="contentRight">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        Calculating Method <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="#">Standard</a></li>
+                        <li><a href="#">Offsetted</a></li>
+                        <li><a href="#">Offsetted (intelligent)</a></li>
+                    </ul>
+                </div>
+            </td>
+            <td ng-repeat="user in users" class="topBorderCell contentMiddle">
                 <strong>{{user.debts.overall}} €</strong>
             </td>
         </tr>
