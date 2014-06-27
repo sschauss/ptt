@@ -18,7 +18,7 @@
             <td>{{article.purchaseDate}}</td>
             <td>{{article.name}}</td>
             <td>{{article.value}} €</td>
-            <td ng-repeat="user in users">
+            <td ng-repeat="user in users" ng-class="{success: isDefrayed(article, user)}">
                 <span ng-show="isConsumer(article, user.id)" class="glyphicon glyphicon-ok"></span>
             </td>
         </tr>
