@@ -11,12 +11,26 @@ import io.dropwizard.setup.Environment;
 import org.skife.jdbi.v2.DBI;
 
 import de.unikoblenz.ptt.lord.ass03.core.RuntimeExceptionMapper;
-import de.unikoblenz.ptt.lord.ass03.core.security.AuthTokenCache;
-import de.unikoblenz.ptt.lord.ass03.core.security.AuthTokenProvider;
-import de.unikoblenz.ptt.lord.ass03.jdbi.costshare.CostShareDao;
-import de.unikoblenz.ptt.lord.ass03.jdbi.user.UserDao;
+import de.unikoblenz.ptt.lord.ass03.core.article.command.ArticleCommandHandler;
+import de.unikoblenz.ptt.lord.ass03.core.article.dao.ArticleViewDao;
+import de.unikoblenz.ptt.lord.ass03.core.article.entity.ArticleRepository;
+import de.unikoblenz.ptt.lord.ass03.core.article.event.ArticleEventHandler;
+import de.unikoblenz.ptt.lord.ass03.core.costshare.command.CostShareCommandHandler;
+import de.unikoblenz.ptt.lord.ass03.core.costshare.dao.CostShareViewDao;
+import de.unikoblenz.ptt.lord.ass03.core.costshare.entity.CostShareRepository;
+import de.unikoblenz.ptt.lord.ass03.core.costshare.event.CostShareEventHandler;
+import de.unikoblenz.ptt.lord.ass03.core.costshareuser.dao.CostShareUserViewDao;
+import de.unikoblenz.ptt.lord.ass03.core.costshareuser.event.CostShareUserEventHandler;
+import de.unikoblenz.ptt.lord.ass03.core.cqrs.CommandBus;
+import de.unikoblenz.ptt.lord.ass03.core.cqrs.EventBus;
+import de.unikoblenz.ptt.lord.ass03.core.cqrs.EventDao;
+import de.unikoblenz.ptt.lord.ass03.core.cqrs.EventStore;
+import de.unikoblenz.ptt.lord.ass03.core.user.command.UserCommandHandler;
+import de.unikoblenz.ptt.lord.ass03.core.user.dao.UserViewDao;
+import de.unikoblenz.ptt.lord.ass03.core.user.entity.UserRepository;
+import de.unikoblenz.ptt.lord.ass03.core.user.event.UserEventHandler;
+import de.unikoblenz.ptt.lord.ass03.resources.ArticleResource;
 import de.unikoblenz.ptt.lord.ass03.resources.CostShareResource;
-import de.unikoblenz.ptt.lord.ass03.resources.TokenResource;
 import de.unikoblenz.ptt.lord.ass03.resources.UserResource;
 
 public class WGCalcApplication extends Application<WGCalcConfiguration> {
@@ -34,7 +48,6 @@ public class WGCalcApplication extends Application<WGCalcConfiguration> {
 			}
 		});
 		bootstrap.addBundle(new AssetsBundle("/assets", "/", "index.html"));
-
 	}
 
 	@Override
@@ -42,22 +55,45 @@ public class WGCalcApplication extends Application<WGCalcConfiguration> {
 		final DBIFactory factory = new DBIFactory();
 		final DBI jdbi = factory.build(environment, configuration.getDataSourceFactory(), "h2");
 
-		final UserDao userDao = jdbi.onDemand(UserDao.class);
-		final CostShareDao costShareDao = jdbi.onDemand(CostShareDao.class);
-		final AuthTokenCache authTokenCache = new AuthTokenCache();
+		final CommandBus commandBus = new CommandBus();
 
-		final TokenResource loginResource = new TokenResource(userDao, authTokenCache);
-		final UserResource userResource = new UserResource(userDao);
-		final CostShareResource costShareResource = new CostShareResource(costShareDao);
+		final EventBus eventBus = new EventBus();
+		final EventDao eventDao = jdbi.onDemand(EventDao.class);
+		final EventStore eventStore = new EventStore(eventDao);
 
-		environment.jersey().register(loginResource);
-		environment.jersey().register(userResource);
+		final CostShareUserViewDao costShareUserViewDao = jdbi.onDemand(CostShareUserViewDao.class);
+
+		final ArticleViewDao articleViewDao = jdbi.onDemand(ArticleViewDao.class);
+		final ArticleRepository articleRepository = new ArticleRepository(eventStore);
+		final ArticleCommandHandler articleCommandHandler = new ArticleCommandHandler(eventBus, articleRepository);
+		final ArticleEventHandler articleEventHandler = new ArticleEventHandler(articleViewDao);
+		final ArticleResource articleResource = new ArticleResource(commandBus, articleViewDao);
+		commandBus.subscribe(articleCommandHandler);
+		eventBus.subscribe(articleEventHandler);
+		environment.jersey().register(articleResource);
+
+		final CostShareViewDao costShareViewDao = jdbi.onDemand(CostShareViewDao.class);
+		final CostShareRepository costShareRepository = new CostShareRepository(eventStore);
+		final CostShareCommandHandler costShareCommandHandler = new CostShareCommandHandler(eventBus, costShareRepository);
+		final CostShareEventHandler costShareEventHandler = new CostShareEventHandler(costShareViewDao);
+		final CostShareUserEventHandler costShareUserEventHandler = new CostShareUserEventHandler(costShareUserViewDao);
+		final CostShareResource costShareResource = new CostShareResource(commandBus, costShareViewDao, costShareUserViewDao);
+		commandBus.subscribe(costShareCommandHandler);
+		eventBus.subscribe(costShareEventHandler);
+		eventBus.subscribe(costShareUserEventHandler);
 		environment.jersey().register(costShareResource);
 
-		final AuthTokenProvider authTokenProvider = new AuthTokenProvider(userDao, authTokenCache);
+		final UserViewDao userViewDao = jdbi.onDemand(UserViewDao.class);
+		final UserRepository userRepository = new UserRepository(eventStore);
+		final UserCommandHandler userViewCommandHandler = new UserCommandHandler(eventBus, userRepository);
+		final UserEventHandler userEventHandler = new UserEventHandler(userViewDao);
+		final UserResource userResource = new UserResource(commandBus, userViewDao, costShareUserViewDao);
+		commandBus.subscribe(userViewCommandHandler);
+		eventBus.subscribe(userEventHandler);
+		environment.jersey().register(userResource);
+
 		final RuntimeExceptionMapper runtimeExceptionMapper = new RuntimeExceptionMapper();
 
-		environment.jersey().register(authTokenProvider);
 		environment.jersey().register(runtimeExceptionMapper);
 
 		environment.jersey().setUrlPattern("/api/*");

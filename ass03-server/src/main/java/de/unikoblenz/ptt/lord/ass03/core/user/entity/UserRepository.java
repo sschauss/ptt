@@ -1,0 +1,29 @@
+package de.unikoblenz.ptt.lord.ass03.core.user.entity;
+
+import java.util.List;
+import java.util.UUID;
+
+import de.unikoblenz.ptt.lord.ass03.core.cqrs.Event;
+import de.unikoblenz.ptt.lord.ass03.core.cqrs.EventStore;
+import de.unikoblenz.ptt.lord.ass03.core.cqrs.Repository;
+
+public class UserRepository extends Repository<User> {
+
+	public UserRepository(EventStore eventStore) {
+		super(eventStore);
+	}
+
+	@Override
+	public User createEntity() {
+		return User.newUser();
+	}
+
+	@Override
+	public User getEntity(UUID entityId) {
+		List<Event> events = eventStore.get(entityId);
+		User user = new User(entityId);
+		user.apply(events);
+		return user;
+	}
+
+}

@@ -1,5 +1,6 @@
 package de.unikoblenz.ptt.lord.ass03.resources;
 
+import java.util.List;
 import java.util.UUID;
 
 import javax.ws.rs.Consumes;
@@ -12,31 +13,47 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import de.unikoblenz.ptt.lord.ass03.core.security.Auth;
-import de.unikoblenz.ptt.lord.ass03.jdbi.user.User;
-import de.unikoblenz.ptt.lord.ass03.jdbi.user.UserDao;
+import de.unikoblenz.ptt.lord.ass03.core.costshare.view.CostShareView;
+import de.unikoblenz.ptt.lord.ass03.core.costshareuser.dao.CostShareUserViewDao;
+import de.unikoblenz.ptt.lord.ass03.core.cqrs.CommandBus;
+import de.unikoblenz.ptt.lord.ass03.core.user.command.CreateUserCommand;
+import de.unikoblenz.ptt.lord.ass03.core.user.dao.UserViewDao;
+import de.unikoblenz.ptt.lord.ass03.core.user.view.UserView;
 
 @Path("/users")
-public class UserResource {
+public class UserResource extends Resource {
 
-	private final UserDao userDao;
+	private UserViewDao userViewDao;
 
-	public UserResource(UserDao userDao) {
-		this.userDao = userDao;
+	private CostShareUserViewDao costShareUserViewDao;
+
+	public UserResource(CommandBus commandBus, UserViewDao userViewDao, CostShareUserViewDao costShareUserViewDao) {
+		super(commandBus);
+		this.userViewDao = userViewDao;
+		this.costShareUserViewDao = costShareUserViewDao;
 	}
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response create(User user) {
-		userDao.create(user);
+	public Response createUser(CreateUserCommand createUserCommand) {
+		commandBus.publish(createUserCommand);
 		return Response.status(Status.CREATED).build();
 	}
 
 	@GET
-	@Path("/{id}")
+	@Path("/{entityId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public User get(@Auth User user, @PathParam("id") UUID id) {
-		return userDao.get(id);
+	public Response getUser(@PathParam("entityId") UUID entityId) {
+		UserView userView = userViewDao.get(entityId);
+		return Response.ok(userView).build();
+	}
+
+	@GET
+	@Path("/{entityId}/costshares")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getCostShares(@PathParam("entityId") UUID entityId) {
+		List<CostShareView> userView = costShareUserViewDao.selectByUserEntityId(entityId);
+		return Response.ok(userView).build();
 	}
 
 }

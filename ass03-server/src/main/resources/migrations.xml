@@ -6,14 +6,22 @@
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
 	<changeSet id="1" author="simon">
-		<createTable tableName="user">
-			<column name="id" type="uuid">
+		<createTable tableName="event_store">
+			<column name="entity_id" type="uuid">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="created_at" type="timestamp">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="event" type="blob">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+		<createTable tableName="user_view_store">
+			<column name="entity_id" type="uuid">
 				<constraints primaryKey="true" nullable="false" />
 			</column>
 			<column name="email_address" type="varchar(255)">
-				<constraints nullable="false" unique="true" />
-			</column>
-			<column name="password" type="varchar(255)">
 				<constraints nullable="false" />
 			</column>
 			<column name="first_name" type="varchar(255)">
@@ -23,54 +31,48 @@
 				<constraints nullable="false" />
 			</column>
 		</createTable>
-		<createTable tableName="cost_share">
-			<column name="id" type="uuid">
+		<createTable tableName="article_view_store">
+			<column name="entity_id" type="uuid">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="cost_share_id" type="uuid">
+				<constraints nullable="false" />
+			</column>
+			<column name="purchaser_entity_id" type="uuid">
+				<constraints nullable="false" />
+			</column>
+			<column name="purchase_date" type="timestamp">
+				<constraints nullable="false" />
+			</column>
+			<column name="name" type="varchar(255)">
+				<constraints nullable="false" />
+			</column>
+			<column name="value" type="decimal(12,6)">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+		<createTable tableName="cost_share_view_store">
+			<column name="entity_id" type="uuid">
 				<constraints primaryKey="true" nullable="false" />
 			</column>
 			<column name="name" type="varchar(255)">
 				<constraints nullable="false" />
 			</column>
 		</createTable>
-		<createTable tableName="cost_share_user">
-			<column name="cost_share_id" type="uuid">
-				<constraints primaryKey="true" nullable="false"
-					foreignKeyName="cost_share_user_fk_cost_share_id" references="cost_share(id)" />
-			</column>
-			<column name="user_id" type="uuid">
-				<constraints primaryKey="true" nullable="false"
-					foreignKeyName="cost_share_user_fk_user_id" references="user(id)" />
-			</column>
-		</createTable>
-		<createTable tableName="article">
-			<column name="id" type="uuid">
+		<createTable tableName="article_user_view_store">
+			<column name="article_entity_id" type="uuid">
 				<constraints primaryKey="true" nullable="false" />
 			</column>
-			<column name="name" type="varchar(255)">
-				<constraints nullable="false" />
-			</column>
-			<column name="price" type="decimal(12,6)">
-				<constraints nullable="false" />
-			</column>
-			<column name="user_id" type="uuid">
-				<constraints nullable="false" foreignKeyName="article_fk_user_id"
-					references="user(id)" />
-			</column>
-			<column name="cost_share_id" type="uuid">
-				<constraints nullable="false" foreignKeyName="article_fk_cost_share_id"
-					references="cost_share(id)" />
+			<column name="user_entity_id" type="uuid">
+				<constraints primaryKey="true" nullable="false" />
 			</column>
 		</createTable>
-		<createTable tableName="article_user">
-			<column name="article_id" type="uuid">
-				<constraints primaryKey="true" nullable="false"
-					foreignKeyName="article_user_fk_article_id" references="article(id)" />
+		<createTable tableName="cost_share_user_view_store">
+			<column name="cost_share_entity_id" type="uuid">
+				<constraints primaryKey="true" nullable="false" />
 			</column>
-			<column name="user_id" type="uuid">
-				<constraints primaryKey="true" nullable="false"
-					foreignKeyName="article_user_fk_user_id" references="user(id)" />
-			</column>
-			<column name="defrayed" type="boolean">
-				<constraints nullable="false" />
+			<column name="user_entity_id" type="uuid">
+				<constraints primaryKey="true" nullable="false" />
 			</column>
 		</createTable>
 	</changeSet>

@@ -8,18 +8,19 @@
  # Controller of the ass03ClientApp
 ###
 angular.module('ass03ClientApp')
-  .controller 'MainCtrl', ($scope, $resource, $controller) ->
+  .controller 'MainCtrl', ($scope, $resource, $http) ->
 
-    Token = $resource "/api/login"
+    Token = $resource '/api/token'
 
-    User = $resource "/api/users/:id", {id: '@id'}
+    User = $resource '/api/users/:id', {id: '@id'}
 
     $scope.login = ->
       Token.save
         emailAddress: $scope.loginEmailAddress
         password: $scope.loginPassword
       , (credentials, headers) ->
-          localStorage.setItem "x-auth-token", headers("x-auth-token")
+          $http.defaults.headers.common['x-auth-token'] = headers 'x-auth-token'
+          console.log $http.defaults.headers
 
 
     $scope.register = ->
