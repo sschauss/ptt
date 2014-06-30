@@ -221,7 +221,7 @@ angular.module('ass03ClientApp')
     #TODO get actual json from server
     Users = $resource '/api/costshare/'+$routeParams.id+'users'
     #$scope.users = Users.query()
-    Articles = $resource '/api/articles/' #TODO kann man hier über die costshare id filtern?
+    Articles = $resource '/api/articles/' #TODO kann man hier über die costshare id filtern?, id's müssen mitgegeben werden (stand auf blatt nicht)
     #$scope.articles = Articles.query()
     ArticlesUsers = $resource '/api/article_user/' #TODO kann man hier über die costshare id filtern?
     #$scope.articlesUsers = ArticlesUsers.query()
@@ -239,6 +239,14 @@ angular.module('ass03ClientApp')
     $scope.isDefrayed = (article, user) ->
       return true if jQuery.inArray(article.id, user.defrayedArticles) != -1
 
+    $scope.calculationMethod = "Standard"
+
+    $scope.switchCalculationMethod = (method) ->
+      switch method
+        when "Standard" then $scope.calculationMethod = "Standard"
+        when "Offsetted" then $scope.calculationMethod = "Offsetted"
+        else $scope.calculationMethod = "Standard"
+
     calculateDebts = (users, articles) ->
       initializeDebts(users)
       for article in articles
@@ -248,14 +256,30 @@ angular.module('ass03ClientApp')
           if !samePerson and !$scope.isDefrayed(article, consumer)
             consumer.debts.overall += round(article.value / article.consumers.length, 2)
             consumer.debts[article.purchaser] += round(article.value / article.consumers.length, 2)
-      fixFloatingPointBug(users) #TODO ist das jetzt wirklich gelöst?
+
+    calculateOffsettedDebts = (users) ->
+      initializeOffsettedDebts(users)
+      for user in users
+        for debtee in users
+          if user.debts[debtee.id] >= debtee.debts[user.id]
+            user.offsettedDebts[debtee.id] = user.debts[debtee.id] - debtee.debts[user.id]
+          else
+            debtee.offsettedDebts[user.id] = debtee.debts[user.id] - user.debts[debtee.id]
+          user.offsettedDebts.overall += user.offsettedDebts[debtee.id]
 
     initializeDebts = (users) ->
+        for user in users
+          user.debts = {}
+          user.debts.overall = 0
+          for debtee in users
+            user.debts[debtee.id] = 0
+
+    initializeOffsettedDebts = (users) ->
       for user in users
-        user.debts = {}
-        user.debts.overall = 0
-        for deptee in users
-          user.debts[deptee.id] = 0
+        user.offsettedDebts = {}
+        user.offsettedDebts.overall = 0
+        for debtee in users
+          user.offsettedDebts[debtee.id] = 0
 
     getUser = (userId) ->
       try
@@ -272,6 +296,7 @@ angular.module('ass03ClientApp')
     fixFloatingPointBug = (users) ->
       for user in users
         user.debts.overall = round(user.debts.overall, 2)
+        user.offsettedDebts.overall = round(user.offsettedDebts.overall, 2)
 
     setDefrayedArticles = (users, articlesUsers) ->
       initializeDefrayedArticles(users)
@@ -285,3 +310,8 @@ angular.module('ass03ClientApp')
 
     setDefrayedArticles($scope.users, $scope.articlesUsers)
     calculateDebts($scope.users, $scope.articles)
+    calculateOffsettedDebts($scope.users)
+    fixFloatingPointBug(users) #TODO ist das jetzt wirklich gelöst?
+
+  #TODO if consumer == purchaser: do we initiate the database entry as defrayed? then the samePerson() stuff would be redunand
+  #TODO initialize methods in one loop

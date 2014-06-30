@@ -33,26 +33,28 @@
             <td class="contentRight">
                 <div class="btn-group">
                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                        Calculating Method <span class="caret"></span>
+                        Calculation: {{calculationMethod}} <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu" role="menu">
-                        <li><a href="#">Standard</a></li>
-                        <li><a href="#">Offsetted</a></li>
-                        <li><a href="#">Offsetted (intelligent)</a></li>
+                        <li><a href ng-click="switchCalculationMethod('Standard')">Standard</a></li>
+                        <li><a href ng-click="switchCalculationMethod('Offsetted')">Offsetted</a></li>
+                        <li><a href>Offsetted (intelligent)</a></li>
                     </ul>
                 </div>
             </td>
             <td ng-repeat="user in users" class="topBorderCell contentMiddle">
-                <strong>{{user.debts.overall}} €</strong>
+                <strong ng-if="calculationMethod == 'Standard'">{{user.debts.overall}} €</strong>
+                <strong ng-if="calculationMethod == 'Offsetted'">{{user.offsettedDebts.overall}} €</strong>
             </td>
         </tr>
         <tr>
             <td colspan="4"></td>
             <td colspan="{{users.length}}"  class="topBorderCell"></td>
         </tr>
-        <tr ng-repeat="deptee in users">
-            <td colspan="4" class="deptee"><em>To {{deptee.firstName}} {{deptee.lastName}}:</em></td>
-            <td ng-repeat="debtor in users">{{debtor.debts[deptee.id]}} €</td>
+        <tr ng-repeat="debtee in users">
+            <td colspan="4" class="deptee"><em>To {{debtee.firstName}} {{debtee.lastName}}:</em></td>
+            <td ng-if="calculationMethod == 'Standard'" ng-repeat="debtor in users">{{debtor.debts[debtee.id]}} €</td>
+            <td ng-if="calculationMethod == 'Offsetted'" ng-repeat="debtor in users">{{debtor.offsettedDebts[debtee.id]}} €</td>
         </tr>
     </tfoot>
 </table>
