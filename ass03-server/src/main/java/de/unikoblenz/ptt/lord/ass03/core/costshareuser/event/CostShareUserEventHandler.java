@@ -1,5 +1,7 @@
 package de.unikoblenz.ptt.lord.ass03.core.costshareuser.event;
 
+import java.util.UUID;
+
 import de.unikoblenz.ptt.lord.ass03.core.costshare.event.CostShareCreatedEvent;
 import de.unikoblenz.ptt.lord.ass03.core.costshareuser.dao.CostShareUserViewDao;
 import de.unikoblenz.ptt.lord.ass03.core.cqrs.Event;
@@ -21,7 +23,9 @@ public class CostShareUserEventHandler extends EventHandler {
 	}
 
 	private void handleCostShareCreatedEvent(CostShareCreatedEvent costShareCreatedEvent) {
-		costShareUserViewDao.insert(costShareCreatedEvent.getEntityId(), costShareCreatedEvent.getInitialUserEntityId());
+		for (UUID userEntityId : costShareCreatedEvent.getUserEntityIds()) {
+			costShareUserViewDao.insert(costShareCreatedEvent.getEntityId(), userEntityId);
+		}
 	}
 
 }

@@ -21,7 +21,7 @@ public class CostShareCommandHandler extends CommandHandler<CostShare> {
 
 	private void handleCreateCostShareCommand(CreateCostShareCommand createCostShareCommand) {
 		CostShare costShare = repository.createEntity();
-		costShare.createCostShare(createCostShareCommand.getName(), createCostShareCommand.getInitialUserEntityId());
+		costShare.createCostShare(createCostShareCommand.getName(), createCostShareCommand.getUserEntityIds());
 		costShare.publishEvents(eventBus);
 		repository.save(costShare);
 	}

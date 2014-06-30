@@ -16,14 +16,14 @@ import de.unikoblenz.ptt.lord.ass03.core.user.view.UserView;
 public interface CostShareUserViewDao {
 
 	@SqlUpdate("INSERT INTO cost_share_user_view_store (cost_share_entity_id, user_entity_id) VALUES (:costShareEntityId, :userEntityId)")
-	void insert(@Bind("costShareEntityId") UUID costShareEntityId, @Bind("userEntityId") UUID userEntityid);
+	void insert(@Bind("costShareEntityId") UUID costShareEntityId, @Bind("userEntityId") UUID userEntityId);
 
 	@RegisterMapper(UserViewMapper.class)
-	@SqlQuery("SELECT * FROM user_view_store INNER JOIN cost_share_user_view_store ON cost_share_user_view_store.cost_share_entity_id = :entityId")
+	@SqlQuery("SELECT DISTINCT entity_id, email_address, first_name, last_name FROM user_view_store INNER JOIN cost_share_user_view_store ON cost_share_user_view_store.cost_share_entity_id = :entityId")
 	List<UserView> selectByCostShareEntityId(@Bind("entityId") UUID entityId);
 
 	@RegisterMapper(CostShareViewMapper.class)
-	@SqlQuery("SELECT * FROM cost_share_view_store INNER JOIN cost_share_user_view_store ON cost_share_user_view_store.user_entity_id = :entityId")
+	@SqlQuery("SELECT DISTINCT entity_id, name FROM cost_share_view_store INNER JOIN cost_share_user_view_store ON cost_share_user_view_store.user_entity_id = :entityId")
 	List<CostShareView> selectByUserEntityId(@Bind("entityId") UUID entityId);
 
 }

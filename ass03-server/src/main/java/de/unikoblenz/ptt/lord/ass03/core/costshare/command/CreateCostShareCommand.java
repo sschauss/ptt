@@ -1,5 +1,6 @@
 package de.unikoblenz.ptt.lord.ass03.core.costshare.command;
 
+import java.util.List;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -11,25 +12,25 @@ public class CreateCostShareCommand implements Command {
 
 	private String name;
 
-	private UUID initialUserEntityId;
+	private List<UUID> userEntityIds;
 
 	@JsonCreator
-	public CreateCostShareCommand(@JsonProperty("name") String name, @JsonProperty("initialUserEntityId") UUID initialUserEntityId) {
+	public CreateCostShareCommand(@JsonProperty("name") String name, @JsonProperty("initialUserEntityId") List<UUID> userEntityIds) {
 		this.name = name;
-		this.initialUserEntityId = initialUserEntityId;
+		this.userEntityIds = userEntityIds;
 	}
 
 	public String getName() {
 		return name;
 	}
 
-	public UUID getInitialUserEntityId() {
-		return initialUserEntityId;
+	public List<UUID> getUserEntityIds() {
+		return userEntityIds;
 	}
-	
+
 	@Override
 	public String toString() {
-		return "Name: " + name + ", Initial User Entity Id: " + initialUserEntityId;
+		return "Name: " + name + ", Initial User Entity Id: " + userEntityIds;
 	}
 
 }

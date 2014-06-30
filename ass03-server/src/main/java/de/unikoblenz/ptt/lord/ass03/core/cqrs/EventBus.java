@@ -13,15 +13,15 @@ public class EventBus {
 	private Set<EventHandler> eventHandlers = new HashSet<>();
 
 	public void subscribe(EventHandler eventHandler) {
+		LOGGER.info(eventHandler + " subscribe");
 		eventHandlers.add(eventHandler);
-		LOGGER.info(eventHandler.toString() + " subscribed");
 	}
 
 	public void publish(Event event) {
+		LOGGER.info("Publish: " + event);
 		for (EventHandler eventHandler : eventHandlers) {
 			eventHandler.handle(event);
 		}
-		LOGGER.info("Published: " + event.toString());
 	}
 
 }
