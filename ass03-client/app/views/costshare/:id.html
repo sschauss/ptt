@@ -1,0 +1,58 @@
+<table class="table table-striped">
+    <thead>
+        <tr class="noBorderRow">
+            <th>Purchaser</th>
+            <th>Date</th>
+            <th>Article</th>
+            <th>Price</th>
+            <th colspan="{{articles.length}}">Who Pays?</th>
+        </tr>
+        <tr>
+            <th colspan="4"></th>
+            <th style="font-weight:normal" ng-repeat="consumer in users">{{consumer.firstName}}<br />{{consumer.lastName}}</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="article in articles">
+            <td>{{getPurchaser(article.purchaser)}}</td>
+            <td>{{article.purchaseDate}}</td>
+            <td>{{article.name}}</td>
+            <td>{{article.value}} €</td>
+            <td ng-repeat="user in users" ng-class="{success: isDefrayed(article, user)}">
+                <span ng-show="isConsumer(article, user.id)" class="glyphicon glyphicon-ok"></span>
+            </td>
+        </tr>
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="4"></td>
+            <td colspan="{{users.length}}"></td>
+        </tr>
+        <tr>
+            <td colspan="3"></td>
+            <td class="contentRight">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        Calculating Method <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="#">Standard</a></li>
+                        <li><a href="#">Offsetted</a></li>
+                        <li><a href="#">Offsetted (intelligent)</a></li>
+                    </ul>
+                </div>
+            </td>
+            <td ng-repeat="user in users" class="topBorderCell contentMiddle">
+                <strong>{{user.debts.overall}} €</strong>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="4"></td>
+            <td colspan="{{users.length}}"  class="topBorderCell"></td>
+        </tr>
+        <tr ng-repeat="deptee in users">
+            <td colspan="4" class="deptee"><em>To {{deptee.firstName}} {{deptee.lastName}}:</em></td>
+            <td ng-repeat="debtor in users">{{debtor.debts[deptee.id]}} €</td>
+        </tr>
+    </tfoot>
+</table>

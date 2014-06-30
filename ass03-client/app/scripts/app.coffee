@@ -21,6 +21,11 @@ angular
       .when '/',
         templateUrl: 'views/main.html'
         controller: 'MainCtrl'
+      .when '/costshare',
+        templateUrl: 'views/costshare.html'
+        controller: 'CostshareCtrl'
+      .when '/costshare/:id',
+        templateUrl: 'views/costshare/:id.html'
+        controller: 'CostshareIdCtrl'
       .otherwise
         redirectTo: '/'
-
