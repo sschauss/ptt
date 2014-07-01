@@ -38,13 +38,14 @@
                     <ul class="dropdown-menu" role="menu">
                         <li><a href ng-click="switchCalculationMethod('Standard')">Standard</a></li>
                         <li><a href ng-click="switchCalculationMethod('Offsetted')">Offsetted</a></li>
-                        <li><a href>Offsetted (intelligent)</a></li>
+                        <li><a href ng-click="switchCalculationMethod('Fully Offsetted')">Fully Offsetted</a></li>
                     </ul>
                 </div>
             </td>
             <td ng-repeat="user in users" class="topBorderCell contentMiddle">
                 <strong ng-if="calculationMethod == 'Standard'">{{user.debts.overall}} €</strong>
                 <strong ng-if="calculationMethod == 'Offsetted'">{{user.offsettedDebts.overall}} €</strong>
+                <strong ng-if="calculationMethod == 'Fully Offsetted'">{{user.fullyOffsettedDebts.overall}} €</strong>
             </td>
         </tr>
         <tr>
@@ -55,6 +56,7 @@
             <td colspan="4" class="deptee"><em>To {{debtee.firstName}} {{debtee.lastName}}:</em></td>
             <td ng-if="calculationMethod == 'Standard'" ng-repeat="debtor in users">{{debtor.debts[debtee.id]}} €</td>
             <td ng-if="calculationMethod == 'Offsetted'" ng-repeat="debtor in users">{{debtor.offsettedDebts[debtee.id]}} €</td>
+            <td ng-if="calculationMethod == 'Fully Offsetted'" ng-repeat="debtor in users">{{debtor.fullyOffsettedDebts[debtee.id]}} €</td>
         </tr>
     </tfoot>
 </table>

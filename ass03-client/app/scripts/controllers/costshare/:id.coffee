@@ -187,21 +187,21 @@ angular.module('ass03ClientApp')
       id: "8"
       purchaser: "2"
       purchaseDate: "26.06.2014"
-      name: "Grinder"
+      name: "Kiste"
       value: 7.99
       consumers: ["1", "2"]
     article9 =
       id: "9"
       purchaser: "2"
       purchaseDate: "26.06.2014"
-      name: "Gras"
+      name: "Bonbons"
       value: 50.00
       consumers: ["1", "2"]
     article10 =
       id: "10"
       purchaser: "2"
       purchaseDate: "26.06.2014"
-      name: "Papes"
+      name: "Kalender"
       value: 0.99
       consumers: ["1", "2"]
 
@@ -219,11 +219,11 @@ angular.module('ass03ClientApp')
     ]
 
     #TODO get actual json from server
-    Users = $resource '/api/costshare/'+$routeParams.id+'users'
+    #Users = $resource '/api/costshare/'+$routeParams.id+'users'
     #$scope.users = Users.query()
-    Articles = $resource '/api/articles/' #TODO kann man hier über die costshare id filtern?, id's müssen mitgegeben werden (stand auf blatt nicht)
+    #Articles = $resource '/api/articles/' #TODO kann man hier über die costshare id filtern?, id's müssen mitgegeben werden (stand auf blatt nicht)
     #$scope.articles = Articles.query()
-    ArticlesUsers = $resource '/api/article_user/' #TODO kann man hier über die costshare id filtern?
+    #ArticlesUsers = $resource '/api/article_user/' #TODO kann man hier über die costshare id filtern?
     #$scope.articlesUsers = ArticlesUsers.query()
 
     $scope.getPurchaser = (purchaserId) ->
@@ -245,6 +245,7 @@ angular.module('ass03ClientApp')
       switch method
         when "Standard" then $scope.calculationMethod = "Standard"
         when "Offsetted" then $scope.calculationMethod = "Offsetted"
+        when "Fully Offsetted" then $scope.calculationMethod = "Fully Offsetted"
         else $scope.calculationMethod = "Standard"
 
     calculateDebts = (users, articles) ->
@@ -281,6 +282,45 @@ angular.module('ass03ClientApp')
         for debtee in users
           user.offsettedDebts[debtee.id] = 0
 
+    initializeFullyOffsettedDebts = (users) ->
+      for user in users
+        user.fullyOffsettedDebts = {}
+        user.fullyOffsettedDebts.overall = 0
+        for debtee in users
+          user.fullyOffsettedDebts[debtee.id] = 0
+
+    initializeBalanceAfter = (users) ->
+      for user in users
+        user.balanceAfter = 0
+
+    calculateBalanceAfter = (users) ->
+      initializeBalanceAfter(users)
+      for user in users
+        for debteeId, debt of user.offsettedDebts
+          if debteeId != "overall" #TODO overall debts eine ebene höher in user objekt schreiben
+            user.balanceAfter -= debt
+            debtee = getUser(debteeId)
+            debtee.balanceAfter += debt
+
+    calculateFullyOffsettedDebts = (users) -> #TODO not trivial - we should test that with more data
+      calculateBalanceAfter(users)
+      initializeFullyOffsettedDebts(users)
+      for debtor in users
+        if debtor.balanceAfter < 0
+          for debtee in users
+            if debtee.id != debtor.id and debtee.balanceAfter > 0
+              if Math.abs(debtor.balanceAfter) >= Math.abs(debtee.balanceAfter)
+                debtor.fullyOffsettedDebts[debtee.id] += debtee.balanceAfter
+                debtor.fullyOffsettedDebts.overall += debtee.balanceAfter
+                debtor.balanceAfter += debtee.balanceAfter
+                debtee.balanceAfter = 0
+              else
+                debtor.fullyOffsettedDebts[debtee.id] += Math.abs(debtor.balanceAfter)
+                debtor.fullyOffsettedDebts.overall += Math.abs(debtor.balanceAfter)
+                debtee.balanceAfter += debtor.balanceAfter
+                debtor.balanceAfter = 0
+
+
     getUser = (userId) ->
       try
         for user in $scope.users
@@ -311,7 +351,8 @@ angular.module('ass03ClientApp')
     setDefrayedArticles($scope.users, $scope.articlesUsers)
     calculateDebts($scope.users, $scope.articles)
     calculateOffsettedDebts($scope.users)
-    fixFloatingPointBug(users) #TODO ist das jetzt wirklich gelöst?
+    fixFloatingPointBug($scope.users) #TODO ist das jetzt wirklich gelöst? - Isses nicht. FullyOffsetted hat das gleiche Problem noch
+    calculateFullyOffsettedDebts($scope.users)
 
   #TODO if consumer == purchaser: do we initiate the database entry as defrayed? then the samePerson() stuff would be redunand
   #TODO initialize methods in one loop
