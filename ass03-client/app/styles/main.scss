@@ -11,20 +11,10 @@ header {
   height: 200px;
   width: 100%;
   margin: 50px 0;
-  background: url("../images/congruent_pentagon.png") repeat;
-  //animation: background-animation 17s;
-  //animation-iteration-count: infinite;
-  //animation-timing-function: linear;
-  box-shadow: inset 0px -8px 8px rgba(80,80,80,0.2), inset 0 8px 8px rgba(80,80,80,0.2);
-}
-
-@keyframes background-animation {
-  from {
-    background-position: 0 0;
-  }
-  to {
-    background-position: 600px 600px;
-  }
+  background: url("../images/pattern.png"), url("../images/header.jpg");
+  background-size: auto, cover;
+  background-position: inherit, center;
+  box-shadow: inset 0px -8px 8px rgba(0,0,0,0.5), inset 0 8px 8px rgba(0,0,0,0.5);
 }
 
 .noBorderRow > th, td{
@@ -53,4 +43,17 @@ tr + .noBorderRow > th, td{
 
 .contentMiddle {
   vertical-align: middle !important;
+}
+
+body{
+  background: url("../images/wood.png") repeat;
+  margin-bottom: 30px;
+}
+
+.content{
+  background-color: rgba(255, 255, 255, 1);
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
+  padding: 30px 10px 30px 10px;
 }
