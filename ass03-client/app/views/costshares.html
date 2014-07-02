@@ -1,0 +1,50 @@
+<div class="row">
+    <div class="col-lg-6">
+        <h2>CostShares</h2>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Name</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="costShare in costShares">
+                <td>
+                    <a ng-href="#/costshares/{{costShare.entityId}}">{{costShare.name}}</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-lg-6">
+        <h2>Create CostShare</h2>
+
+        <form role="form">
+            <div class="form-group col-lg-10">
+                <label for="name">Name</label>
+                <input type="text" class="form-control" id="name" placeholder="Enter Name" ng-model="name">
+            </div>
+            <div class="form-group col-lg-10">
+                <label for="searchString">Users</label>
+                <ul class="list-group">
+                    <li class="list-group-item" ng-repeat="user in users">
+                        {{user.firstName}} {{user.lastName}}
+                    </li>
+                    <li class="list-group-item">
+                        <input type="text" class="form-control plain-input" id="searchString"
+                               placeholder="Enter Search String"
+                               ng-model="searchString">
+                    </li>
+                    <li class="list-group-item" ng-repeat="user in searchResult">
+                        <a ng-click="addUser(user)" href="#/costshares">
+                            {{user.firstName}} {{user.lastName}}
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="form-group col-lg-2 col-lg-offset-10">
+                <button type="submit" class="btn btn-default pull-right" ng-click="create()">Ok</button>
+            </div>
+        </form>
+    </div>
+</div>

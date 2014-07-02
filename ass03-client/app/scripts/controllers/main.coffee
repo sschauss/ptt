@@ -8,19 +8,20 @@
  # Controller of the ass03ClientApp
 ###
 angular.module('ass03ClientApp')
-  .controller 'MainCtrl', ($scope, $resource, $http) ->
+  .controller 'MainCtrl', ($scope, $resource, $location) ->
 
-    Token = $resource '/api/token'
+    Login = $resource '/api/users/login'
 
     User = $resource '/api/users/:id', {id: '@id'}
 
     $scope.login = ->
-      Token.save
+      Login.save
         emailAddress: $scope.loginEmailAddress
         password: $scope.loginPassword
       , (credentials, headers) ->
-          $http.defaults.headers.common['x-auth-token'] = headers 'x-auth-token'
-          console.log $http.defaults.headers
+        localStorage.setItem 'entityId', headers 'x-entityId'
+        $location.path '/costshares'
+
 
 
     $scope.register = ->
@@ -29,6 +30,3 @@ angular.module('ass03ClientApp')
         password: $scope.registerPassword
         firstName: $scope.firstName
         lastName: $scope.lastName
-
-
-

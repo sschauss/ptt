@@ -9,6 +9,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -39,12 +40,19 @@ public class UserResource extends Resource {
 		commandBus.publish(createUserCommand);
 		return Response.status(Status.CREATED).build();
 	}
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getUsers(@QueryParam("q") String q) {
+		List<UserView> userViews = userViewDao.search(q + "%");
+		return Response.ok(userViews).build();
+	}
 
 	@GET
 	@Path("/{entityId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getUser(@PathParam("entityId") UUID entityId) {
-		UserView userView = userViewDao.get(entityId);
+		UserView userView = userViewDao.selectByEntityId(entityId);
 		return Response.ok(userView).build();
 	}
 
@@ -52,8 +60,16 @@ public class UserResource extends Resource {
 	@Path("/{entityId}/costshares")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getCostShares(@PathParam("entityId") UUID entityId) {
-		List<CostShareView> userView = costShareUserViewDao.selectByUserEntityId(entityId);
-		return Response.ok(userView).build();
+		List<CostShareView> costSharesViews = costShareUserViewDao.selectByUserEntityId(entityId);
+		return Response.ok(costSharesViews).build();
+	}
+
+	@POST
+	@Path("/login")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response login(UserCredentials userCredentials) {
+		UserView userView = userViewDao.get(userCredentials.getEmailAddress());
+		return Response.status(Status.CREATED).header("x-entityId", userView.getEntityId()).build();
 	}
 
 }

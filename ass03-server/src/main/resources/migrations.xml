@@ -75,5 +75,13 @@
 				<constraints primaryKey="true" nullable="false" />
 			</column>
 		</createTable>
+		<createTable tableName="user_token_view_store">
+			<column name="entity_id" type="uuid">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="token" type="uuid">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
 	</changeSet>
 </databaseChangeLog>

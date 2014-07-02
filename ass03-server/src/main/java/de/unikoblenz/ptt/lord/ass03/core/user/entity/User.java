@@ -10,6 +10,8 @@ import de.unikoblenz.ptt.lord.ass03.core.user.event.UserCreatedEvent;
 
 public class User extends AggregateRoot {
 
+	private String password;
+
 	public User(UUID entityId) {
 		super(entityId);
 	}
@@ -21,8 +23,8 @@ public class User extends AggregateRoot {
 
 	public void createUser(String emailAddress, String password, String firstName, String lastName) {
 		Timestamp createdAt = new Timestamp(new Date().getTime());
-		UserCreatedEvent userCreatedEvent = new UserCreatedEvent(entityId, createdAt, emailAddress, password, firstName, lastName);
-		register(userCreatedEvent);
+		UserCreatedEvent event = new UserCreatedEvent(entityId, createdAt, emailAddress, password, firstName, lastName);
+		register(event);
 	}
 
 	@Override
@@ -33,7 +35,7 @@ public class User extends AggregateRoot {
 	}
 
 	private void applyUserCreatedEvent(UserCreatedEvent userCreatedEvent) {
-		entityId = userCreatedEvent.getEntityId();
+		this.password = userCreatedEvent.getPassword();
 	}
 
 }

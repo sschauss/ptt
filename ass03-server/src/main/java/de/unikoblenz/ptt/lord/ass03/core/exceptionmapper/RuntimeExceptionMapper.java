@@ -1,4 +1,4 @@
-package de.unikoblenz.ptt.lord.ass03.core;
+package de.unikoblenz.ptt.lord.ass03.core.exceptionmapper;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;

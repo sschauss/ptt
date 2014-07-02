@@ -19,8 +19,8 @@ public class UserEventHandler extends EventHandler {
 		}
 	}
 
-	private void handleUserCreateEvent(UserCreatedEvent userCreatedEvent) {
-		userViewDao.insert(userCreatedEvent);
+	private void handleUserCreateEvent(UserCreatedEvent event) {
+		userViewDao.insert(event);
 	}
 
 }

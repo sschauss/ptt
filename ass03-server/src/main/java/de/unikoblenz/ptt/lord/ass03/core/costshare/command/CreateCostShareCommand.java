@@ -15,7 +15,7 @@ public class CreateCostShareCommand implements Command {
 	private List<UUID> userEntityIds;
 
 	@JsonCreator
-	public CreateCostShareCommand(@JsonProperty("name") String name, @JsonProperty("initialUserEntityId") List<UUID> userEntityIds) {
+	public CreateCostShareCommand(@JsonProperty("name") String name, @JsonProperty("userEntityIds") List<UUID> userEntityIds) {
 		this.name = name;
 		this.userEntityIds = userEntityIds;
 	}

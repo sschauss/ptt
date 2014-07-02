@@ -11,6 +11,8 @@ public class UserCreatedEvent extends Event {
 
 	private String emailAddress;
 
+	private String password;
+
 	private String firstName;
 
 	private String lastName;
@@ -18,12 +20,21 @@ public class UserCreatedEvent extends Event {
 	public UserCreatedEvent(UUID entityId, Timestamp timestamp, String emailAddress, String password, String firstName, String lastName) {
 		super(entityId, timestamp);
 		this.emailAddress = emailAddress;
+		this.password = password;
 		this.firstName = firstName;
 		this.lastName = lastName;
 	}
 
 	public String getEmailAddress() {
 		return emailAddress;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	public String getFirstName() {
@@ -33,7 +44,7 @@ public class UserCreatedEvent extends Event {
 	public String getLastName() {
 		return lastName;
 	}
-	
+
 	@Override
 	public String toString() {
 		return super.toString() + ", Email Address: " + emailAddress + ", Password: xxxx, First Name: " + firstName + ", Last Name: " + lastName;

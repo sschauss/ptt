@@ -10,7 +10,6 @@ import io.dropwizard.setup.Environment;
 
 import org.skife.jdbi.v2.DBI;
 
-import de.unikoblenz.ptt.lord.ass03.core.RuntimeExceptionMapper;
 import de.unikoblenz.ptt.lord.ass03.core.article.command.ArticleCommandHandler;
 import de.unikoblenz.ptt.lord.ass03.core.article.dao.ArticleViewDao;
 import de.unikoblenz.ptt.lord.ass03.core.article.entity.ArticleRepository;
@@ -25,6 +24,7 @@ import de.unikoblenz.ptt.lord.ass03.core.cqrs.CommandBus;
 import de.unikoblenz.ptt.lord.ass03.core.cqrs.EventBus;
 import de.unikoblenz.ptt.lord.ass03.core.cqrs.EventDao;
 import de.unikoblenz.ptt.lord.ass03.core.cqrs.EventStore;
+import de.unikoblenz.ptt.lord.ass03.core.exceptionmapper.RuntimeExceptionMapper;
 import de.unikoblenz.ptt.lord.ass03.core.user.command.UserCommandHandler;
 import de.unikoblenz.ptt.lord.ass03.core.user.dao.UserViewDao;
 import de.unikoblenz.ptt.lord.ass03.core.user.entity.UserRepository;
