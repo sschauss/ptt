@@ -248,10 +248,12 @@ angular.module('ass03ClientApp')
         when "Fully Offsetted" then $scope.calculationMethod = "Fully Offsetted"
         else $scope.calculationMethod = "Standard"
 
-    itemsPerPage = 1
-    paginationBarPreview = 2
+    paginationBarPreview = 2 #TODO rename
 
-    $scope.pages = Math.ceil($scope.articles.length / itemsPerPage)
+    $scope.setArticlesPerPage = (n) ->
+      $scope.articlesPerPage = n
+      $scope.pages = Math.ceil($scope.articles.length / $scope.articlesPerPage)
+      $scope.turnThePage(1)
 
     getPagination = () ->
       l = $scope.page
@@ -287,7 +289,7 @@ angular.module('ass03ClientApp')
       if i > 0 and i <= $scope.pages
         $scope.page = i
         $scope.pagination = getPagination()
-        $scope.paginatedArticles = $scope.articles.slice(($scope.page - 1) * itemsPerPage, ($scope.page - 1) * itemsPerPage + itemsPerPage)
+        $scope.paginatedArticles = $scope.articles.slice(($scope.page - 1) * $scope.articlesPerPage, ($scope.page - 1) * $scope.articlesPerPage + $scope.articlesPerPage)
 
     calculateDebts = (users, articles) ->
       initializeDebts(users)
@@ -392,6 +394,7 @@ angular.module('ass03ClientApp')
     calculateOffsettedDebts($scope.users)
     fixFloatingPointBug($scope.users)
     calculateFullyOffsettedDebts($scope.users)
+    $scope.setArticlesPerPage(5)
     $scope.turnThePage(1)
 
 #TODO if consumer == purchaser: do we initiate the database entry as defrayed? then the samePerson() stuff would be redunand

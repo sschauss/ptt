@@ -24,9 +24,21 @@
         </tr>
     </tbody>
     <tfoot>
-        <tr ng-show="pages > 1">
+        <tr>
             <td colspan="{{users.length + 4}}">
-                <ul class="pagination">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        Articles per page: {{articlesPerPage}} <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href ng-click="setArticlesPerPage(5)">5</a></li>
+                        <li><a href ng-click="setArticlesPerPage(10)">10</a></li>
+                        <li><a href ng-click="setArticlesPerPage(15)">15</a></li>
+                        <li><a href ng-click="setArticlesPerPage(20)">20</a></li>
+                        <li><a href ng-click="setArticlesPerPage(25)">25</a></li>
+                    </ul>
+                </div>
+                <ul class="pagination paginationArticles" ng-show="pages > 1">
                     <li ng-class="{disabled: 1 == page}"><a href ng-click="turnThePage(page - 1)">&laquo;</a></li>
                     <li ng-class="{active: 1 == page}"><a href ng-click="turnThePage(1)">1</a></li>
                     <li ng-show="paginationLeftDots" class="disabled"><a>...</a></li>
