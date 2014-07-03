@@ -248,6 +248,47 @@ angular.module('ass03ClientApp')
         when "Fully Offsetted" then $scope.calculationMethod = "Fully Offsetted"
         else $scope.calculationMethod = "Standard"
 
+    itemsPerPage = 1
+    paginationBarPreview = 2
+
+    $scope.pages = Math.ceil($scope.articles.length / itemsPerPage)
+
+    getPagination = () ->
+      l = $scope.page
+      r = $scope.page
+      l++ if l == 1
+      r-- if r == $scope.pages
+      fieldsToDisplay = paginationBarPreview * 2
+      fieldsToDisplay++ if $scope.page == 1 or $scope.page == $scope.pages
+      $scope.paginationLeftDots = if $scope.page - paginationBarPreview > 2 then true else false
+      $scope.paginationRightDots = if $scope.page + paginationBarPreview < $scope.pages - 1 then true else false
+      fieldsToDisplay++ if $scope.paginationLeftDots == false
+      fieldsToDisplay++ if $scope.paginationRightDots == false
+      for j in [1..paginationBarPreview]
+        if l > 2 and fieldsToDisplay > 0
+          l--
+          fieldsToDisplay--
+      for j in [1..paginationBarPreview]
+        if r < $scope.pages - 1 and fieldsToDisplay > 0
+          r++
+          fieldsToDisplay--
+      while fieldsToDisplay > 0 and l > 2
+        l--
+        fieldsToDisplay--
+      while fieldsToDisplay > 0 and r < $scope.pages - 1
+        r++
+        fieldsToDisplay--
+      result = []
+      result.push(i) for i in [l..r]
+      result = [] if $scope.pages < 3
+      return result
+
+    $scope.turnThePage = (i) ->
+      if i > 0 and i <= $scope.pages
+        $scope.page = i
+        $scope.pagination = getPagination()
+        $scope.paginatedArticles = $scope.articles.slice(($scope.page - 1) * itemsPerPage, ($scope.page - 1) * itemsPerPage + itemsPerPage)
+
     calculateDebts = (users, articles) ->
       initializeDebts(users)
       for article in articles
@@ -255,7 +296,7 @@ angular.module('ass03ClientApp')
           consumer = getUser(consumerId)
           samePerson = consumerId == article.purchaser
           if !samePerson and !$scope.isDefrayed(article, consumer)
-            consumer.debts.overall += round(article.value / article.consumers.length, 2)
+            consumer.debtsOverall += round(article.value / article.consumers.length, 2)
             consumer.debts[article.purchaser] += round(article.value / article.consumers.length, 2)
 
     calculateOffsettedDebts = (users) ->
@@ -266,60 +307,58 @@ angular.module('ass03ClientApp')
             user.offsettedDebts[debtee.id] = user.debts[debtee.id] - debtee.debts[user.id]
           else
             debtee.offsettedDebts[user.id] = debtee.debts[user.id] - user.debts[debtee.id]
-          user.offsettedDebts.overall += user.offsettedDebts[debtee.id]
+          user.offsettedDebtsOverall += user.offsettedDebts[debtee.id]
 
     initializeDebts = (users) ->
         for user in users
           user.debts = {}
-          user.debts.overall = 0
+          user.debtsOverall = 0
           for debtee in users
             user.debts[debtee.id] = 0
 
     initializeOffsettedDebts = (users) ->
       for user in users
         user.offsettedDebts = {}
-        user.offsettedDebts.overall = 0
+        user.offsettedDebtsOverall = 0
         for debtee in users
           user.offsettedDebts[debtee.id] = 0
 
     initializeFullyOffsettedDebts = (users) ->
       for user in users
         user.fullyOffsettedDebts = {}
-        user.fullyOffsettedDebts.overall = 0
+        user.fullyOffsettedDebtsOverall = 0
         for debtee in users
           user.fullyOffsettedDebts[debtee.id] = 0
 
-    initializeBalanceAfter = (users) ->
+    initializeGetsOrPays = (users) ->
       for user in users
-        user.balanceAfter = 0
+        user.getsOrPays = 0
 
-    calculateBalanceAfter = (users) ->
-      initializeBalanceAfter(users)
+    calculateGetsOrPays = (users) ->
+      initializeGetsOrPays(users)
       for user in users
         for debteeId, debt of user.offsettedDebts
-          if debteeId != "overall" #TODO overall debts eine ebene höher in user objekt schreiben
-            user.balanceAfter -= debt
-            debtee = getUser(debteeId)
-            debtee.balanceAfter += debt
+          user.getsOrPays -= debt
+          debtee = getUser(debteeId)
+          debtee.getsOrPays += debt
 
     calculateFullyOffsettedDebts = (users) -> #TODO not trivial - we should test that with more data
-      calculateBalanceAfter(users)
+      calculateGetsOrPays(users)
       initializeFullyOffsettedDebts(users)
       for debtor in users
-        if debtor.balanceAfter < 0
+        if debtor.getsOrPays < 0
           for debtee in users
-            if debtee.id != debtor.id and debtee.balanceAfter > 0
-              if Math.abs(debtor.balanceAfter) >= Math.abs(debtee.balanceAfter)
-                debtor.fullyOffsettedDebts[debtee.id] += debtee.balanceAfter
-                debtor.fullyOffsettedDebts.overall += debtee.balanceAfter
-                debtor.balanceAfter += debtee.balanceAfter
-                debtee.balanceAfter = 0
+            if debtee.id != debtor.id and debtee.getsOrPays > 0
+              if Math.abs(debtor.getsOrPays) >= Math.abs(debtee.getsOrPays)
+                debtor.fullyOffsettedDebts[debtee.id] += debtee.getsOrPays
+                debtor.fullyOffsettedDebtsOverall += debtee.getsOrPays
+                debtor.getsOrPays += debtee.getsOrPays
+                debtee.getsOrPays = 0
               else
-                debtor.fullyOffsettedDebts[debtee.id] += Math.abs(debtor.balanceAfter)
-                debtor.fullyOffsettedDebts.overall += Math.abs(debtor.balanceAfter)
-                debtee.balanceAfter += debtor.balanceAfter
-                debtor.balanceAfter = 0
-
+                debtor.fullyOffsettedDebts[debtee.id] += Math.abs(debtor.getsOrPays)
+                debtor.fullyOffsettedDebtsOverall += Math.abs(debtor.getsOrPays)
+                debtee.getsOrPays += debtor.getsOrPays
+                debtor.getsOrPays = 0
 
     getUser = (userId) ->
       try
@@ -333,10 +372,10 @@ angular.module('ass03ClientApp')
       return Math.round(number * Math.pow(10, decimals)) / Math.pow(10, decimals)
 
     #addition of already rounded numbers sometimes creates values like 12.45000000000000001
-    fixFloatingPointBug = (users) ->
+    fixFloatingPointBug = (users) -> #TODO no solution - instead we should use something like bignumber.js with safe arithmetics for all values
       for user in users
-        user.debts.overall = round(user.debts.overall, 2)
-        user.offsettedDebts.overall = round(user.offsettedDebts.overall, 2)
+        user.debtsOverall = round(user.debtsOverall, 2)
+        user.offsettedDebtsOverall = round(user.offsettedDebtsOverall, 2)
 
     setDefrayedArticles = (users, articlesUsers) ->
       initializeDefrayedArticles(users)
@@ -351,8 +390,9 @@ angular.module('ass03ClientApp')
     setDefrayedArticles($scope.users, $scope.articlesUsers)
     calculateDebts($scope.users, $scope.articles)
     calculateOffsettedDebts($scope.users)
-    fixFloatingPointBug($scope.users) #TODO ist das jetzt wirklich gelöst? - Isses nicht. FullyOffsetted hat das gleiche Problem noch
+    fixFloatingPointBug($scope.users)
     calculateFullyOffsettedDebts($scope.users)
+    $scope.turnThePage(1)
 
-  #TODO if consumer == purchaser: do we initiate the database entry as defrayed? then the samePerson() stuff would be redunand
+#TODO if consumer == purchaser: do we initiate the database entry as defrayed? then the samePerson() stuff would be redunand
   #TODO initialize methods in one loop

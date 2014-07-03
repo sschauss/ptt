@@ -13,7 +13,7 @@
         </tr>
     </thead>
     <tbody>
-        <tr ng-repeat="article in articles">
+        <tr ng-repeat="article in paginatedArticles">
             <td>{{getPurchaser(article.purchaser)}}</td>
             <td>{{article.purchaseDate}}</td>
             <td>{{article.name}}</td>
@@ -24,13 +24,25 @@
         </tr>
     </tbody>
     <tfoot>
+        <tr ng-show="pages > 1">
+            <td colspan="{{users.length + 4}}">
+                <ul class="pagination">
+                    <li ng-class="{disabled: 1 == page}"><a href ng-click="turnThePage(page - 1)">&laquo;</a></li>
+                    <li ng-class="{active: 1 == page}"><a href ng-click="turnThePage(1)">1</a></li>
+                    <li ng-show="paginationLeftDots" class="disabled"><a>...</a></li>
+                    <li ng-repeat="i in pagination" ng-class="{active: i == page}"><a href ng-click="turnThePage(i)">{{i}}</a></li>
+                    <li ng-show="paginationRightDots" class="disabled"><a>...</a></li>
+                    <li ng-class="{active: pages == page}" ng-show="pages > 1"><a href ng-click="turnThePage(pages)">{{pages}}</a></li>
+                    <li ng-class="{disabled: pages == page}"><a href ng-click="turnThePage(page + 1)">&raquo;</a></li>
+                </ul>
+            </td>
+        </tr>
         <tr>
             <td colspan="4"></td>
             <td colspan="{{users.length}}"></td>
         </tr>
         <tr>
-            <td colspan="3"></td>
-            <td class="contentRight">
+            <td colspan="4" class="contentRight">
                 <div class="btn-group">
                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                         Calculation: {{calculationMethod}} <span class="caret"></span>
@@ -43,9 +55,9 @@
                 </div>
             </td>
             <td ng-repeat="user in users" class="topBorderCell contentMiddle">
-                <strong ng-if="calculationMethod == 'Standard'">{{user.debts.overall}} €</strong>
-                <strong ng-if="calculationMethod == 'Offsetted'">{{user.offsettedDebts.overall}} €</strong>
-                <strong ng-if="calculationMethod == 'Fully Offsetted'">{{user.fullyOffsettedDebts.overall}} €</strong>
+                <strong ng-if="calculationMethod == 'Standard'">{{user.debtsOverall}} €</strong>
+                <strong ng-if="calculationMethod == 'Offsetted'">{{user.offsettedDebtsOverall}} €</strong>
+                <strong ng-if="calculationMethod == 'Fully Offsetted'">{{user.fullyOffsettedDebtsOverall}} €</strong>
             </td>
         </tr>
         <tr>
