@@ -15,7 +15,7 @@ header {
   animation: background-animation 17s;
   animation-iteration-count: infinite;
   animation-timing-function: linear;
-  box-shadow: inset 0px -8px 8px rgba(80,80,80,0.2), inset 0 8px 8px rgba(80,80,80,0.2);
+  box-shadow: inset 0px -8px 8px rgba(80, 80, 80, 0.2), inset 0 8px 8px rgba(80, 80, 80, 0.2);
 }
 
 nav {
@@ -31,33 +31,29 @@ nav {
   }
 }
 
-
-.plain-input {}
-
-.noBorderRow > th, td{
-  border:none !important;
+.plain-input, .plain-input:focus {
+  background: none;
+  box-shadow: none;
+  border: none;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
-.noBorderRow + tr > th, td{
-  border-top:none !important;
+.no-border {
+  border: none !important;
 }
 
-tr + .noBorderRow > th, td{
-  border-bottom:none !important;
+.table-no-border {
+  @extend .no-border;
+  tr, td {
+    @extend .no-border;
+  }
 }
 
-.topBorderCell {
-  border-top: 2px solid #dddddd !important;
+.no-hover, .no-hover * {
+  background: none !important;
 }
 
-.deptee {
-  text-align: right;
-}
-
-.contentRight {
-  text-align: right;
-}
-
-.contentMiddle {
-  vertical-align: middle !important;
+.ng-invalid {
+  color: red;
 }

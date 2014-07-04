@@ -23,7 +23,7 @@ public class ArticleUserEventHandler extends EventHandler {
 	}
 
 	private void handleArticleCreatedEvent(ArticleCreatedEvent articleCreatedEvent) {
-		for (UUID userEntityId : articleCreatedEvent.getConsumerEntityIds()) {
+		for (UUID userEntityId : articleCreatedEvent.getUserEntityIds()) {
 			articleUserViewDao.insert(articleCreatedEvent.getEntityId(), userEntityId);
 		}
 	}

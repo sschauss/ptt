@@ -21,7 +21,7 @@ public class ArticleCommandHandler extends CommandHandler<Article> {
 
 	private void handleCreateArticleCommand(CreateArticleCommand createArticleCommand) {
 		Article article = repository.createEntity();
-		article.createArticle(createArticleCommand.getPurchaserEntityId(), createArticleCommand.getPurchaseDate(), createArticleCommand.getName(), createArticleCommand.getValue(), createArticleCommand.getConsumerEntityIds());
+		article.createArticle(createArticleCommand.getPurchaserEntityId(), createArticleCommand.getPurchaseDate(), createArticleCommand.getName(), createArticleCommand.getValue(), createArticleCommand.getCostShareEntityId(), createArticleCommand.getUserEntityIds());
 		article.publishEvents(eventBus);
 		repository.save(article);
 	}

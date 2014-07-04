@@ -13,6 +13,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import de.unikoblenz.ptt.lord.ass03.core.article.dao.ArticleViewDao;
+import de.unikoblenz.ptt.lord.ass03.core.article.view.ArticleView;
+import de.unikoblenz.ptt.lord.ass03.core.articleuser.dao.ArticleUserViewDao;
 import de.unikoblenz.ptt.lord.ass03.core.costshare.command.CreateCostShareCommand;
 import de.unikoblenz.ptt.lord.ass03.core.costshare.dao.CostShareViewDao;
 import de.unikoblenz.ptt.lord.ass03.core.costshare.view.CostShareView;
@@ -27,10 +30,16 @@ public class CostShareResource extends Resource {
 
 	private CostShareUserViewDao costShareUserViewDao;
 
-	public CostShareResource(CommandBus commandBus, CostShareViewDao costShareViewDao, CostShareUserViewDao costShareUserViewDao) {
+	private ArticleViewDao articleViewDao;
+
+	private ArticleUserViewDao articleUserViewDao;
+
+	public CostShareResource(CommandBus commandBus, CostShareViewDao costShareViewDao, CostShareUserViewDao costShareUserViewDao, ArticleViewDao articleViewDao, ArticleUserViewDao articleUserViewDao) {
 		super(commandBus);
 		this.costShareViewDao = costShareViewDao;
 		this.costShareUserViewDao = costShareUserViewDao;
+		this.articleViewDao = articleViewDao;
+		this.articleUserViewDao = articleUserViewDao;
 	}
 
 	@POST
@@ -54,6 +63,18 @@ public class CostShareResource extends Resource {
 	public Response getCostShareUsers(@PathParam("entityId") UUID entityId) {
 		List<UserView> costShareUserViews = costShareUserViewDao.selectByCostShareEntityId(entityId);
 		return Response.ok(costShareUserViews).build();
+	}
+
+	@GET
+	@Path("/{entityId}/articles")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getCostShareArticles(@PathParam("entityId") UUID entityId) {
+		List<ArticleView> costShareArticles = articleViewDao.selectByCostShareEntityId(entityId);
+		for (ArticleView articleView : costShareArticles) {
+			List<UUID> userEntityIds = articleUserViewDao.select(articleView.getEntityId());
+			articleView.setUserEntityIds(userEntityIds);
+		}
+		return Response.ok(costShareArticles).build();
 	}
 
 }

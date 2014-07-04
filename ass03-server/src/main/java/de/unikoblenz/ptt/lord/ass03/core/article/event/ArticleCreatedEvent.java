@@ -13,21 +13,24 @@ public class ArticleCreatedEvent extends Event {
 
 	private UUID purchaserEntityId;
 
+	private UUID costShareEntityId;
+
 	private Timestamp purchaseDate;
 
 	private String name;
 
 	private BigDecimal value;
 
-	private List<UUID> consumerEntityIds;
+	private List<UUID> userEntityIds;
 
-	public ArticleCreatedEvent(UUID entityId, Timestamp createdAt, UUID purchaserEntityId, Timestamp purchaseDate, String name, BigDecimal value, List<UUID> consumerEntityIds) {
+	public ArticleCreatedEvent(UUID entityId, Timestamp createdAt, UUID purchaserEntityId, Timestamp purchaseDate, String name, BigDecimal value, UUID costShareEntityId, List<UUID> userEntityIds) {
 		super(entityId, createdAt);
 		this.purchaserEntityId = purchaserEntityId;
+		this.costShareEntityId = costShareEntityId;
 		this.purchaseDate = purchaseDate;
 		this.name = name;
 		this.value = value;
-		this.consumerEntityIds = consumerEntityIds;
+		this.userEntityIds = userEntityIds;
 	}
 
 	public UUID getPurchaserEntityId() {
@@ -46,13 +49,17 @@ public class ArticleCreatedEvent extends Event {
 		return value;
 	}
 
-	public List<UUID> getConsumerEntityIds() {
-		return consumerEntityIds;
+	public UUID getCostShareEntityId() {
+		return costShareEntityId;
 	}
-	
+
+	public List<UUID> getUserEntityIds() {
+		return userEntityIds;
+	}
+
 	@Override
 	public String toString() {
-		return super.toString() + ", Purchaser Entity Id" + purchaserEntityId + ", Purchase Date: " + purchaseDate + ", Name: " + name + ", Value: " + value + ", Consumer Entity Ids" + consumerEntityIds;
+		return super.toString() + ", Purchaser Entity Id" + purchaserEntityId + ", Cost Share Entity Id: " + costShareEntityId + ", Purchase Date: " + purchaseDate + ", Name: " + name + ", Value: " + value + ", User Entity Ids" + userEntityIds;
 	}
 
 }

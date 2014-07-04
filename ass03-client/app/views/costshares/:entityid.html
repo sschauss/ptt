@@ -1,1 +1,72 @@
-<h2>{{costShare.name}}</h2>
+<table class="table table-hover">
+    <thead>
+    <tr>
+        <th>Purchaser</th>
+        <th>Date</th>
+        <th>Article</th>
+        <th>Price</th>
+        <th ng-repeat="user in costShareUsers">{{user.firstName}} {{user.lastName}}</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="article in articles">
+        <td>{{getPurchaser(article.purchaserEntityId)}}</td>
+        <td>{{getDateFromMilliseconds(article.purchaseDate)}}</td>
+        <td>{{article.name}}</td>
+        <td>{{article.value.toFixed(2)}} €</td>
+        <td ng-repeat="user in costShareUsers">
+            <span ng-show="isUser(article, user.entityId)" class="glyphicon glyphicon-ok"></span>
+        </td>
+        <td></td>
+    </tr>
+    </tbody>
+    <tfoot class="table-no-border">
+    <tr>
+        <td>
+            <select class="form-control plain-input"
+                    ng-model="article.purchaserEntityId"
+                    ng-options="user.entityId as (user.firstName + ' ' + user.lastName) for user in costShareUsers">
+            </select>
+        </td>
+        <td>
+            <input type="date" class="form-control plain-input" ng-model="article.purchaseDate">
+        </td>
+        <td>
+            <input type="text" class="form-control plain-input" ng-model="article.name" placeholder="Enter Name">
+        </td>
+        <td>
+            <input type="number" step="0.01" class="form-control plain-input" ng-model="article.value" ng-pattern="onlyNumbers"
+                   placeholder="Enter Price">
+        </td>
+        <td ng-repeat="user in costShareUsers">
+            <input type="checkbox" class="form-control plain-input" ng-click="addUser(user.entityId)">
+        </td>
+        <td>
+            <input type="button" class="form-control" value="Add" ng-click="addArticle()">
+        </td>
+    </tr>
+    <tr>
+        <td colspan="4"></td>
+        <td colspan="{{costShareUsers.length}}"></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td colspan="4"></td>
+        <td ng-repeat="user in costShareUsers">
+            <strong>{{getDebts(user.entityId).overall.toFixed(2)}} €</strong>
+        </td>
+        <td></td>
+    </tr>
+    <tr ng-repeat="user in costShareUsers">
+        <td colspan="3"></td>
+        <td>
+            <em>To {{user.firstName}} {{user.lastName}}:</em>
+        </td>
+        <td ng-repeat="u in costShareUsers">
+            <span ng-if="getDebts(u.entityId)[user.entityId]">{{getDebts(u.entityId)[user.entityId].toFixed(2)}} €</span>
+        </td>
+        <td></td>
+    </tr>
+    </tfoot>
+</table>

@@ -40,7 +40,7 @@ public class UserResource extends Resource {
 		commandBus.publish(createUserCommand);
 		return Response.status(Status.CREATED).build();
 	}
-	
+
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getUsers(@QueryParam("q") String q) {
@@ -69,7 +69,11 @@ public class UserResource extends Resource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response login(UserCredentials userCredentials) {
 		UserView userView = userViewDao.get(userCredentials.getEmailAddress());
-		return Response.status(Status.CREATED).header("x-entityId", userView.getEntityId()).build();
+		if (userView == null) {
+			return Response.status(Status.BAD_REQUEST).build();
+		} else {
+			return Response.status(Status.CREATED).header("x-entityId", userView.getEntityId()).build();
+		}
 	}
 
 }

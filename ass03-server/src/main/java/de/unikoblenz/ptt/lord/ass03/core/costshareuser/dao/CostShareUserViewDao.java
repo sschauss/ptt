@@ -19,11 +19,11 @@ public interface CostShareUserViewDao {
 	void insert(@Bind("costShareEntityId") UUID costShareEntityId, @Bind("userEntityId") UUID userEntityId);
 
 	@RegisterMapper(UserViewMapper.class)
-	@SqlQuery("SELECT DISTINCT entity_id, email_address, first_name, last_name FROM user_view_store INNER JOIN cost_share_user_view_store ON cost_share_user_view_store.cost_share_entity_id = :entityId")
+	@SqlQuery("SELECT uvs.entity_id, uvs.first_name, uvs.last_name, uvs.email_address FROM cost_share_user_view_store csuvs, user_view_store uvs WHERE csuvs.cost_share_entity_id = :entityId  AND csuvs.user_entity_id = uvs.entity_id")
 	List<UserView> selectByCostShareEntityId(@Bind("entityId") UUID entityId);
 
 	@RegisterMapper(CostShareViewMapper.class)
-	@SqlQuery("SELECT DISTINCT entity_id, name FROM cost_share_view_store INNER JOIN cost_share_user_view_store ON cost_share_user_view_store.user_entity_id = :entityId")
+	@SqlQuery("SELECT csvs.entity_id, csvs.name FROM cost_share_user_view_store csuvs, cost_share_view_store csvs WHERE csuvs.user_entity_id = :entityId  AND csuvs.cost_share_entity_id = csvs.entity_id")
 	List<CostShareView> selectByUserEntityId(@Bind("entityId") UUID entityId);
 
 }

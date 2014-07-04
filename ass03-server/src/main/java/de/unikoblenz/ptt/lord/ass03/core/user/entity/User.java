@@ -10,8 +10,6 @@ import de.unikoblenz.ptt.lord.ass03.core.user.event.UserCreatedEvent;
 
 public class User extends AggregateRoot {
 
-	private String password;
-
 	public User(UUID entityId) {
 		super(entityId);
 	}
@@ -29,13 +27,7 @@ public class User extends AggregateRoot {
 
 	@Override
 	public void apply(Event event) {
-		if (event instanceof UserCreatedEvent) {
-			applyUserCreatedEvent((UserCreatedEvent) event);
-		}
-	}
 
-	private void applyUserCreatedEvent(UserCreatedEvent userCreatedEvent) {
-		this.password = userCreatedEvent.getPassword();
 	}
 
 }

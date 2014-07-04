@@ -28,10 +28,10 @@
                 <label for="searchString">Users</label>
                 <ul class="list-group">
                     <li class="list-group-item" ng-repeat="user in users">
-                        {{user.firstName}} {{user.lastName}}
+                        {{user.firstName}} {{user.lastName}} <a href="#/costshares" ng-click="removeUser(user)"><i class="glyphicon glyphicon-trash pull-right"></i></a>
                     </li>
                     <li class="list-group-item">
-                        <input type="text" class="form-control plain-input" id="searchString"
+                        <input type="text" class="plain-input" id="searchString"
                                placeholder="Enter Search String"
                                ng-model="searchString">
                     </li>

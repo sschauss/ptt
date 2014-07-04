@@ -10,29 +10,9 @@
 angular.module('ass03ClientApp')
   .controller 'CostshareIdCtrl', ($scope, $resource, $routeParams) ->
 
-    #TODO get actual json from server
-    Users = $resource '/api/costshare/'+$routeParams.id+'users'
-    #$scope.users = Users.query()
-    Articles = $resource '/api/articles/' #TODO kann man hier über die costshare id filtern?
-    #$scope.articles = Articles.query()
-    ArticlesUsers = $resource '/api/article_user/' #TODO kann man hier über die costshare id filtern?
-    #$scope.articlesUsers = ArticlesUsers.query()
 
-    $scope.getPurchaser = (purchaserId) ->
-      for user in $scope.users
-        return user.firstName + " " + user.lastName if user.id == purchaserId
-      return "Couldn't find username"
 
-    $scope.isConsumer = (article, userId) ->
-      for consumerId in article.consumers
-        return true if consumerId == userId
-      false
-
-    $scope.isDefrayed = (article, user) ->
-      return true if jQuery.inArray(article.id, user.defrayedArticles) != -1
-
-    calculateDebts = (users, articles) ->
-      initializeDebts(users)
+    getDebts = (users) ->
       for article in articles
         for consumerId in article.consumers
           consumer = getUser(consumerId)

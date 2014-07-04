@@ -14,6 +14,8 @@ import de.unikoblenz.ptt.lord.ass03.core.article.command.ArticleCommandHandler;
 import de.unikoblenz.ptt.lord.ass03.core.article.dao.ArticleViewDao;
 import de.unikoblenz.ptt.lord.ass03.core.article.entity.ArticleRepository;
 import de.unikoblenz.ptt.lord.ass03.core.article.event.ArticleEventHandler;
+import de.unikoblenz.ptt.lord.ass03.core.articleuser.dao.ArticleUserViewDao;
+import de.unikoblenz.ptt.lord.ass03.core.articleuser.event.ArticleUserEventHandler;
 import de.unikoblenz.ptt.lord.ass03.core.costshare.command.CostShareCommandHandler;
 import de.unikoblenz.ptt.lord.ass03.core.costshare.dao.CostShareViewDao;
 import de.unikoblenz.ptt.lord.ass03.core.costshare.entity.CostShareRepository;
@@ -61,15 +63,18 @@ public class WGCalcApplication extends Application<WGCalcConfiguration> {
 		final EventDao eventDao = jdbi.onDemand(EventDao.class);
 		final EventStore eventStore = new EventStore(eventDao);
 
+		final ArticleUserViewDao articleUserViewDao = jdbi.onDemand(ArticleUserViewDao.class);
 		final CostShareUserViewDao costShareUserViewDao = jdbi.onDemand(CostShareUserViewDao.class);
 
 		final ArticleViewDao articleViewDao = jdbi.onDemand(ArticleViewDao.class);
 		final ArticleRepository articleRepository = new ArticleRepository(eventStore);
 		final ArticleCommandHandler articleCommandHandler = new ArticleCommandHandler(eventBus, articleRepository);
 		final ArticleEventHandler articleEventHandler = new ArticleEventHandler(articleViewDao);
-		final ArticleResource articleResource = new ArticleResource(commandBus, articleViewDao);
+		final ArticleUserEventHandler articleUserEventHandler = new ArticleUserEventHandler(articleUserViewDao);
+		final ArticleResource articleResource = new ArticleResource(commandBus);
 		commandBus.subscribe(articleCommandHandler);
 		eventBus.subscribe(articleEventHandler);
+		eventBus.subscribe(articleUserEventHandler);
 		environment.jersey().register(articleResource);
 
 		final CostShareViewDao costShareViewDao = jdbi.onDemand(CostShareViewDao.class);
@@ -77,7 +82,7 @@ public class WGCalcApplication extends Application<WGCalcConfiguration> {
 		final CostShareCommandHandler costShareCommandHandler = new CostShareCommandHandler(eventBus, costShareRepository);
 		final CostShareEventHandler costShareEventHandler = new CostShareEventHandler(costShareViewDao);
 		final CostShareUserEventHandler costShareUserEventHandler = new CostShareUserEventHandler(costShareUserViewDao);
-		final CostShareResource costShareResource = new CostShareResource(commandBus, costShareViewDao, costShareUserViewDao);
+		final CostShareResource costShareResource = new CostShareResource(commandBus, costShareViewDao, costShareUserViewDao, articleViewDao, articleUserViewDao);
 		commandBus.subscribe(costShareCommandHandler);
 		eventBus.subscribe(costShareEventHandler);
 		eventBus.subscribe(costShareUserEventHandler);

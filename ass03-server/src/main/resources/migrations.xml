@@ -35,7 +35,7 @@
 			<column name="entity_id" type="uuid">
 				<constraints primaryKey="true" nullable="false" />
 			</column>
-			<column name="cost_share_id" type="uuid">
+			<column name="cost_share_entity_id" type="uuid">
 				<constraints nullable="false" />
 			</column>
 			<column name="purchaser_entity_id" type="uuid">

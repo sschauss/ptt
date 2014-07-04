@@ -26,9 +26,9 @@ public class Article extends AggregateRoot {
 
 	}
 
-	public void createArticle(UUID purchaserEntityId, Timestamp purchaseDate, String name, BigDecimal value, List<UUID> consumerEntityIds) {
+	public void createArticle(UUID purchaserEntityId, Timestamp purchaseDate, String name, BigDecimal value, UUID costShareEntityId, List<UUID> userEntityIds) {
 		Timestamp createdAt = new Timestamp(new Date().getTime());
-		ArticleCreatedEvent articleCreatedEvent = new ArticleCreatedEvent(purchaserEntityId, createdAt, purchaserEntityId, purchaseDate, name, value, consumerEntityIds);
+		ArticleCreatedEvent articleCreatedEvent = new ArticleCreatedEvent(entityId, createdAt, purchaserEntityId, purchaseDate, name, value, costShareEntityId, userEntityIds);
 		register(articleCreatedEvent);
 	}
 

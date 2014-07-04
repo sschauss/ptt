@@ -13,6 +13,8 @@ import de.unikoblenz.ptt.lord.ass03.core.cqrs.Command;
 public class CreateArticleCommand implements Command {
 
 	private UUID purchaserEntityId;
+	
+	private UUID costShareEntityId;
 
 	private Timestamp purchaseDate;
 
@@ -20,24 +22,30 @@ public class CreateArticleCommand implements Command {
 
 	private BigDecimal value;
 
-	private List<UUID> consumerEntityIds;
+	private List<UUID> userEntityIds;
 
 	@JsonCreator
 	public CreateArticleCommand(
 			@JsonProperty("purchaserEntityId") UUID purchaserEntityId, 
+			@JsonProperty("costShareEntityId") UUID costShareEntityId,
 			@JsonProperty("purchaseDate") Timestamp purchaseDate, 
 			@JsonProperty("name") String name,
 			@JsonProperty("value") BigDecimal value, 
-			@JsonProperty("consumerEntityIds") List<UUID> consumerEntityIds) {
+			@JsonProperty("userEntityIds") List<UUID> userEntityIds) {
 		this.purchaserEntityId = purchaserEntityId;
 		this.purchaseDate = purchaseDate;
 		this.name = name;
 		this.value = value;
-		this.consumerEntityIds = consumerEntityIds;
+		this.costShareEntityId = costShareEntityId;
+		this.userEntityIds = userEntityIds;
 	}
 
 	public UUID getPurchaserEntityId() {
 		return purchaserEntityId;
+	}
+	
+	public UUID getCostShareEntityId() {
+		return costShareEntityId;
 	}
 
 	public Timestamp getPurchaseDate() {
@@ -56,13 +64,13 @@ public class CreateArticleCommand implements Command {
 		return value;
 	}
 
-	public List<UUID> getConsumerEntityIds() {
-		return consumerEntityIds;
+	public List<UUID> getUserEntityIds() {
+		return userEntityIds;
 	}
 	
 	@Override
 	public String toString() {
-		return "Purchaser Entity Id: " + purchaserEntityId + ", Purchase Date: " + purchaseDate + ", Name: " + name + ", Value: " + value + ", ConsumerEntityIds: " + consumerEntityIds;
+		return "Purchaser Entity Id: " + purchaserEntityId + ", Cost Share Entity Id: " + costShareEntityId + ", Purchase Date: " + purchaseDate + ", Name: " + name + ", Value: " + value + ", ConsumerEntityIds: " + userEntityIds;
 	}
 
 }
