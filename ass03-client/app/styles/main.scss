@@ -7,18 +7,29 @@ $icon-font-path: "../bower_components/bootstrap-sass-official/vendor/assets/font
   outline: none;
 }
 
+body {
+  background: url("../images/wood.png") fixed;
+  margin-bottom: 30px;
+}
+
 header {
   height: 200px;
   width: 100%;
   margin: 50px 0;
-  background: url("../images/pattern.png"), url("../images/header.jpg");
-  background-size: auto, cover;
-  background-position: inherit, center;
-  box-shadow: inset 0px -8px 8px rgba(0,0,0,0.5);
+  background: url("../images/pattern.png") fixed, url("../images/header.jpg") fixed;
+  box-shadow: inset 0px -8px 8px rgba(0, 0, 0, 0.5);
 }
 
 nav {
-  box-shadow: 0 8px 8px rgba(0,0,0,0.5);
+  box-shadow: 0 8px 8px rgba(0, 0, 0, 0.5);
+}
+
+.well {
+  overflow: auto;
+  box-shadow: 0px -8px 8px rgba(0, 0, 0, 0.5),
+              0px 8px 8px rgba(0, 0, 0, 0.5),
+              -8px 0px 8px rgba(0, 0, 0, 0.5),
+              8px 0px 8px rgba(0, 0, 0, 0.5);
 }
 
 .plain-input, .plain-input:focus {
@@ -44,28 +55,11 @@ nav {
   background: none !important;
 }
 
-.ng-invalid {
+input.ng-invalid {
   color: red;
 }
 
-.contentMiddle {
-  vertical-align: middle !important;
-}
-
-body{
-  background: url("../images/wood.png") repeat;
-  margin-bottom: 30px;
-}
-
-.content{
-  background-color: rgba(255, 255, 255, 1);
-  -webkit-border-radius: 10px;
-  -moz-border-radius: 10px;
-  border-radius: 10px;
-  padding: 30px 10px 30px 10px;
-}
-
-.paginationArticles{
+.paginationArticles {
   margin: 0px !important;
   vertical-align: top !important;
 }
