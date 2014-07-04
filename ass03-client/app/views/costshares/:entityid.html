@@ -10,7 +10,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr ng-repeat="article in articles">
+    <tr ng-repeat="article in paginatedArticles">
         <td>{{getPurchaser(article.purchaserEntityId)}}</td>
         <td>{{getDateFromMilliseconds(article.purchaseDate)}}</td>
         <td>{{article.name}}</td>
