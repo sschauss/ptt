@@ -38,6 +38,15 @@ angular.module('ass03ClientApp')
     $scope.articles = CostShareArticle.query
       entityId: costShareEntityId
 
+    $scope.calculationMethod = "Standard"
+
+    $scope.switchCalculationMethod = (method) ->
+      switch method
+        when "Standard" then $scope.calculationMethod = "Standard"
+        when "Offsetted" then $scope.calculationMethod = "Offsetted"
+        when "Fully Offsetted" then $scope.calculationMethod = "Fully Offsetted"
+        else $scope.calculationMethod = "Standard"
+
     $scope.isUser = (article, entityId) ->
       for userEntityId in article.userEntityIds
         return true if userEntityId == entityId
@@ -86,5 +95,65 @@ angular.module('ass03ClientApp')
             debts[article.purchaserEntityId] += debt
           else
             debts[article.purchaserEntityId] = debt
-      console.log debts
       return debts
+
+    $scope.getOffsettedDebts = (entityId) ->
+      offsettedDebts =
+        overall: 0
+      debts = $scope.getDebts(entityId)
+      for debtee in $scope.costShareUsers
+        debteesDebts = $scope.getDebts(debtee.entityId)
+        if debts[debtee.entityId] > debteesDebts[entityId]
+          offsettedDebts[debtee.entityId] = debts[debtee.entityId] - debteesDebts[entityId]
+          offsettedDebts.overall += offsettedDebts[debtee.entityId]
+      return offsettedDebts
+
+
+
+
+
+
+    paginationBarPreview = 2 #TODO rename
+
+    $scope.setArticlesPerPage = (n) ->
+      $scope.articlesPerPage = n
+      $scope.pages = Math.ceil($scope.articles.length / $scope.articlesPerPage)
+      $scope.turnThePage(1)
+
+    getPagination = () ->
+      l = $scope.page
+      r = $scope.page
+      l++ if l == 1
+      r-- if r == $scope.pages
+      fieldsToDisplay = paginationBarPreview * 2
+      fieldsToDisplay++ if $scope.page == 1 or $scope.page == $scope.pages
+      $scope.paginationLeftDots = if $scope.page - paginationBarPreview > 2 then true else false
+      $scope.paginationRightDots = if $scope.page + paginationBarPreview < $scope.pages - 1 then true else false
+      fieldsToDisplay++ if $scope.paginationLeftDots == false
+      fieldsToDisplay++ if $scope.paginationRightDots == false
+      for j in [1..paginationBarPreview]
+        if l > 2 and fieldsToDisplay > 0
+          l--
+          fieldsToDisplay--
+      for j in [1..paginationBarPreview]
+        if r < $scope.pages - 1 and fieldsToDisplay > 0
+          r++
+          fieldsToDisplay--
+      while fieldsToDisplay > 0 and l > 2
+        l--
+        fieldsToDisplay--
+      while fieldsToDisplay > 0 and r < $scope.pages - 1
+        r++
+        fieldsToDisplay--
+      result = []
+      result.push(i) for i in [l..r]
+      result = [] if $scope.pages < 3
+      return result
+
+    $scope.turnThePage = (i) ->
+      if i > 0 and i <= $scope.pages
+        $scope.page = i
+        #$scope.pagination = getPagination()
+        #$scope.paginatedArticles = $scope.articles.slice(($scope.page - 1) * $scope.articlesPerPage, ($scope.page - 1) * $scope.articlesPerPage + $scope.articlesPerPage)
+
+    $scope.setArticlesPerPage(1)

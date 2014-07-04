@@ -52,9 +52,47 @@
         <td></td>
     </tr>
     <tr>
-        <td colspan="4"></td>
-        <td ng-repeat="user in costShareUsers">
-            <strong>{{getDebts(user.entityId).overall.toFixed(2)}} €</strong>
+        <td colspan="{{users.length + 4}}">
+            <div class="btn-group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    Articles per page: {{articlesPerPage}} <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a href ng-click="setArticlesPerPage(5)">5</a></li>
+                    <li><a href ng-click="setArticlesPerPage(10)">10</a></li>
+                    <li><a href ng-click="setArticlesPerPage(15)">15</a></li>
+                    <li><a href ng-click="setArticlesPerPage(20)">20</a></li>
+                    <li><a href ng-click="setArticlesPerPage(25)">25</a></li>
+                </ul>
+            </div>
+            <ul class="pagination paginationArticles" ng-show="pages > 1">
+                <li ng-class="{disabled: 1 == page}"><a href ng-click="turnThePage(page - 1)">&laquo;</a></li>
+                <li ng-class="{active: 1 == page}"><a href ng-click="turnThePage(1)">1</a></li>
+                <li ng-show="paginationLeftDots" class="disabled"><a>...</a></li>
+                <li ng-repeat="i in pagination" ng-class="{active: i == page}"><a href ng-click="turnThePage(i)">{{i}}</a></li>
+                <li ng-show="paginationRightDots" class="disabled"><a>...</a></li>
+                <li ng-class="{active: pages == page}" ng-show="pages > 1"><a href ng-click="turnThePage(pages)">{{pages}}</a></li>
+                <li ng-class="{disabled: pages == page}"><a href ng-click="turnThePage(page + 1)">&raquo;</a></li>
+            </ul>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="4" class="contentRight">
+            <div class="btn-group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    Calculation: {{calculationMethod}} <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a href ng-click="switchCalculationMethod('Standard')">Standard</a></li>
+                    <li><a href ng-click="switchCalculationMethod('Offsetted')">Offsetted</a></li>
+                    <li><a href ng-click="switchCalculationMethod('Fully Offsetted')">Fully Offsetted</a></li>
+                </ul>
+            </div>
+        </td>
+        <td ng-repeat="user in costShareUsers" class="topBorderCell contentMiddle">
+            <strong ng-if="calculationMethod == 'Standard'">{{getDebts(user.entityId).overall.toFixed(2)}} €</strong>
+            <strong ng-if="calculationMethod == 'Offsetted'">{{getOffsettedDebts(user.entityId).overall.toFixed(2)}} €</strong>
+            <strong ng-if="calculationMethod == 'Fully Offsetted'">{{user.fullyOffsettedDebtsOverall}} €</strong>
         </td>
         <td></td>
     </tr>
@@ -64,7 +102,9 @@
             <em>To {{user.firstName}} {{user.lastName}}:</em>
         </td>
         <td ng-repeat="u in costShareUsers">
-            <span ng-if="getDebts(u.entityId)[user.entityId]">{{getDebts(u.entityId)[user.entityId].toFixed(2)}} €</span>
+            <span ng-if="getDebts(u.entityId)[user.entityId] && calculationMethod == 'Standard'">{{getDebts(u.entityId)[user.entityId].toFixed(2)}} €</span>
+            <span ng-if="getOffsettedDebts(u.entityId)[user.entityId] && calculationMethod == 'Offsetted'">{{getOffsettedDebts(u.entityId)[user.entityId].toFixed(2)}} €</span>
+            <span ng-if="getFullyOffsettedDebts(u.entityId)[user.entityId] && calculationMethod == 'Fully Offsetted'">{{getFullyOffsettedDebts(u.entityId)[user.entityId].toFixed(2)}} €</span>
         </td>
         <td></td>
     </tr>
