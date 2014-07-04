@@ -13,7 +13,7 @@
         </tr>
     </thead>
     <tbody>
-        <tr ng-repeat="article in articles">
+        <tr ng-repeat="article in paginatedArticles">
             <td>{{getPurchaser(article.purchaser)}}</td>
             <td>{{article.purchaseDate}}</td>
             <td>{{article.name}}</td>
@@ -25,34 +25,62 @@
     </tbody>
     <tfoot>
         <tr>
+            <td colspan="{{users.length + 4}}">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        Articles per page: {{articlesPerPage}} <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href ng-click="setArticlesPerPage(5)">5</a></li>
+                        <li><a href ng-click="setArticlesPerPage(10)">10</a></li>
+                        <li><a href ng-click="setArticlesPerPage(15)">15</a></li>
+                        <li><a href ng-click="setArticlesPerPage(20)">20</a></li>
+                        <li><a href ng-click="setArticlesPerPage(25)">25</a></li>
+                    </ul>
+                </div>
+                <ul class="pagination paginationArticles" ng-show="pages > 1">
+                    <li ng-class="{disabled: 1 == page}"><a href ng-click="turnThePage(page - 1)">&laquo;</a></li>
+                    <li ng-class="{active: 1 == page}"><a href ng-click="turnThePage(1)">1</a></li>
+                    <li ng-show="paginationLeftDots" class="disabled"><a>...</a></li>
+                    <li ng-repeat="i in pagination" ng-class="{active: i == page}"><a href ng-click="turnThePage(i)">{{i}}</a></li>
+                    <li ng-show="paginationRightDots" class="disabled"><a>...</a></li>
+                    <li ng-class="{active: pages == page}" ng-show="pages > 1"><a href ng-click="turnThePage(pages)">{{pages}}</a></li>
+                    <li ng-class="{disabled: pages == page}"><a href ng-click="turnThePage(page + 1)">&raquo;</a></li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
             <td colspan="4"></td>
             <td colspan="{{users.length}}"></td>
         </tr>
         <tr>
-            <td colspan="3"></td>
-            <td class="contentRight">
+            <td colspan="4" class="contentRight">
                 <div class="btn-group">
                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                        Calculating Method <span class="caret"></span>
+                        Calculation: {{calculationMethod}} <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu" role="menu">
-                        <li><a href="#">Standard</a></li>
-                        <li><a href="#">Offsetted</a></li>
-                        <li><a href="#">Offsetted (intelligent)</a></li>
+                        <li><a href ng-click="switchCalculationMethod('Standard')">Standard</a></li>
+                        <li><a href ng-click="switchCalculationMethod('Offsetted')">Offsetted</a></li>
+                        <li><a href ng-click="switchCalculationMethod('Fully Offsetted')">Fully Offsetted</a></li>
                     </ul>
                 </div>
             </td>
             <td ng-repeat="user in users" class="topBorderCell contentMiddle">
-                <strong>{{user.debts.overall}} €</strong>
+                <strong ng-if="calculationMethod == 'Standard'">{{user.debtsOverall}} €</strong>
+                <strong ng-if="calculationMethod == 'Offsetted'">{{user.offsettedDebtsOverall}} €</strong>
+                <strong ng-if="calculationMethod == 'Fully Offsetted'">{{user.fullyOffsettedDebtsOverall}} €</strong>
             </td>
         </tr>
         <tr>
             <td colspan="4"></td>
             <td colspan="{{users.length}}"  class="topBorderCell"></td>
         </tr>
-        <tr ng-repeat="deptee in users">
-            <td colspan="4" class="deptee"><em>To {{deptee.firstName}} {{deptee.lastName}}:</em></td>
-            <td ng-repeat="debtor in users">{{debtor.debts[deptee.id]}} €</td>
+        <tr ng-repeat="debtee in users">
+            <td colspan="4" class="deptee"><em>To {{debtee.firstName}} {{debtee.lastName}}:</em></td>
+            <td ng-if="calculationMethod == 'Standard'" ng-repeat="debtor in users">{{debtor.debts[debtee.id]}} €</td>
+            <td ng-if="calculationMethod == 'Offsetted'" ng-repeat="debtor in users">{{debtor.offsettedDebts[debtee.id]}} €</td>
+            <td ng-if="calculationMethod == 'Fully Offsetted'" ng-repeat="debtor in users">{{debtor.fullyOffsettedDebts[debtee.id]}} €</td>
         </tr>
     </tfoot>
 </table>
