@@ -92,7 +92,7 @@
         <td ng-repeat="user in costShareUsers" class="topBorderCell contentMiddle">
             <strong ng-if="calculationMethod == 'Standard'">{{getDebts(user.entityId).overall.toFixed(2)}} €</strong>
             <strong ng-if="calculationMethod == 'Offsetted'">{{getOffsettedDebts(user.entityId).overall.toFixed(2)}} €</strong>
-            <strong ng-if="calculationMethod == 'Fully Offsetted'">{{user.fullyOffsettedDebtsOverall}} €</strong>
+            <strong ng-if="calculationMethod == 'Fully Offsetted'">{{getFullyOffsettedDebts(user.entityId).overall.toFixed(2)}} €</strong>
         </td>
         <td></td>
     </tr>

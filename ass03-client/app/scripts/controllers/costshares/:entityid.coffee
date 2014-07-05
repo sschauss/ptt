@@ -37,7 +37,7 @@ angular.module('ass03ClientApp')
 
     $scope.articles = CostShareArticle.query
       entityId: costShareEntityId, ->
-        $scope.setArticlesPerPage(1)
+        $scope.setArticlesPerPage(5)
 
     $scope.calculationMethod = "Standard"
 
@@ -111,11 +111,15 @@ angular.module('ass03ClientApp')
           offsettedDebts.overall += offsettedDebts[debtee.entityId]
       return offsettedDebts
 
+    $scope.getFullyOffsettedDebts = (entityId) ->
+      debts = $scope.getOffsettedDebts(entityId)
+      fullyOffsettedDebts =
+        overall: debts.overall
+      for debtee in $scope.users
+        debteesDebts = $scope.getOffsettedDebts(debtee.entityId)
+        fullyOffsettedDebts.overall -= debteesDebts[entityId] if debteesDebts[entityId]
 
-
-
-
-
+      return fullyOffsettedDebts
 
     $scope.setArticlesPerPage = (n) ->
       $scope.articlesPerPage = n

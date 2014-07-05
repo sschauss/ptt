@@ -26,10 +26,15 @@ nav {
 
 .well {
   overflow: auto;
-  box-shadow: 0px -8px 8px rgba(0, 0, 0, 0.5),
-              0px 8px 8px rgba(0, 0, 0, 0.5),
-              -8px 0px 8px rgba(0, 0, 0, 0.5),
-              8px 0px 8px rgba(0, 0, 0, 0.5);
+  box-shadow: 0px -8px 8px rgba(0, 0, 0, 0.2),
+              0px 8px 8px rgba(0, 0, 0, 0.2),
+              -8px 0px 8px rgba(0, 0, 0, 0.2),
+              8px 0px 8px rgba(0, 0, 0, 0.2);
+  background-image: url("../images/paper.png");
+}
+
+.navbar{
+  background-image: url("../images/paper.png") !important;
 }
 
 .plain-input, .plain-input:focus {
@@ -62,4 +67,8 @@ input.ng-invalid {
 .paginationArticles {
   margin: 0px !important;
   vertical-align: top !important;
+}
+
+.contentRight{
+  text-align: right;
 }
