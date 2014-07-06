@@ -22,7 +22,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr ng-if="((articlesPerPage * (articlePage - 1)) <= $index) && ($index <= (articlesPerPage * articlePage))"
+    <tr ng-if="((articlesPerPage * (articlePage - 1)) <= $index) && ($index < (articlesPerPage * articlePage))"
         ng-repeat="article in articles | orderBy:articleOrderPredicate:articleOrderReverse"
         ng-class="{success: (article.entityId == articleToEdit.entityId)}">
         <td>
