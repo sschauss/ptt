@@ -1,46 +1,118 @@
-<table class="table table-hover">
+<table class="table table-hover"
+       ng-init="
+        articlePage = 1;
+        articlesPerPage = 5;
+        articleOrderReverse = false;
+        articleOrderPredicate = 'purchaserEntityId';
+        calculationType = 'Standard'"
+        >
     <thead>
     <tr>
-        <th>Purchaser</th>
-        <th>Date</th>
-        <th>Article</th>
-        <th>Price</th>
+        <th class="click"
+            ng-click="articleOrderPredicate = 'purchaserEntityId'; articleOrderReverse = !articleOrderReverse">Purchaser
+        </th>
+        <th class="click"
+            ng-click="articleOrderPredicate = 'purchaseDate'; articleOrderReverse = !articleOrderReverse">Date</th>
+        <th class="click"
+            ng-click="articleOrderPredicate = 'name'; articleOrderReverse = !articleOrderReverse">Article</th>
+        <th class="click"
+            ng-click="articleOrderPredicate = 'value'; articleOrderReverse = !articleOrderReverse">Price</th>
         <th ng-repeat="user in costShareUsers">{{user.firstName}} {{user.lastName}}</th>
         <th></th>
     </tr>
     </thead>
     <tbody>
-    <tr ng-repeat="article in paginatedArticles">
-        <td>{{getPurchaser(article.purchaserEntityId)}}</td>
-        <td>{{getDateFromMilliseconds(article.purchaseDate)}}</td>
-        <td>{{article.name}}</td>
-        <td>{{article.value.toFixed(2)}} €</td>
-        <td ng-repeat="user in costShareUsers">
-            <span ng-show="isUser(article, user.entityId)" class="glyphicon glyphicon-ok"></span>
+    <tr ng-if="((articlesPerPage * (articlePage - 1)) <= $index) && ($index <= (articlesPerPage * articlePage))"
+        ng-repeat="article in articles | orderBy:articleOrderPredicate:articleOrderReverse"
+        ng-class="{success: (article.entityId == articleToEdit.entityId)}">
+        <td>
+            <span ng-if="articleToEdit.entityId != article.entityId">{{getPurchaser(article.purchaserEntityId)}}</span>
+            <span ng-if="articleToEdit.entityId == article.entityId">
+            <select class="form-control plain-input"
+                    ng-model="articleToEdit.purchaserEntityId"
+                    ng-init="articleToEdit.purchaserEntityId = article.purchaserEntityId"
+                    ng-options="user.entityId as (user.firstName + ' ' + user.lastName) for user in costShareUsers">
+            </select>
+            </span>
         </td>
-        <td></td>
+        <td>
+            <span ng-if="articleToEdit.entityId != article.entityId">{{article.purchaseDate | date: 'dd/MM/yyyy'}}</span>
+            <span ng-if="articleToEdit.entityId == article.entityId">
+                <input type="date" class="form-control plain-input"
+                       ng-init="articleToEdit.purchaseDate = getDateFromMilliseconds(article.purchaseDate)"
+                       ng-model="articleToEdit.purchaseDate">
+            </span>
+        </td>
+        <td>
+            <span ng-if="articleToEdit.entityId != article.entityId">{{article.name}}</span>
+            <span ng-if="articleToEdit.entityId == article.entityId">
+                <input class="form-control plain-input"
+                       placeholder="Enter Name"
+                       type="text"
+                       ng-init="articleToEdit.name = article.name"
+                       ng-model="articleToEdit.name">
+            </span>
+        </td>
+        <td>
+            <span ng-if="articleToEdit.entityId != article.entityId">{{article.value.toFixed(2)}} €</span>
+            <span ng-if="articleToEdit.entityId == article.entityId">
+                <input class="form-control plain-input"
+                       placeholder="Enter Price"
+                       step="0.01" type="number"
+                       ng-init="articleToEdit.value = article.value"
+                       ng-model="articleToEdit.value"
+                       ng-pattern="currencyPattern">
+            </span>
+        </td>
+        <td ng-repeat="user in costShareUsers">
+            <span ng-if="articleToEdit.entityId != article.entityId">
+                <i ng-show="isUser(article, user.entityId)" class="glyphicon glyphicon-ok"></i>
+            </span>
+            <span ng-if="articleToEdit.entityId == article.entityId">
+            <input class="form-control plain-input"
+                   type="checkbox"
+                   ng-init="articleToEdit.userEntityIdSelection[user.entityId] = isUser(article, user.entityId)"
+                   ng-model="articleToEdit.userEntityIdSelection[user.entityId]">
+            </span>
+        </td>
+        <td>
+            <span ng-if="articleToEdit.entityId != article.entityId">
+                <i class="glyphicon glyphicon-edit click" ng-click="articleToEdit.entityId = article.entityId"></i>
+            </span>
+            <span class="pull-right" ng-if="articleToEdit.entityId != article.entityId">
+                <i class="glyphicon glyphicon-remove click" ng-click="deleteArticle(article.entityId, $index)"></i>
+            </span>
+            <span class="pull-right" ng-if="articleToEdit.entityId == article.entityId">
+                <i class="glyphicon glyphicon-ban-circle click" ng-click="articleToEdit.entityId = null"></i>
+            </span>
+            <span ng-if="articleToEdit.entityId == article.entityId">
+                <i class="glyphicon glyphicon-ok click" ng-click="updateArticle()"></i>
+            </span>
+        </td>
     </tr>
     </tbody>
     <tfoot class="table-no-border">
     <tr>
         <td>
             <select class="form-control plain-input"
-                    ng-model="article.purchaserEntityId"
+                    ng-model="articleToAdd.purchaserEntityId"
                     ng-options="user.entityId as (user.firstName + ' ' + user.lastName) for user in costShareUsers">
             </select>
         </td>
         <td>
-            <input type="date" class="form-control plain-input" ng-model="article.purchaseDate">
+            <input type="date" class="form-control plain-input" ng-model="articleToAdd.purchaseDate">
         </td>
         <td>
-            <input type="text" class="form-control plain-input" ng-model="article.name" placeholder="Enter Name">
+            <input type="text" class="form-control plain-input" ng-model="articleToAdd.name" placeholder="Enter Name">
         </td>
         <td>
-            <input type="number" step="0.01" class="form-control plain-input" ng-model="article.value" ng-pattern="onlyNumbers"
+            <input type="number" step="0.01" class="form-control plain-input" ng-model="articleToAdd.value"
+                   ng-pattern="currencyPattern"
                    placeholder="Enter Price">
         </td>
         <td ng-repeat="user in costShareUsers">
-            <input type="checkbox" class="form-control plain-input" ng-click="addUser(user.entityId)">
+            <input type="checkbox" class="form-control plain-input"
+                   ng-model="articleToAdd.userEntityIdSelection[user.entityId]">
         </td>
         <td>
             <input type="button" class="form-control" value="Add" ng-click="addArticle()">
@@ -53,46 +125,37 @@
     </tr>
     <tr>
         <td colspan="{{users.length + 4}}">
-            <div class="btn-group">
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                    Articles per page: {{articlesPerPage}} <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu" role="menu">
-                    <li><a href ng-click="setArticlesPerPage(5)">5</a></li>
-                    <li><a href ng-click="setArticlesPerPage(10)">10</a></li>
-                    <li><a href ng-click="setArticlesPerPage(15)">15</a></li>
-                    <li><a href ng-click="setArticlesPerPage(20)">20</a></li>
-                    <li><a href ng-click="setArticlesPerPage(25)">25</a></li>
-                </ul>
-            </div>
-            <ul class="pagination paginationArticles" ng-show="pages > 1">
-                <li ng-class="{disabled: 1 == page}"><a href ng-click="turnThePage(page - 1)">&laquo;</a></li>
-                <li ng-class="{active: 1 == page}"><a href ng-click="turnThePage(1)">1</a></li>
-                <li ng-show="paginationLeftDots" class="disabled"><a>...</a></li>
-                <li ng-repeat="i in pagination" ng-class="{active: i == page}"><a href ng-click="turnThePage(i)">{{i}}</a></li>
-                <li ng-show="paginationRightDots" class="disabled"><a>...</a></li>
-                <li ng-class="{active: pages == page}" ng-show="pages > 1"><a href ng-click="turnThePage(pages)">{{pages}}</a></li>
-                <li ng-class="{disabled: pages == page}"><a href ng-click="turnThePage(page + 1)">&raquo;</a></li>
+            <label for="article-per-page">Articles per page:</label>
+            <select id="article-per-page" class="form-inline plain-input" ng-model="articlesPerPage">
+                <option>5</option>
+                <option>10</option>
+                <option>15</option>
+                <option>20</option>
+                <option>25</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <ul class="pagination">
+                <li><a class="click" ng-click="articlePage = articlePage - 1">&laquo;</a></li>
+                <li ng-repeat="i in nTimes(articles.length / articlesPerPage)">
+                    <a ng-click="$parent.articlePage = i" class="click">{{i}}</a>
+                </li>
+                <li><a class="click" ng-click="articlePage = articlePage + 1">&raquo;</a></li>
             </ul>
         </td>
     </tr>
     <tr>
-        <td colspan="4" class="contentRight">
-            <div class="btn-group">
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                    Calculation: {{calculationMethod}} <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu" role="menu">
-                    <li><a href ng-click="switchCalculationMethod('Standard')">Standard</a></li>
-                    <li><a href ng-click="switchCalculationMethod('Offsetted')">Offsetted</a></li>
-                    <li><a href ng-click="switchCalculationMethod('Fully Offsetted')">Fully Offsetted</a></li>
-                </ul>
-            </div>
+        <td colspan="3"></td>
+        <td>
+            <select class="form-inline plain-input" ng-model="calculationType">
+                <option>Standard</option>
+                <option>Balanced</option>
+            </select>
         </td>
         <td ng-repeat="user in costShareUsers" class="topBorderCell contentMiddle">
-            <strong ng-if="calculationMethod == 'Standard'">{{getDebts(user.entityId).overall.toFixed(2)}} €</strong>
-            <strong ng-if="calculationMethod == 'Offsetted'">{{getOffsettedDebts(user.entityId).overall.toFixed(2)}} €</strong>
-            <strong ng-if="calculationMethod == 'Fully Offsetted'">{{getFullyOffsettedDebts(user.entityId).overall.toFixed(2)}} €</strong>
+            <strong>{{getDebts(user.entityId, calculationType).overall.toFixed(2)}} €</strong>
         </td>
         <td></td>
     </tr>
@@ -101,10 +164,8 @@
         <td>
             <em>To {{user.firstName}} {{user.lastName}}:</em>
         </td>
-        <td ng-repeat="u in costShareUsers">
-            <span ng-if="getDebts(u.entityId)[user.entityId] && calculationMethod == 'Standard'">{{getDebts(u.entityId)[user.entityId].toFixed(2)}} €</span>
-            <span ng-if="getOffsettedDebts(u.entityId)[user.entityId] && calculationMethod == 'Offsetted'">{{getOffsettedDebts(u.entityId)[user.entityId].toFixed(2)}} €</span>
-            <span ng-if="getFullyOffsettedDebts(u.entityId)[user.entityId] && calculationMethod == 'Fully Offsetted'">{{getFullyOffsettedDebts(u.entityId)[user.entityId].toFixed(2)}} €</span>
+        <td ng-repeat="toUser in costShareUsers">
+            <span ng-if="getDebts(toUser.entityId, calculationType)[user.entityId]">{{getDebts(toUser.entityId, calculationType)[user.entityId].toFixed(2)}} €</span>
         </td>
         <td></td>
     </tr>

@@ -71,7 +71,7 @@ public class CostShareResource extends Resource {
 	public Response getCostShareArticles(@PathParam("entityId") UUID entityId) {
 		List<ArticleView> costShareArticles = articleViewDao.selectByCostShareEntityId(entityId);
 		for (ArticleView articleView : costShareArticles) {
-			List<UUID> userEntityIds = articleUserViewDao.select(articleView.getEntityId());
+			List<UUID> userEntityIds = articleUserViewDao.getByUserEntityId(articleView.getEntityId());
 			articleView.setUserEntityIds(userEntityIds);
 		}
 		return Response.ok(costShareArticles).build();

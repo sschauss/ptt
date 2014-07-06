@@ -14,17 +14,34 @@ public class ArticleCommandHandler extends CommandHandler<Article> {
 
 	@Override
 	public void handle(Command command) {
-		if(command instanceof CreateArticleCommand) {
+		if (command instanceof CreateArticleCommand) {
 			handleCreateArticleCommand((CreateArticleCommand) command);
+		} else if (command instanceof UpdateArticleCommand) {
+			handleUpdateArticleCommand((UpdateArticleCommand) command);
+		} else if (command instanceof DeleteArticleCommand) {
+			handleDeleteArticleCommand((DeleteArticleCommand) command);
 		}
 	}
 
-	private void handleCreateArticleCommand(CreateArticleCommand createArticleCommand) {
+	private void handleCreateArticleCommand(CreateArticleCommand command) {
 		Article article = repository.createEntity();
-		article.createArticle(createArticleCommand.getPurchaserEntityId(), createArticleCommand.getPurchaseDate(), createArticleCommand.getName(), createArticleCommand.getValue(), createArticleCommand.getCostShareEntityId(), createArticleCommand.getUserEntityIds());
+		article.create(command.getPurchaserEntityId(), command.getPurchaseDate(), command.getName(), command.getValue(), command.getCostShareEntityId(), command.getUserEntityIds());
+		article.publishEvents(eventBus);
+		repository.save(article);
+	}
+
+	private void handleUpdateArticleCommand(UpdateArticleCommand command) {
+		Article article = repository.getEntity(command.getEntityId());
+		article.update(command.getPurchaserEntityId(), command.getPurchaseDate(), command.getName(), command.getValue(), command.getUserEntityIds());
+		article.publishEvents(eventBus);
+		repository.save(article);
+	}
+	
+	private void handleDeleteArticleCommand(DeleteArticleCommand command) {
+		Article article = repository.getEntity(command.getEntityId());
+		article.delete();
 		article.publishEvents(eventBus);
 		repository.save(article);
 	}
 
 }
-

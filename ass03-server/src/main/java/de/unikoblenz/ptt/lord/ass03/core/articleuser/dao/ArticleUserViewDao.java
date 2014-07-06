@@ -13,7 +13,10 @@ public interface ArticleUserViewDao {
 
 	@SqlUpdate("INSERT INTO article_user_view_store (article_entity_id, user_entity_id) VALUES (:articleEntityId, :userEntityId)")
 	void insert(@Bind("articleEntityId") UUID articleEntityId, @Bind("userEntityId") UUID userEntityId);
+
+	@SqlUpdate("DELETE FROM article_user_view_store WHERE article_entity_id = :entityId")
+	void deleteByArticleEntityId(@Bind("entityId") UUID entityId);
 	
 	@SqlQuery("SELECT user_entity_id FROM article_user_view_store WHERE article_entity_id = :entityId")
-	List<UUID> select(@Bind("entityId") UUID entityId);
+	List<UUID> getByUserEntityId(@Bind("entityId") UUID entityId);
 }

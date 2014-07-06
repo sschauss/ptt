@@ -10,15 +10,12 @@
 angular.module('ass03ClientApp')
   .controller 'CostsharesEntityidCtrl', ($scope, $resource, $routeParams) ->
 
-    $scope.onlyNumbers = /^(0|[1-9][0-9]*)((\.|,)[0-9][0-9]?)?$/;
-
-    $scope.article =
-      userEntityIds: []
-
     costShareEntityId = $routeParams.entityId
 
     Article = $resource '/api/articles/:entityId',
-      entityId: '@id'
+      entityId: '@id',
+        update:
+          method: 'POST'
 
     CostShareArticle = $resource '/api/costshares/:entityId/articles',
       entityId: '@id'
@@ -29,6 +26,15 @@ angular.module('ass03ClientApp')
     CostShareUser = $resource '/api/costshares/:entityId/users',
       entityId: '@id'
 
+    $scope.currencyPattern = /^(0|[1-9][0-9]*)((\.|,)[0-9][0-9]?)?$/;
+
+    $scope.articleToAdd =
+      purchaseDate: new Date()
+      userEntityIdSelection: {}
+
+    $scope.articleToEdit =
+      userEntityIdSelection: {}
+
     $scope.costShare = CostShare.get
       entityId: costShareEntityId
 
@@ -36,10 +42,15 @@ angular.module('ass03ClientApp')
       entityId: costShareEntityId
 
     $scope.articles = CostShareArticle.query
-      entityId: costShareEntityId, ->
-        $scope.setArticlesPerPage(5)
+      entityId: costShareEntityId
 
     $scope.calculationMethod = "Standard"
+
+    $scope.getDateFromMilliseconds = (milliseconds) ->
+      return new Date(milliseconds)
+
+    $scope.nTimes = (n) ->
+      i for i in [1..Math.ceil(n)]
 
     $scope.switchCalculationMethod = (method) ->
       switch method
@@ -58,34 +69,68 @@ angular.module('ass03ClientApp')
         if user.entityId == entityId
           return "#{user.firstName} #{user.lastName}"
 
-    $scope.getDateFromMilliseconds = (milliseconds) ->
-      date = new Date milliseconds
-      return "#{("0" + date.getDate()).slice(-2)}/#{("0" + date.getMonth()).slice(-2)}/#{date.getFullYear()}"
-
     $scope.addArticle = ->
-      purchaseDateArray = $scope.article.purchaseDate.split "-"
-      purchaseDate = new Date purchaseDateArray[0], purchaseDateArray[1], purchaseDateArray[2]
+      purchaserEntityId = $scope.articleToAdd.purchaserEntityId
+      purchaseDate = $scope.articleToAdd.purchaseDate
+      name = $scope.articleToAdd.name
+      value = $scope.articleToAdd.value
+      userEntityIds = []
+
+      for userEntityId, selected of $scope.articleToAdd.userEntityIdSelection
+        userEntityIds.push userEntityId if selected
+
       Article.save
-        purchaserEntityId: $scope.article.purchaserEntityId
+        purchaserEntityId: purchaserEntityId
         costShareEntityId: costShareEntityId
         purchaseDate: purchaseDate
-        name: $scope.article.name
-        value: $scope.article.value
-        userEntityIds: $scope.article.userEntityIds
+        name: name
+        value: value
+        userEntityIds: userEntityIds
       , ->
-        $scope.article =
-          userEntityIds: []
         $scope.articles = CostShareArticle.query
           entityId: costShareEntityId
 
-    $scope.addUser = (entityId) ->
-      index = $scope.article.userEntityIds.indexOf entityId
-      if index < 0
-        $scope.article.userEntityIds.push entityId
-      else
-        $scope.article.userEntityIds.splice index, 1
+    $scope.updateArticle = ->
+      entityId = $scope.articleToEdit.entityId
+      console.log entityId
+      purchaserEntityId = $scope.articleToEdit.purchaserEntityId
+      purchaseDate = $scope.articleToEdit.purchaseDate
+      name = $scope.articleToEdit.name
+      value = $scope.articleToEdit.value
+      userEntityIds = []
 
-    $scope.getDebts = (entityId) ->
+      for userEntityId, selected of $scope.articleToEdit.userEntityIdSelection
+        userEntityIds.push userEntityId if selected
+
+      Article.update
+        entityId: entityId
+      ,
+        entityId: entityId
+        purchaserEntityId: purchaserEntityId
+        purchaseDate: purchaseDate
+        name: name
+        value: value
+        userEntityIds: userEntityIds
+      , ->
+        $scope.articles = CostShareArticle.query
+          entityId: costShareEntityId
+        , ->
+          $scope.articleToEdit.entityId = null
+
+    $scope.deleteArticle = (entityId, index) ->
+      Article.delete
+        entityId: entityId
+      , ->
+        console.log index
+        $scope.articles.splice index, 1
+
+    $scope.getDebts = (entityId, calculationType) ->
+      switch calculationType
+        when 'Standard' then getStandardDebts entityId
+        when 'Balanced' then getBalancedDebts entityId
+        else getStandardDebts entityId
+
+    getStandardDebts = (entityId) ->
       debts =
         overall: 0
       for article in $scope.articles
@@ -98,65 +143,15 @@ angular.module('ass03ClientApp')
             debts[article.purchaserEntityId] = debt
       return debts
 
-    $scope.getOffsettedDebts = (entityId) ->
-      offsettedDebts =
+    getBalancedDebts = (entityId) ->
+      balancedDebts =
         overall: 0
       debts = $scope.getDebts(entityId)
-      for debtee in $scope.costShareUsers
-        debteesDebts = $scope.getDebts(debtee.entityId)
-        debts[debtee.entityId] = 0 if !debts[debtee.entityId] #otherwise the the offsetted debts of user1 would be undefined if user1 has debts to user2 but user2's debts to user1 are undefined
-        debteesDebts[entityId] = 0 if !debteesDebts[entityId]
-        if debts[debtee.entityId] > debteesDebts[entityId]
-          offsettedDebts[debtee.entityId] = debts[debtee.entityId] - debteesDebts[entityId]
-          offsettedDebts.overall += offsettedDebts[debtee.entityId]
-      return offsettedDebts
-
-    $scope.getFullyOffsettedDebts = (entityId) ->
-      debts = $scope.getOffsettedDebts(entityId)
-      fullyOffsettedDebts =
-        overall: debts.overall
-      for debtee in $scope.users
-        debteesDebts = $scope.getOffsettedDebts(debtee.entityId)
-        fullyOffsettedDebts.overall -= debteesDebts[entityId] if debteesDebts[entityId]
-
-      return fullyOffsettedDebts
-
-    $scope.setArticlesPerPage = (n) ->
-      $scope.articlesPerPage = n
-      $scope.pages = Math.ceil($scope.articles.length / $scope.articlesPerPage)
-      $scope.turnThePage(1)
-
-    getPagination = () ->
-      paginationBarLeftRight = 1
-      l = $scope.page
-      r = $scope.page
-      l++ if l == 1
-      r-- if r == $scope.pages
-      fieldsToDisplay = paginationBarLeftRight * 2
-      fieldsToDisplay++ if $scope.page == 1 or $scope.page == $scope.pages
-      $scope.paginationLeftDots = if $scope.page - paginationBarLeftRight > 2 then true else false
-      $scope.paginationRightDots = if $scope.page + paginationBarLeftRight < $scope.pages - 1 then true else false
-      for j in [1..paginationBarLeftRight]
-        if l > 2 and fieldsToDisplay > 0
-          l--
-          fieldsToDisplay--
-      for j in [1..paginationBarLeftRight]
-        if r < $scope.pages - 1 and fieldsToDisplay > 0
-          r++
-          fieldsToDisplay--
-      while fieldsToDisplay > 0 and l > 2
-        l--
-        fieldsToDisplay--
-      while fieldsToDisplay > 0 and r < $scope.pages - 1
-        r++
-        fieldsToDisplay--
-      result = []
-      result.push(i) for i in [l..r]
-      result = [] if $scope.pages < 3
-      return result
-
-    $scope.turnThePage = (i) ->
-      if i > 0 and i <= $scope.pages
-        $scope.page = i
-        $scope.pagination = getPagination()
-        $scope.paginatedArticles = $scope.articles.slice(($scope.page - 1) * $scope.articlesPerPage, ($scope.page - 1) * $scope.articlesPerPage + $scope.articlesPerPage)
+      for user in $scope.costShareUsers
+        userDebts = $scope.getDebts(user.entityId)
+        debts[user.entityId] = 0 if !debts[user.entityId]
+        userDebts[entityId] = 0 if !userDebts[entityId]
+        if debts[user.entityId] > userDebts[entityId]
+          balancedDebts[user.entityId] = debts[user.entityId] - userDebts[entityId]
+          balancedDebts.overall += balancedDebts[user.entityId]
+      return balancedDebts

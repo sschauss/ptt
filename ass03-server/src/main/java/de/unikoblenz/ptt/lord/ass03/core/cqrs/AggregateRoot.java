@@ -1,6 +1,8 @@
 package de.unikoblenz.ptt.lord.ass03.core.cqrs;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -35,6 +37,10 @@ public abstract class AggregateRoot {
 
 	public void storeEvents(EventStore eventStore) {
 		eventStore.store(unpublishedEvents);
+	}
+
+	protected Timestamp getCreatedAt() {
+		return new Timestamp(new Date().getTime());
 	}
 
 }
