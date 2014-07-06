@@ -52,6 +52,7 @@ angular.module('ass03ClientApp')
       return new Date(milliseconds)
 
     $scope.nTimes = (n) ->
+      return {} if n == 0
       i for i in [1..Math.ceil(n)]
 
     $scope.switchCalculationMethod = (method) ->
