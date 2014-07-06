@@ -14,6 +14,11 @@ grunt build
 echo
 echo
 echo
+echo "ass01-client: remove old assets folder"
+rm -r ../ass01-server/src/main/resources/assets
+echo
+echo
+echo
 echo "ass01-client: copy webapp to servers assets folder"
 cp -R ./dist ../ass01-server/src/main/resources/assets
 echo
@@ -44,6 +49,11 @@ echo
 echo
 echo "ass03-client: build webapp..."
 grunt build
+echo
+echo
+echo
+echo "ass03-client: remove old assets folder"
+rm -r ../ass03-server/src/main/resources/assets
 echo
 echo
 echo

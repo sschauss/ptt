@@ -14,46 +14,47 @@ To build the webapp you need Yeoman. You can get it [here](http://yeoman.io/).
 
 ###1.3 SASS
 
-The webapp stylesheets are written in sass in combination with compass. So you probably have to [install](http://compass-style.org/install/) compass as well.  
+The webapp stylesheets are written in sass in combination with compass. So you probably have to [install](http://compass-style.org/install/) compass as well. 
 
+###1.4 Maven
 
-##2 Usage
+To build the server binaries we've used [maven](http://maven.apache.org/download.cgi). 
 
-###2.1 Build
+##2 Build
 
-To build the project you can run `sbt assembly` from the root directory of the project. You can find the JAR in `target/scala-2.11/`.
+To build the project you can use the build script (in the root folder of the ptt project).
 
-###2.2 Parse SCSS and transform it to prettyprinted SCSS/CSS
+Alternative:
 
-`java -jar ass02.jar scssFile [--pretty scssOutputFilename] [--css cssOutputFilename]`
+1. From the ass03-client folder run:
+ 	`bower install && npm install && grunt build`
+2. Copy the contents of the ass03-client/dist folder to ass03-server/src/main/resources/assets
+3. From the ass03-server folder run:
+	`mvn install`
 
+##3 Run
 
-	scssFile:
- 		relative or absolute path to scss file
+###3.1
 
- 	scssOutputFilename:
- 		relative or absolute path for prettyprinted scss file
-  		default: ./pretty.scss
+Create file with .yml suffix.
 
- 	cssOutputFilename:
- 		relative or absolute path for prettyprinted css file
-  		default: ./pretty.css
- 		
-You can also use sbt to run the transformation: 
+	database:
+  		# the name of your JDBC driver
+  		driverClass: org.h2.Driver
 
-`sbt run scssFile [scssOutputFilename] [cssOutputFilename]`
+  		# the username
+  		user: costshare
 
-##3 Current Status
+  		# the password
+  		password: 
 
-We only covered the following scss [basics](http://sass-lang.com/guide):
+  		# the JDBC URL
+  		url: jdbc:h2:~/costshare
+  		
+###3.2
 
-- Variables
-- Nesting
-- Import
-- Mixins
-- Operators
+Run `java -jar [path to server.jar file] server [path to config.yml file]`
 
-[@rules](https://developer.mozilla.org/de/docs/Web/CSS/At-rule) (such as @charset, @font-face...) and line/block comments are not covered yet.
 
 
 

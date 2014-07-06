@@ -46,8 +46,6 @@ angular.module('ass03ClientApp')
     $scope.articles = CostShareArticle.query
       entityId: costShareEntityId
 
-    $scope.calculationMethod = "Standard"
-
     $scope.getDateFromMilliseconds = (milliseconds) ->
       return new Date(milliseconds)
 
@@ -57,10 +55,9 @@ angular.module('ass03ClientApp')
 
     $scope.switchCalculationMethod = (method) ->
       switch method
-        when "Standard" then $scope.calculationMethod = "Standard"
-        when "Offsetted" then $scope.calculationMethod = "Offsetted"
-        when "Fully Offsetted" then $scope.calculationMethod = "Fully Offsetted"
-        else $scope.calculationMethod = "Standard"
+        when 'Standard' then $scope.calculationMethod = 'Standard'
+        when 'Balanced' then $scope.calculationMethod = 'Balanced'
+        else $scope.calculationMethod = 'Standard'
 
     $scope.isUser = (article, entityId) ->
       for userEntityId in article.userEntityIds
