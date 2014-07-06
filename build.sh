@@ -21,7 +21,7 @@ echo
 echo
 echo "ass01-server: build server"
 cd ../ass01-server
-maven install
+mvn install
 echo
 echo
 echo
@@ -31,7 +31,7 @@ sbt assembly
 echo
 echo
 echo
-cd ./ass03-client
+cd ../ass03-client
 echo "ass03-client: Node.js dependencies..."
 npm install
 echo
@@ -54,9 +54,4 @@ echo
 echo
 echo "ass03-server: build server"
 cd ../ass03-server
-maven install
-echo
-echo
-echo
-
-
+mvn install
