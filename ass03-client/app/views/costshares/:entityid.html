@@ -9,14 +9,33 @@
     <thead>
     <tr>
         <th class="click"
-            ng-click="articleOrderPredicate = 'purchaserEntityId'; articleOrderReverse = !articleOrderReverse">Purchaser
+            ng-click="articleOrderPredicate = 'purchaserEntityId'; articleOrderReverse = !articleOrderReverse">
+            Purchaser
+            <span class="glyphicon"
+                  ng-class="{'glyphicon-chevron-up': 'articleOrderReverse', 'glyphicon-chevron-down': !articleOrderReverse}"
+                  ng-if="articleOrderPredicate == 'purchaserEntityId'"></span>
         </th>
         <th class="click"
-            ng-click="articleOrderPredicate = 'purchaseDate'; articleOrderReverse = !articleOrderReverse">Date</th>
+            ng-click="articleOrderPredicate = 'purchaseDate'; articleOrderReverse = !articleOrderReverse">
+            Date
+            <span class="glyphicon"
+                  ng-class="{'glyphicon-chevron-up': 'articleOrderReverse', 'glyphicon-chevron-down': !articleOrderReverse}"
+                  ng-if="articleOrderPredicate == 'purchaseDate'"></span>
+        </th>
         <th class="click"
-            ng-click="articleOrderPredicate = 'name'; articleOrderReverse = !articleOrderReverse">Article</th>
+            ng-click="articleOrderPredicate = 'name'; articleOrderReverse = !articleOrderReverse">
+            Article
+            <span class="glyphicon"
+                  ng-class="{'glyphicon-chevron-up': 'articleOrderReverse', 'glyphicon-chevron-down': !articleOrderReverse}"
+                  ng-if="articleOrderPredicate == 'name'"></span>
+        </th>
         <th class="click"
-            ng-click="articleOrderPredicate = 'value'; articleOrderReverse = !articleOrderReverse">Price</th>
+            ng-click="articleOrderPredicate = 'value'; articleOrderReverse = !articleOrderReverse">
+            Price
+            <span class="glyphicon"
+                  ng-class="{'glyphicon-chevron-up': 'articleOrderReverse', 'glyphicon-chevron-down': !articleOrderReverse}"
+                  ng-if="articleOrderPredicate == 'value'"></span>
+        </th>
         <th ng-repeat="user in costShareUsers">{{user.firstName}} {{user.lastName}}</th>
         <th></th>
     </tr>
