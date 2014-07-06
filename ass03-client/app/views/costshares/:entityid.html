@@ -155,7 +155,7 @@
         </td>
     </tr>
     <tr>
-        <td>
+        <td colspan="{{5 + costShareUsers.length}}">
             <ul class="pagination">
                 <li ng-class="{disabled: articlePage <= 1}">
                     <a class="click" ng-click="articlePage = Math.max(articlePage - 1, 1)">&laquo;</a>
@@ -165,7 +165,7 @@
                     <a ng-click="$parent.articlePage = i" class="click">{{i}}</a>
                 </li>
                 <li ng-class="{disabled: articlePage * articlesPerPage >= articles.length}">
-                    <a class="click" ng-click="articlePage = Math.min(articlePage + 1, 3)">&raquo;</a>
+                    <a class="click" ng-click="articlePage = Math.min(articlePage + 1, Math.ceil(articles.length / articlesPerPage))">&raquo;</a>
                 </li>
             </ul>
         </td>
