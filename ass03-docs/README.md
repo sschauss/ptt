@@ -53,6 +53,8 @@ Create file with .yml suffix.
   		
 ###3.2
 
+If you run the server for the first to you have to initialize the database. Just run `java -jar [path to server.jar file] db migrate [path to config.yml file]`
+
 Run `java -jar [path to server.jar file] server [path to config.yml file]`
 
 
