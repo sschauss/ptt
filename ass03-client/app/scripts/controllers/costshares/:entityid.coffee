@@ -26,6 +26,8 @@ angular.module('ass03ClientApp')
     CostShareUser = $resource '/api/costshares/:entityId/users',
       entityId: '@id'
 
+    $scope.Math = Math
+
     $scope.currencyPattern = /^(0|[1-9][0-9]*)((\.|,)[0-9][0-9]?)?$/;
 
     $scope.articleToAdd =
