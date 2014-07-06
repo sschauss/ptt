@@ -29,10 +29,7 @@ td {
 }
 
 .well {
-  box-shadow: 0px -8px 8px rgba(0, 0, 0, 0.2),
-              0px 8px 8px rgba(0, 0, 0, 0.2),
-              -8px 0px 8px rgba(0, 0, 0, 0.2),
-              8px 0px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 64px rgba(0, 0, 0, 1);
   background-image: url("../images/paper.png");
   overflow: auto;
 }
