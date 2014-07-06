@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.dropwizard.Configuration;
 import io.dropwizard.db.DataSourceFactory;
 
-public class WGCalcConfiguration extends Configuration {
+public class CostShareConfiguration extends Configuration {
 
 	@Valid
 	@NotNull

@@ -35,17 +35,17 @@ import de.unikoblenz.ptt.lord.ass03.resources.ArticleResource;
 import de.unikoblenz.ptt.lord.ass03.resources.CostShareResource;
 import de.unikoblenz.ptt.lord.ass03.resources.UserResource;
 
-public class WGCalcApplication extends Application<WGCalcConfiguration> {
+public class CostShareApplication extends Application<CostShareConfiguration> {
 
 	public static void main(String[] args) throws Exception {
-		WGCalcApplication wgCalcApplication = new WGCalcApplication();
-		wgCalcApplication.run(args);
+		CostShareApplication costShareApplication = new CostShareApplication();
+		costShareApplication.run(args);
 	}
 
 	@Override
-	public void initialize(Bootstrap<WGCalcConfiguration> bootstrap) {
-		bootstrap.addBundle(new MigrationsBundle<WGCalcConfiguration>() {
-			public DataSourceFactory getDataSourceFactory(WGCalcConfiguration configuration) {
+	public void initialize(Bootstrap<CostShareConfiguration> bootstrap) {
+		bootstrap.addBundle(new MigrationsBundle<CostShareConfiguration>() {
+			public DataSourceFactory getDataSourceFactory(CostShareConfiguration configuration) {
 				return configuration.getDataSourceFactory();
 			}
 		});
@@ -53,7 +53,7 @@ public class WGCalcApplication extends Application<WGCalcConfiguration> {
 	}
 
 	@Override
-	public void run(WGCalcConfiguration configuration, Environment environment) throws Exception {
+	public void run(CostShareConfiguration configuration, Environment environment) throws Exception {
 		final DBIFactory factory = new DBIFactory();
 		final DBI jdbi = factory.build(environment, configuration.getDataSourceFactory(), "h2");
 
