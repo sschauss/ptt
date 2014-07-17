@@ -1,0 +1,42 @@
+model Dropwizard configured in DropwizardConfig
+import Prelude
+
+Java : Language
+
+Jetty : Technology
+Jersey : Technology
+Jackson : Technology
+Metrics : Technology
+
+
+
+
+
+
+
+
+
+
+
+
+#######################################################
+
+HibernatePOJO : Language
+HibernatePOJO subsetOf Java
+
+Program < File
+
+application : Program
+application elementOf Java
+
+Fragment < File
+apiCall : Fragment
+apiCall partOf application
+
+persistentClasses : File+
+
+Library < Artifact
+HibernateLib : Library
+apiCall dependsOn HibernateLib
+
+application dependsOn persistentClasses
