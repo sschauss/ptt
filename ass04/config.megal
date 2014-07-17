@@ -1,24 +1,29 @@
-configuration DropwizardConfig for Dropwizard
+configuration DropwizardCfg for Dropwizard
 
 jar "/technomodels/plugins/megal-0.0.1-SNAPSHOT.jar"
 
-Dropwizard ="http://101companies.org/wiki/Technology:ANTLR"
+## Languages
 Java = "http://101companies.org/wiki/Language:Java"
+YAML = "http://101companies.org/wiki/Language:YAML"
+
+## Technolgies
+Dropwizard ="http://dropwizard.io"
+
+Maven = "http://101companies.org/wiki/Technology:Maven"
+
 Jetty = "http://www.eclipse.org/jetty/"
 Jersey = "https://jersey.java.net/"
 Jackson = "http://wiki.fasterxml.com/JacksonHome"
 Metrics = "http://metrics.codahale.com/"
 
+Guava = "http://code.google.com/p/guava-libraries/"
+Sl4j = "http://www.slf4j.org/"
+LogBack = "http://logback.qos.ch/"
+HibernateValidator = "http://www.hibernate.org/subprojects/validator.html"
+JodaTime = "http://joda-time.sourceforge.net/"
 
-
-
-
-
-
-##################################################
-
-aGrammar = "https://github.com/avaranovich/101simplejava/blob/master/contributions/antlr4Parser/src/main/antlr/Company.g4"
-aParser = "https://github.com/avaranovich/101simplejava/blob/master/contributions/antlr4Parser/src/main/java/org/softlang/company/antlr/src/main/antlr/CompanyParser.java"
-anInput = "https://github.com/avaranovich/101simplejava/blob/master/contributions/antlr4Parser/inputs/sample.Company"
-
-ANTLR.Generator = "https://github.com/avaranovich/101simplejava/blob/master/contributions/antlr4Parser/build.gradle#L19"
+## Artifacts
+dropwizardApplication = "http://dropwizard.io/getting-started.html#gs-application"
+dropwizardConfiguration = "http://dropwizard.io/getting-started.html#gs-configuration"
+configurationFile = "http://dropwizard.io/getting-started.html#gs-configuration"
+resourceClasses = "http://dropwizard.io/getting-started.html#gs-resource"

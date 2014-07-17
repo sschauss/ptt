@@ -1,42 +1,32 @@
-model Dropwizard configured in DropwizardConfig
+model Dropwizard configured in DropwizardCfg
+
 import Prelude
+import Dropwizard.Technologies
+import Dropwizard.Languages
 
-Java : Language
+JavaFile < File
+JavaFile elementOf Java
+YAMLFile < File
+YAMLFile elementOf YAML
 
-Jetty : Technology
-Jersey : Technology
-Jackson : Technology
-Metrics : Technology
+BuildSystem < Technology
+Maven : BuildSystem
 
+Dropwizard dependsOn Jackson
+Dropwizard dependsOn Jersey
+Dropwizard dependsOn Jetty
+Dropwizard dependsOn Metrics
 
+dropwizardApplication : JavaFile
+dropwizardConfiguration : JavaFile
+configurationFile : YAMLFile
+resourceClasses : JavaFile+
 
+dropwizardApplication partOf Dropwizard
+dropwizardConfiguration partOf Dropwizard
+dropwizardEnvironment partOf Dropwizard
+jerseyEnvironment partOf dropwizardEnvironment
 
-
-
-
-
-
-
-
-
-#######################################################
-
-HibernatePOJO : Language
-HibernatePOJO subsetOf Java
-
-Program < File
-
-application : Program
-application elementOf Java
-
-Fragment < File
-apiCall : Fragment
-apiCall partOf application
-
-persistentClasses : File+
-
-Library < Artifact
-HibernateLib : Library
-apiCall dependsOn HibernateLib
-
-application dependsOn persistentClasses
+dropwizardApplication dependsOn dropwizardConfiguration
+dropwizardConfiguration dependsOn configurationFile
+jerseyEnvironment dependsOn resourceClasses

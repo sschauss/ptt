@@ -1,0 +1,7 @@
+model Dropwizard.Languages configured in DropwizardConfig
+
+import Prelude
+
+Java : Language
+YAML : Language
+
