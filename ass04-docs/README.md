@@ -13,14 +13,14 @@ Also important are various enviroments and configurations which are definately n
 
 ###2.2 Technology-specific insight we tried to model
 
-We first tried to give the user an overview over all the Technologys Dropwizard is providing and which so can be natively used in a Dropwizard project. Also we wanted to give a quick insight into all the abolutely necessary configuration, application and enviroment files to get Dropwizard running, because if this first "set-up" part is done, it's easy to pull out an awesome application by using the linked documentations of the provided technologys.
+We first tried to give the user an overview over all the technologys Dropwizard is providing and which so can be natively used in a Dropwizard project. Also we wanted to give a quick insight into all the abolutely necessary configuration, application and enviroment files to get Dropwizard running, because if this first "set-up" step is done, it's easy to pull out an awesome application by using the linked documentations of the provided technologys.
 
 ###2.3 Relationships between key entities
 
-Between the used technologys there are no "external" relationships. You can use them all independentely in your ptoject. Internal they may be closely linked, because Dropwizard is depending on all of them, but that's not what we tried to model.<br>
+Between the used technologys there are no "external relationships"". You can use them all independentely in your ptoject. Internal they may be closely linked, because Dropwizard is depending on all of them, but that's not what we tried to model.<br>
 There are interesting relationships between resources, enviroments and configurations.
 
-1. The Jersey enviroment depends on at least one the resource classes which are at least one Java file
+1. The Jersey enviroment depends on the resource classes which are at least one Java file
 2. The Jersey enviroment again is part of the Dropwizard Enviroment which of course is a part of Dropwizard
 3. The Dropwizard configuration & application are Java files and are a part of Dropwizard
 4. The Dropwizard Application depends on the Dropwizard configuration which depends on the configuration file which is a YAML file written in the YAML markup language
