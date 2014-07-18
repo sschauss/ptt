@@ -17,6 +17,11 @@ Dropwizard dependsOn Jersey
 Dropwizard dependsOn Jetty
 Dropwizard dependsOn Metrics
 
+Dropwizard dependsOn Guava
+Dropwizard dependsOn LogBack
+Dropwizard dependsOn HibernateValidator
+Dropwizard dependsOn JodaTime
+
 dropwizardApplication : JavaFile
 dropwizardConfiguration : JavaFile
 configurationFile : YAMLFile
