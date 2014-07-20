@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <link href="css/main.css" rel="stylesheet">
+</head>
+<body>
+model <span data-megal="Dropwizard">Dropwizard</span> configured in <a href="config.megal.html">DropwizardCfg</a><br>
+<br>
+import <a href="https://github.com/avaranovich/technomodels/blob/master/prelude.megal">Prelude</a><br>
+import <a href="technologies.megal.html">Dropwizard.Technologies</a><br>
+import <a href="languages.megal.html">Dropwizard.Languages<br></a>
+<br>
+<span data-megal="JavaFile">JavaFile</span> < <span data-megal="File">File</span><br>
+<span data-megal="JavaFile">JavaFile</span> elementOf <span data-megal="Java">Java</span><br>
+<span data-megal="YAMLFile">YAMLFile</span> < <span data-megal="File">File</span><br>
+<span data-megal="YAMLFile">YAMLFile</span> elementOf <span data-megal="YAML"><a href="languages.megal.html#yaml">YAML</a></span><br>
+<br>
+<span data-megal="BuildSystem">BuildSystem</span> < <span data-megal="Technology">Technology</span><br>
+<span data-megal="Maven">Maven</span> : <span data-megal="BuildSystem">BuildSystem</span><br>
+<br>
+<span data-megal="Dropwizard">Dropwizard</span> dependsOn <span data-megal="Jackson">Jackson</span><br>
+<span data-megal="Dropwizard">Dropwizard</span> dependsOn <span data-megal="Jersey">Jersey</span><br>
+<span data-megal="Dropwizard">Dropwizard</span> dependsOn <span data-megal="Jetty">Jetty</span><br>
+<span data-megal="Dropwizard">Dropwizard</span> dependsOn <span data-megal="Metrics">Metrics</span><br>
+<br>
+<span data-megal="Dropwizard">Dropwizard</span> dependsOn <span data-megal="Guava">Guava</span><br>
+<span data-megal="Dropwizard">Dropwizard</span> dependsOn <span data-megal="LogBack">LogBack</span><br>
+<span data-megal="Dropwizard">Dropwizard</span> dependsOn <span data-megal="HibernateValidator">HibernateValidator</span><br>
+<span data-megal="Dropwizard">Dropwizard</span> dependsOn <span data-megal="JodaTime">JodaTime</span><br>
+<br>
+<span data-megal="dropwizardApplication">dropwizardApplication</span> : <span data-megal="JavaFile">JavaFile</span><br>
+<span data-megal="dropwizardConfiguration">dropwizardConfiguration</span> : <span data-megal="JavaFile">JavaFile</span><br>
+<span data-megal="dropwizardEnvironment">dropwizardEnvironment</span> : <span data-megal="JavaFile">JavaFile</span><br>
+<span data-megal="configurationFile">configurationFile</span> : <span data-megal="YAMLFile">YAMLFile</span><br>
+<span data-megal="jerseyEnvironment">jerseyEnvironment</span> : <span data-megal="JavaFile">JavaFile</span><br>
+<span data-megal="resources">resources</span> : <span data-megal="JavaFile">JavaFile</span>+<br>
+<br>
+<span data-megal="dropwizardApplication">dropwizardApplication</span> partOf <span data-megal="Dropwizard">Dropwizard</span><br>
+<span data-megal="dropwizardConfiguration">dropwizardConfiguration</span> partOf <span data-megal="Dropwizard">Dropwizard</span><br>
+<span data-megal="dropwizardEnvironment">dropwizardEnvironment</span> partOf <span data-megal="Dropwizard">Dropwizard</span><br>
+<span data-megal="jerseyEnvironment">jerseyEnvironment</span> partOf <span data-megal="dropwizardEnvironment">dropwizardEnvironment</span><br>
+<br>
+<span data-megal="dropwizardApplication">dropwizardApplication</span> dependsOn <span data-megal="dropwizardConfiguration">dropwizardConfiguration</span><br>
+<span data-megal="dropwizardConfiguration">dropwizardConfiguration</span> dependsOn <span data-megal="configurationFile">configurationFile</span><br>
+<span data-megal="jerseyEnvironment">jerseyEnvironment</span> dependsOn <span data-megal="resources">resources</span><br>
+<script src="js/app.js" type="application/javascript"></script>
+</body>
+</html>

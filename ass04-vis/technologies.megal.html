@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <link href="css/main.css" rel="stylesheet">
+</head>
+<body>
+model Dropwizard.Technologies configured in <a href="config.megal.html">DropwizardCfg</a><br>
+<br>
+import <a href="https://github.com/avaranovich/technomodels/blob/master/prelude.megal">Prelude</a><br>
+<br>
+<span data-megal="FullStackWebApplicationFramework">FullStackWebApplicationFramework</span>['Full Stack Web Application Framework'] < <span data-megal=Technology">Technology</span><br>
+<span data-megal="WebServer">WebServer</span>['Web Server'] < <span data-megal=Technology">Technology</span><br>
+<span data-megal="RestfulWebServicesFramework">RestfulWebServicesFramework</span>['RESTful Web Services Framework'] < <span data-megal=Technology">Technology</span><br>
+<span data-megal="JsonProcessor">JsonProcessor</span>['Json Processor'] < <span data-megal=Technology">Technology</span><br>
+<span data-megal="BeanValidator">BeanValidator</span>['Bean Validator'] < <span data-megal=Technology">Technology</span><br>
+<span data-megal="LoggingFramework">LoggingFramework</span>['Logging Framework'] < <span data-megal=Technology">Technology</span><br>
+<span data-megal="ApiAppendix">ApiAppendix</span>['Java API Appendix'] < <span data-megal=Technology">Technology</span><br>
+<br>
+<span data-megal=Dropwizard">Dropwizard</span> : <span data-megal="FullStackWebApplicationFramework">FullStackWebApplicationFramework</span><br>
+<span data-megal=Jetty">Jetty</span> : <span data-megal="WebServer">WebServer</span><br>
+<span data-megal=Jersey">Jersey</span> : <span data-megal="RestfulWebServicesFramework">RestfulWebServicesFramework</span><br>
+<span data-megal=Jackson">Jackson</span>  : <span data-megal="JsonProcessor">JsonProcessor</span><br>
+<br>
+<span data-megal="Guava">Guava</span> : <span data-megal="ApiAppendix">ApiAppendix</span><br>
+<span data-megal="Sl4j">Sl4j</span> : <span data-megal="LoggingFramework">LoggingFramework</span><br>
+<span data-megal="LogBack">LogBack</span> : <span data-megal="LoggingFramework">LoggingFramework</span><br>
+<span data-megal="LogBack">LogBack</span> realizationOf <span data-megal="Sl4j">Sl4j</span><br>
+<span data-megal="HibernateValidator">HibernateValidator</span> : <span data-megal="BeanValidator">BeanValidator</span><br>
+<span data-megal="JodaTime">JodaTime</span> : <span data-megal="ApiAppendix">ApiAppendix</span><br>
+<br>
+<span data-megal=ArchStyle">ArchStyle</span>['Architectural Style'] < <span data-megal=Concept">Concept</span><br>
+<span data-megal=REST">REST</span> : <span data-megal=ArchStyle">ArchStyle</span><br>
+<br>
+Dropwizard supports <span data-megal=REST">REST</span>
+<script src="js/app.js" type="application/javascript"></script>
+</body>
+</html>
