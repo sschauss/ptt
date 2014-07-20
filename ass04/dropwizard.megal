@@ -24,8 +24,10 @@ Dropwizard dependsOn JodaTime
 
 dropwizardApplication : JavaFile
 dropwizardConfiguration : JavaFile
+dropwizardEnvironment : JavaFile
 configurationFile : YAMLFile
-resourceClasses : JavaFile+
+jerseyEnvironment : JavaFile
+resources : JavaFile+
 
 dropwizardApplication partOf Dropwizard
 dropwizardConfiguration partOf Dropwizard
@@ -34,4 +36,4 @@ jerseyEnvironment partOf dropwizardEnvironment
 
 dropwizardApplication dependsOn dropwizardConfiguration
 dropwizardConfiguration dependsOn configurationFile
-jerseyEnvironment dependsOn resourceClasses
+jerseyEnvironment dependsOn resources

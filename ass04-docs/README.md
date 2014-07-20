@@ -2,7 +2,7 @@
 
 ##1 The model
 
-You can find our mega model in ass04 folder.
+You can find our mega model in ass04 folder or you can view the model in your browser. (e.g. run python -m SimpleHTTPServer)
 
 ##2 Model description
 

@@ -7,7 +7,7 @@ Java = "http://101companies.org/wiki/Language:Java"
 YAML = "http://101companies.org/wiki/Language:YAML"
 
 ## Technolgies
-Dropwizard ="http://dropwizard.io"
+Dropwizard = "http://dropwizard.io"
 
 Maven = "http://101companies.org/wiki/Technology:Maven"
 

@@ -1,14 +1,14 @@
-model Dropwizard.Technologies configured in DropwizardConfig
+model Dropwizard.Technologies configured in DropwizardCfg
+
+import Prelude
 
 FullStackWebApplicationFramework['Full Stack Web Application Framework'] < Technology
 WebServer['Web Server'] < Technology
 RestfulWebServicesFramework['RESTful Web Services Framework'] < Technology
 JsonProcessor['Json Processor'] < Technology
 BeanValidator['Bean Validator'] < Technology
-LoggingFrameWork['Logging Framework'] < Technology
-DateAndTimeApi['Date and Time API'] < Technology
+LoggingFramework['Logging Framework'] < Technology
 ApiAppendix['Java API Appendix'] < Technology
-
 
 Dropwizard : FullStackWebApplicationFramework
 Jetty : WebServer
@@ -20,8 +20,7 @@ Sl4j : LoggingFramework
 LogBack : LoggingFramework
 LogBack realizationOf Sl4j
 HibernateValidator : BeanValidator
-JodaTime : JavaDateAndTimeApi
-
+JodaTime : ApiAppendix
 
 ArchStyle['Architectural Style'] < Concept
 REST : ArchStyle
